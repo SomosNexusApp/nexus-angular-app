@@ -12,9 +12,10 @@ export class JwtInterceptor implements HttpInterceptor {
 
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     // comprobamos si la peticion va dirigida a rutas de admin (usa un token diferente)
+    // IMPORTANTE: /api/auth/* son rutas de autenticación de usuario (me, 2fa, etc.),
+    // NO son rutas de admin, así que NO deben usar el admin token.
     const isAdminRequest = req.url.includes('/api/admin/') || 
-                         req.url.includes('/admin/') ||
-                          (req.url.includes('/api/auth/') && !req.url.includes('/login') && !req.url.includes('/register'));
+                           req.url.includes('/admin/');
     const token = this.jwtService.getToken(isAdminRequest);
     
     // si la url empieza por http y NO es nuestra api, es externa (ej: Stripe, Google)
