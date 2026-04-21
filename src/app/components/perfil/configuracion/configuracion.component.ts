@@ -479,6 +479,8 @@ export class ConfiguracionComponent implements OnInit, AfterViewInit, OnDestroy 
           },
         });
     }
+  }
+
   confirmEnableEmail2FA() {
     this.loading2FA.set(true);
     this.http.post(`${this.backendUrl}/api/usuario/me/2fa/enable-email`, {}).subscribe({

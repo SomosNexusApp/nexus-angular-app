@@ -306,6 +306,14 @@
   color: var(--accent-purple);
 }
 
+.section-desc {
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 1.1rem;
+  line-height: 1.6;
+  margin-bottom: 30px;
+  max-width: 600px;
+}
+
 .section-card {
   background: var(--glass-base);
   backdrop-filter: var(--glass-blur);

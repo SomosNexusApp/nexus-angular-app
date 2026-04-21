@@ -40,7 +40,7 @@
         <div class="section-card">
           <div class="avatar-edit">
             <div class="avatar-preview">
-              <app-avatar 
+              <app-avatar
                 [avatarUrl]="user()?.avatar"
                 [googleAvatarUrl]="user()?.googleAvatarUrl"
                 [avatarSource]="user()?.avatarSource"
@@ -56,16 +56,33 @@
                   <i class="fas fa-camera"></i> Cambiar imagen
                   <input type="file" hidden (change)="onAvatarSelected($event)" accept="image/*" />
                 </label>
-                 <div class="avatar-source-options">
-                   <button *ngIf="user()?.googleAvatarUrl || user()?.googleId" type="button" class="btn-source" [class.active]="user()?.avatarSource === 'GOOGLE'" (click)="setAvatarChoice('GOOGLE')">
-                     <i class="fab fa-google"></i> Google
-                   </button>
-                   <button type="button" class="btn-source" [class.active]="user()?.avatarSource === 'INITIALS'" (click)="setAvatarChoice('INITIALS')">
-                     <i class="fas fa-font"></i> Iniciales
-                   </button>
-                   <button *ngIf="user()?.customAvatarUrl" type="button" class="btn-source" [class.active]="user()?.avatarSource === 'CUSTOM'" (click)="setAvatarChoice('CUSTOM')">
+                <div class="avatar-source-options">
+                  <button
+                    *ngIf="user()?.googleAvatarUrl || user()?.googleId"
+                    type="button"
+                    class="btn-source"
+                    [class.active]="user()?.avatarSource === 'GOOGLE'"
+                    (click)="setAvatarChoice('GOOGLE')"
+                  >
+                    <i class="fab fa-google"></i> Google
+                  </button>
+                  <button
+                    type="button"
+                    class="btn-source"
+                    [class.active]="user()?.avatarSource === 'INITIALS'"
+                    (click)="setAvatarChoice('INITIALS')"
+                  >
+                    <i class="fas fa-font"></i> Iniciales
+                  </button>
+                  <button
+                    *ngIf="user()?.customAvatarUrl"
+                    type="button"
+                    class="btn-source"
+                    [class.active]="user()?.avatarSource === 'CUSTOM'"
+                    (click)="setAvatarChoice('CUSTOM')"
+                  >
                     <i class="fas fa-image"></i> Personalizada
-                   </button>
+                  </button>
                 </div>
               </div>
               <p class="help-text">JPG, GIF o PNG. Max 5MB.</p>
@@ -221,7 +238,8 @@
               <div>
                 <strong>¿Quieres vender como profesional?</strong>
                 <p>
-                  Si cambias a Empresa, deberás proveer NIF/CIF y accederás a beneficios como catálogos masivos.
+                  Si cambias a Empresa, deberás proveer NIF/CIF y accederás a beneficios como
+                  catálogos masivos.
                   <br /><strong class="text-danger" style="font-size: 0.85rem"
                     >Nota: Esta acción es irreversible.</strong
                   >
@@ -252,9 +270,7 @@
           >
             <div class="form-migracion-empresa">
               <h3 style="margin-top: 0">Migrar a cuenta de Empresa</h3>
-              <p class="section-desc">
-                Por favor, facilítanos los datos de tu negocio.
-              </p>
+              <p class="section-desc">Por favor, facilítanos los datos de tu negocio.</p>
 
               <div class="form-row">
                 <div class="form-group">
@@ -287,7 +303,11 @@
               </div>
 
               <div class="section-actions mt-4">
-                <button class="btn-primary" (click)="prepararMigracionEmpresa()">
+                <button
+                  style="margin-right: 15px"
+                  class="btn-primary"
+                  (click)="prepararMigracionEmpresa()"
+                >
                   Migrar cuenta
                 </button>
                 <button class="btn-outline" (click)="showFormEmpresa.set(false)">Cancelar</button>
@@ -302,58 +322,61 @@
         <div class="section-card">
           <div class="security-group">
             <h3><i class="fas fa-key"></i> Gestión de Contraseña</h3>
-            
+
             @if (user(); as u) {
               @if (!u.isSocial && !u.googleId) {
                 <!-- Usuarios Locales (JWT) -->
-              <div class="form-group">
-                <input
-                  type="password"
-                  placeholder="Contraseña actual"
-                  [ngModel]="security().passwordActual"
-                  (ngModelChange)="updateSecurityField('passwordActual', $event)"
-                />
-              </div>
-              <div class="form-row">
                 <div class="form-group">
                   <input
                     type="password"
-                    placeholder="Nueva contraseña (min. 8 caracteres)"
-                    [ngModel]="security().passwordNueva"
-                    (ngModelChange)="updateSecurityField('passwordNueva', $event)"
+                    placeholder="Contraseña actual"
+                    [ngModel]="security().passwordActual"
+                    (ngModelChange)="updateSecurityField('passwordActual', $event)"
                   />
                 </div>
-                <div class="form-group">
-                  <input
-                    type="password"
-                    placeholder="Confirmar nueva contraseña"
-                    [ngModel]="security().passwordConfirm"
-                    (ngModelChange)="updateSecurityField('passwordConfirm', $event)"
-                  />
+                <div class="form-row">
+                  <div class="form-group">
+                    <input
+                      type="password"
+                      placeholder="Nueva contraseña (min. 8 caracteres)"
+                      [ngModel]="security().passwordNueva"
+                      (ngModelChange)="updateSecurityField('passwordNueva', $event)"
+                    />
+                  </div>
+                  <div class="form-group">
+                    <input
+                      type="password"
+                      placeholder="Confirmar nueva contraseña"
+                      [ngModel]="security().passwordConfirm"
+                      (ngModelChange)="updateSecurityField('passwordConfirm', $event)"
+                    />
+                  </div>
                 </div>
-              </div>
-              <button class="btn-primary" (click)="cambiarPassword()">
-                Actualizar Contraseña
-              </button>
-            } @else {
-              <!-- Usuarios Sociales (Google/Facebook) -->
-              <div class="alert alert-premium social-identity-card">
-                <i class="fas fa-shield-halved"></i>
-                <div class="alert-content">
-                  <strong>Identidad Gestionada Externamente</strong>
-                  <p>
-                    Tu cuenta está vinculada a 
-                    <strong>Google</strong>. 
-                    Por seguridad, debes gestionar tu contraseña directamente en su plataforma.
-                  </p>
-                  <a href="https://myaccount.google.com/security" 
-                     target="_blank" class="btn-text">
-                    Ir a ajustes de seguridad <i class="fas fa-external-link-alt"></i>
-                  </a>
+                <button class="btn-primary" (click)="cambiarPassword()">
+                  Actualizar Contraseña
+                </button>
+              } @else {
+                <!-- Usuarios Sociales (Google/Facebook) -->
+                <div class="alert alert-premium social-identity-card">
+                  <i class="fas fa-shield-halved"></i>
+                  <div class="alert-content">
+                    <strong>Identidad Gestionada Externamente</strong>
+                    <p>
+                      Tu cuenta está vinculada a
+                      <strong>Google.</strong>
+                      Por seguridad, debes gestionar tu contraseña directamente en su plataforma.
+                    </p>
+                    <a
+                      href="https://myaccount.google.com/security"
+                      target="_blank"
+                      class="btn-text"
+                    >
+                      Ir a ajustes de seguridad <i class="fas fa-external-link-alt"></i>
+                    </a>
+                  </div>
                 </div>
-              </div>
+              }
             }
-          }
           </div>
 
           <div class="divider-soft"></div>
@@ -366,7 +389,8 @@
               [class.enabled]="user()?.twoFactorEnabled && user()?.twoFactorMethod === 'EMAIL'"
             >
               <div class="two-fa-info">
-                <i class="fas fa-envelope"
+                <i
+                  class="fas fa-envelope"
                   [ngClass]="
                     user()?.twoFactorEnabled && user()?.twoFactorMethod === 'EMAIL'
                       ? 'text-primary'
@@ -413,33 +437,19 @@
 
             <div class="setup-2fa-panel" *ngIf="show2FASetup()">
               <h4>Configurar Authenticator</h4>
-              <p class="help-text">
-                1. Escanea este código QR con tu aplicación.
-              </p>
+              <p class="help-text">1. Escanea este código QR con tu aplicación.</p>
 
               <div class="qr-container">
-                <img
-                  *ngIf="qrCodeUrl()"
-                  [src]="qrCodeUrl()"
-                  alt="QR Code"
-                />
+                <img *ngIf="qrCodeUrl()" [src]="qrCodeUrl()" alt="QR Code" />
                 <div *ngIf="!qrCodeUrl()" class="spinner-sm"></div>
               </div>
 
-              <p class="help-text">
-                2. Introduce el código de 6 dígitos de la app:
-              </p>
+              <p class="help-text">2. Introduce el código de 6 dígitos de la app:</p>
               <div class="totp-input-group">
-                <input
-                  type="text"
-                  [(ngModel)]="totpCode"
-                  placeholder="000000"
-                  maxlength="6"
-                />
-                                <button class="btn-primary" (click)="confirmar2FAApp()">
+                <input type="text" [(ngModel)]="totpCode" placeholder="000000" maxlength="6" />
+                <button class="btn-primary" (click)="confirmar2FAApp()">
                   <i class="fas fa-check-circle"></i> Verificar
                 </button>
-
               </div>
             </div>
           </div>
@@ -450,51 +460,52 @@
       <section id="notificaciones" class="config-section">
         <h2><i class="fas fa-bell"></i> Notificaciones</h2>
         <div class="section-card">
-          <p class="section-desc">
-            Escoge qué alertas quieres recibir.
-          </p>
+          <p class="section-desc">Escoge qué alertas quieres recibir.</p>
 
           <div class="toggle-list">
             <div class="toggle-item">
               <div class="toggle-info">
-                   <h4>Mensajes de chat</h4>
-                   <p>Avisar cuando recibas un DM.</p>
+                <h4>Mensajes de chat</h4>
+                <p>Avisar cuando recibas un DM.</p>
               </div>
               <label class="premium-toggle">
                 <input
                   type="checkbox"
                   [ngModel]="notificaciones().notifNuevosMensajes"
-                  (ngModelChange)="updateNotificacionesField('notifNuevosMensajes', $event)" />
+                  (ngModelChange)="updateNotificacionesField('notifNuevosMensajes', $event)"
+                />
                 <span class="premium-slider"></span>
               </label>
             </div>
 
             <div class="toggle-item">
-                <div class="toggle-info">
-                     <h4>Compras y Ventas</h4>
-                     <p>Alertas de transacciones realizadas.</p>
-                </div>
-                <label class="premium-toggle">
-                  <input
-                    type="checkbox"
-                    [ngModel]="notificaciones().notifNuevaCompra"
-                    (ngModelChange)="updateNotificacionesField('notifNuevaCompra', $event)" />
-                  <span class="premium-slider"></span>
-                </label>
+              <div class="toggle-info">
+                <h4>Compras y Ventas</h4>
+                <p>Alertas de transacciones realizadas.</p>
+              </div>
+              <label class="premium-toggle">
+                <input
+                  type="checkbox"
+                  [ngModel]="notificaciones().notifNuevaCompra"
+                  (ngModelChange)="updateNotificacionesField('notifNuevaCompra', $event)"
+                />
+                <span class="premium-slider"></span>
+              </label>
             </div>
 
             <div class="toggle-item">
-                <div class="toggle-info">
-                     <h4>Valoraciones</h4>
-                     <p>Cuando alguien te deje una review.</p>
-                </div>
-                <label class="premium-toggle">
-                  <input
-                    type="checkbox"
-                    [ngModel]="notificaciones().notifValoracion"
-                    (ngModelChange)="updateNotificacionesField('notifValoracion', $event)" />
-                  <span class="premium-slider"></span>
-                </label>
+              <div class="toggle-info">
+                <h4>Valoraciones</h4>
+                <p>Cuando alguien te deje una review.</p>
+              </div>
+              <label class="premium-toggle">
+                <input
+                  type="checkbox"
+                  [ngModel]="notificaciones().notifValoracion"
+                  (ngModelChange)="updateNotificacionesField('notifValoracion', $event)"
+                />
+                <span class="premium-slider"></span>
+              </label>
             </div>
 
             <div class="divider-soft"></div>
@@ -508,7 +519,8 @@
                 <input
                   type="checkbox"
                   [ngModel]="notificaciones().newsletterSuscrito"
-                  (ngModelChange)="updateNotificacionesField('newsletterSuscrito', $event)" />
+                  (ngModelChange)="updateNotificacionesField('newsletterSuscrito', $event)"
+                />
                 <span class="premium-slider"></span>
               </label>
             </div>
@@ -529,9 +541,7 @@
           <div class="gdpr-item">
             <div class="gdpr-info">
               <h3>Descargar mis datos</h3>
-              <p>
-                Obtén un archivo JSON con toda tu información encriptada.
-              </p>
+              <p>Obtén un archivo JSON con toda tu información encriptada.</p>
             </div>
             <div class="gdpr-actions">
               <span class="gdpr-btn-help">Copia de seguridad local</span>
@@ -546,9 +556,7 @@
           <div class="gdpr-item">
             <div class="gdpr-info">
               <h3 class="text-danger">Eliminar mi cuenta</h3>
-              <p>
-                Esta acción es irreversible y eliminará todos tus datos.
-              </p>
+              <p>Esta acción es irreversible y eliminará todos tus datos.</p>
             </div>
             <div class="gdpr-actions">
               <span class="gdpr-btn-help text-danger">Eliminación definitiva</span>
@@ -566,9 +574,7 @@
 <div class="modal-overlay" *ngIf="showModalEmpresa()">
   <div class="modal-content">
     <div class="modal-header">
-      <h3>
-        <i class="fas fa-building"></i> ¿Convertir a Empresa?
-      </h3>
+      <h3><i class="fas fa-building"></i> ¿Convertir a Empresa?</h3>
       <button class="btn-text" (click)="showModalEmpresa.set(false)">
         <i class="fas fa-times"></i>
       </button>
@@ -576,7 +582,9 @@
     <div class="modal-body">
       <p>
         Al hacer este cambio
-        <strong class="text-warning">perderás tu historial de chats privados actuales y tus favoritos guardados</strong>
+        <strong class="text-warning"
+          >perderás tu historial de chats privados actuales y tus favoritos guardados</strong
+        >
         para adaptar tu cuenta al formato profesional.
       </p>
       <p>¿Estás seguro de continuar?</p>
@@ -586,29 +594,29 @@
       <button class="btn-primary" (click)="ejecutarMigracionEmpresa()">Sí, convertir cuenta</button>
     </div>
   </div>
-
-  <app-confirm-modal
-    #disable2FAModal
-    title="Desactivar Seguridad"
-    message="¿Seguro que quieres desactivar la Autenticación en 2 Pasos? Tu cuenta será mucho menos segura."
-    confirmText="Desactivar"
-    cancelText="Mantener Seguridad"
-    type="danger"
-    icon="fas fa-user-shield"
-    (confirmed)="confirmDisable2FA()"
-  />
-
-  <app-confirm-modal
-    #enableEmail2FAModal
-    title="Activar 2FA por Email"
-    message="Cada vez que inicies sesión, te enviaremos un código de seguridad a tu correo electrónico para verificar tu identidad."
-    confirmText="Activar ahora"
-    cancelText="Tal vez luego"
-    type="primary"
-    icon="fas fa-envelope-shield"
-    (confirmed)="confirmEnableEmail2FA()"
-  />
 </div>
+
+<app-confirm-modal
+  #disable2FAModal
+  title="Desactivar Seguridad"
+  message="¿Seguro que quieres desactivar la Autenticación en 2 Pasos? Tu cuenta será mucho menos segura."
+  confirmText="Desactivar"
+  cancelText="Mantener Seguridad"
+  type="danger"
+  icon="fas fa-shield-halved"
+  (confirmed)="confirmDisable2FA()"
+/>
+
+<app-confirm-modal
+  #enableEmail2FAModal
+  title="Activar 2FA por Email"
+  message="Cada vez que inicies sesión, te enviaremos un código de seguridad a tu correo electrónico para verificar tu identidad."
+  confirmText="Activar ahora"
+  cancelText="Tal vez luego"
+  type="primary"
+  icon="fas fa-envelope-open-text"
+  (confirmed)="confirmEnableEmail2FA()"
+/>
 
 <!-- Modal de Eliminación de Cuenta -->
 <div class="modal-overlay delete-modal-overlay" *ngIf="showDeleteModal()">
@@ -626,14 +634,17 @@
 
     <div class="modal-body">
       <div class="danger-notice">
-        <p>Al confirmar, perderás permanentemente el acceso a Nexus, incluyendo tus productos, mensajes, favoritos y reputación acumulada.</p>
+        <p>
+          Al confirmar, perderás permanentemente el acceso a Nexus, incluyendo tus productos,
+          mensajes, favoritos y reputación acumulada.
+        </p>
       </div>
-      
+
       <div class="confirmation-form">
         <div class="form-group-premium">
           <label>Escribe <span class="confirm-keyword">ELIMINAR</span> para confirmar</label>
-          <input 
-            type="text" 
+          <input
+            type="text"
             placeholder="Escribe aquí..."
             [ngModel]="deleteAccount().confirmText"
             (ngModelChange)="updateDeleteAccountField('confirmText', $event)"
@@ -646,8 +657,8 @@
           <label>Confirma con tu contraseña</label>
           <div class="input-icon-wrapper">
             <i class="fas fa-lock"></i>
-            <input 
-              type="password" 
+            <input
+              type="password"
               placeholder="••••••••"
               [ngModel]="deleteAccount().password"
               (ngModelChange)="updateDeleteAccountField('password', $event)"
@@ -659,10 +670,15 @@
     </div>
 
     <div class="modal-actions-premium">
-      <button class="btn-cancel-premium" (click)="showDeleteModal.set(false)">No, volver atrás</button>
-      <button 
-        class="btn-delete-final" 
-        [disabled]="deleteAccount().confirmText !== 'ELIMINAR' || (!user()?.googleId && !deleteAccount().password)"
+      <button class="btn-cancel-premium" (click)="showDeleteModal.set(false)">
+        No, volver atrás
+      </button>
+      <button
+        class="btn-delete-final"
+        [disabled]="
+          deleteAccount().confirmText !== 'ELIMINAR' ||
+          (!user()?.googleId && !deleteAccount().password)
+        "
         (click)="confirmarEliminacion()"
       >
         <span>Eliminar Permanentemente</span>
