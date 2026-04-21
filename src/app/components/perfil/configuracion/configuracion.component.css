@@ -487,6 +487,16 @@ input:checked + .premium-slider:before {
   transition: var(--transition-smooth);
 }
 
+.two-fa-item.enabled {
+  background: rgba(124, 58, 237, 0.05);
+  border-color: rgba(124, 58, 237, 0.3);
+  box-shadow: inset 0 0 20px rgba(124, 58, 237, 0.05);
+}
+
+.mb-4 {
+  margin-bottom: 2rem !important;
+}
+
 .two-fa-info {
   display: flex;
   align-items: center;
@@ -513,65 +523,11 @@ input:checked + .premium-slider:before {
   margin-bottom: 4px;
 }
 
-.session-card {
-  display: flex;
-  align-items: center;
-  gap: 30px; /* More internal space */
-  padding: 30px;
-  background: rgba(255, 255, 255, 0.02);
-  border-radius: 24px;
-  border: 1px solid var(--glass-border-lite);
-  margin-bottom: 24px; /* More space between sessions */
-  transition: var(--transition-smooth);
-}
 
-.session-card:hover {
-  background: rgba(255, 255, 255, 0.04);
-  transform: translateX(10px);
-  border-color: var(--glass-border-plus);
-}
 
-.session-icon {
-  font-size: 1.5rem;
-  width: 50px;
-  height: 50px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: rgba(255, 255, 255, 0.05);
-  border-radius: 14px;
-  color: var(--text-dim);
-}
 
-.session-details strong {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  font-size: 1.1rem;
-}
 
-.session-details .badge {
-  background: linear-gradient(135deg, var(--accent-purple), var(--accent-blue));
-  color: #fff;
-  font-size: 0.65rem;
-  padding: 4px 12px;
-  border-radius: 8px;
-  text-transform: uppercase;
-  font-weight: 800;
-  box-shadow: 0 4px 15px rgba(168, 85, 247, 0.4);
-  letter-spacing: 1px;
-}
 
-.header-split {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-end;
-  margin-bottom: 30px; /* More space for the session list */
-}
-
-.header-split .btn-text {
-  margin-top: 0; /* Override common text-btn margin here */
-}
 
 .divider-soft {
   height: 1px;
@@ -724,6 +680,19 @@ input:checked + .premium-slider:before {
 .gdpr-info h3 {
   font-size: 1.25rem;
   margin-bottom: 8px;
+}
+
+.gdpr-actions {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.gdpr-btn-help {
+  font-size: 0.85rem;
+  color: var(--text-dim);
+  font-weight: 500;
+  opacity: 0.7;
 }
 
 .modal-overlay {

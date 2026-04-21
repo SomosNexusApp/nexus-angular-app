@@ -1,3 +1,4 @@
+<!-- REFRESH -->
 @if (!isEmbedded) {
   <app-toast-container></app-toast-container>
 }
@@ -358,7 +359,7 @@
           <div class="divider-soft"></div>
 
           <div class="security-group">
-            <h3>Autenticación en 2 Pasos (2FA)</h3>
+            <h3 class="mb-4">Autenticación en 2 Pasos (2FA)</h3>
 
             <div
               class="two-fa-item"
@@ -439,51 +440,6 @@
                   <i class="fas fa-check-circle"></i> Verificar
                 </button>
 
-              </div>
-            </div>
-          </div>
-
-          <div class="divider-soft"></div>
-
-          <div class="security-group sessions-history-group">
-            <div class="header-split">
-              <h3>Historial de Sesiones</h3>
-              <button class="btn-text text-danger" (click)="cerrarOtrasSesiones()">
-                Cerrar todas las demás
-              </button>
-            </div>
-            <div class="sessions-list">
-              <div *ngIf="sesionesActivas().length === 0" class="help-text">
-                Cargando historial...
-              </div>
-              <div class="session-card" *ngFor="let ses of sesionesActivas(); let i = index">
-                <div class="session-icon">
-                  <i
-                    *ngIf="ses.dispositivo?.toLowerCase().includes('windows')"
-                    class="fab fa-windows"
-                  ></i>
-                  <i
-                    *ngIf="
-                      ses.dispositivo?.toLowerCase().includes('iphone') ||
-                      ses.dispositivo?.toLowerCase().includes('mac')
-                    "
-                    class="fab fa-apple"
-                  ></i>
-                  <i
-                    *ngIf="ses.dispositivo?.toLowerCase().includes('android')"
-                    class="fab fa-android"
-                  ></i>
-                  <i *ngIf="!ses.dispositivo" class="fas fa-desktop"></i>
-                </div>
-                <div class="session-details">
-                  <strong>
-                    {{ ses.dispositivo || 'Dispositivo Web' }}
-                    <span class="badge" *ngIf="ses.actual || i === 0">Actual</span>
-                  </strong>
-                  <span class="ip-address">IP: {{ ses.ip }}</span>
-                  <span class="session-divider">•</span>
-                  <span class="session-date">Login: {{ ses.fechaLogin | date: 'medium' }}</span>
-                </div>
               </div>
             </div>
           </div>
@@ -577,9 +533,12 @@
                 Obtén un archivo JSON con toda tu información encriptada.
               </p>
             </div>
-            <button class="btn-outline" (click)="descargarDatos()">
-              <i class="fas fa-download"></i> Descargar
-            </button>
+            <div class="gdpr-actions">
+              <span class="gdpr-btn-help">Copia de seguridad local</span>
+              <button class="btn-outline" (click)="descargarDatos()">
+                <i class="fas fa-download"></i> Descargar
+              </button>
+            </div>
           </div>
 
           <div class="divider-soft"></div>
@@ -591,9 +550,12 @@
                 Esta acción es irreversible y eliminará todos tus datos.
               </p>
             </div>
-            <button class="btn-danger" (click)="showDeleteModal.set(true)">
-              <i class="fas fa-trash"></i> Eliminar
-            </button>
+            <div class="gdpr-actions">
+              <span class="gdpr-btn-help text-danger">Eliminación definitiva</span>
+              <button class="btn-danger" (click)="showDeleteModal.set(true)">
+                <i class="fas fa-trash"></i> Eliminar
+              </button>
+            </div>
           </div>
         </div>
       </section>
@@ -634,6 +596,17 @@
     type="danger"
     icon="fas fa-user-shield"
     (confirmed)="confirmDisable2FA()"
+  />
+
+  <app-confirm-modal
+    #enableEmail2FAModal
+    title="Activar 2FA por Email"
+    message="Cada vez que inicies sesión, te enviaremos un código de seguridad a tu correo electrónico para verificar tu identidad."
+    confirmText="Activar ahora"
+    cancelText="Tal vez luego"
+    type="primary"
+    icon="fas fa-envelope-shield"
+    (confirmed)="confirmEnableEmail2FA()"
   />
 </div>
 

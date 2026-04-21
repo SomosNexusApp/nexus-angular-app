@@ -97,8 +97,9 @@ export class ConfiguracionComponent implements OnInit, AfterViewInit, OnDestroy 
   deleteAccount = signal({ confirmText: '', password: '' });
 
   @ViewChild('disable2FAModal') disable2FAModal!: ConfirmModalComponent;
+  @ViewChild('enableEmail2FAModal') enableEmail2FAModal!: ConfirmModalComponent;
 
-  sesionesActivas = signal<any[]>([]);
+
 
   constructor(
     private authStore: AuthStore,
@@ -118,7 +119,7 @@ export class ConfiguracionComponent implements OnInit, AfterViewInit, OnDestroy 
       return;
     }
     this.cargarDatosActuales();
-    this.cargarSesiones();
+
 
     this.searchSubject
       .pipe(
@@ -452,17 +453,7 @@ export class ConfiguracionComponent implements OnInit, AfterViewInit, OnDestroy 
     }
 
     if (metodo === 'EMAIL') {
-      this.loading2FA.set(true);
-      this.http.post(`${this.backendUrl}/api/usuario/me/2fa/enable-email`, {}).subscribe({
-        next: () => {
-          this.toast.success('2FA por Email activado');
-          this.show2FASetup.set(false);
-          this.authService.loadCurrentUser().subscribe({
-            complete: () => this.loading2FA.set(false)
-          });
-        },
-        error: () => this.loading2FA.set(false)
-      });
+      this.enableEmail2FAModal.open();
     }
 
     if (metodo === 'APP') {
@@ -488,6 +479,17 @@ export class ConfiguracionComponent implements OnInit, AfterViewInit, OnDestroy 
           },
         });
     }
+  confirmEnableEmail2FA() {
+    this.loading2FA.set(true);
+    this.http.post(`${this.backendUrl}/api/usuario/me/2fa/enable-email`, {}).subscribe({
+      next: () => {
+        this.toast.success('Autenticación por Email activada');
+        this.authService.loadCurrentUser().subscribe({
+          complete: () => this.loading2FA.set(false)
+        });
+      },
+      error: () => this.loading2FA.set(false)
+    });
   }
 
   confirmDisable2FA() {
@@ -523,25 +525,7 @@ export class ConfiguracionComponent implements OnInit, AfterViewInit, OnDestroy 
       });
   }
 
-  // --- Lógica Sesiones Reales ---
-  cargarSesiones() {
-    this.http.get<any[]>(`${this.backendUrl}/api/usuario/me/sesiones`).subscribe({
-      next: (res) => this.sesionesActivas.set(res || []),
-      error: (err) => {
-        console.error('Error cargando sesiones:', err);
-        this.sesionesActivas.set([]); // Para que no se quede colgado
-      },
-    });
-  }
 
-  cerrarOtrasSesiones() {
-    this.http.delete(`${this.backendUrl}/api/usuario/me/sesiones/otras`).subscribe({
-      next: () => {
-        this.toast.success('Historial de sesiones limpiado');
-        this.cargarSesiones();
-      },
-    });
-  }
   guardarNotificaciones() {
     this.http
       .patch(`${this.backendUrl}/api/usuario/me/notificaciones-config`, this.notificaciones())
