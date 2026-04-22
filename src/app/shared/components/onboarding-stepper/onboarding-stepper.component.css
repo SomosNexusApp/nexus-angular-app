@@ -577,3 +577,148 @@
   border-color: rgba(168, 85, 247, 0.4);
   color: rgba(168, 85, 247, 0.6);
 }
+
+/* ================= MOBILE RESPONSIVE ================= */
+@media (max-width: 768px) {
+  .onboarding-container {
+    width: 100%;
+    max-width: 100%;
+    height: 100vh;
+    max-height: 100vh;
+    border-radius: 0;
+    border: none;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+  }
+
+  .onboarding-header {
+    padding: 30px 24px 20px;
+  }
+
+  .step-content {
+    padding: 0 24px 30px;
+    min-height: unset;
+  }
+
+  .step-header {
+    margin-bottom: 25px;
+  }
+
+  .step-header h2 {
+    font-size: 1.8rem;
+  }
+
+  .step-header p {
+    font-size: 0.95rem;
+  }
+
+  .terms-card {
+    padding: 20px;
+  }
+
+  .terms-scroll {
+    max-height: 200px;
+  }
+
+  .security-card {
+    padding: 16px;
+    gap: 15px;
+  }
+
+  .security-icon {
+    width: 40px;
+    height: 40px;
+    font-size: 1.1rem;
+    border-radius: 10px;
+  }
+  
+  .security-info strong {
+    font-size: 1rem;
+  }
+
+  .totp-setup-area {
+    padding: 20px;
+    margin-top: 15px;
+  }
+
+  .totp-input-group input {
+    font-size: 1.3rem;
+    letter-spacing: 8px;
+    padding: 12px;
+  }
+
+  .step-3-layout {
+    gap: 15px;
+  }
+
+  .step-3-layout.empresa-mode {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 20px;
+  }
+
+  .identity-grid {
+    grid-template-columns: 1fr;
+    gap: 15px;
+  }
+
+  .empresa-mode .identity-grid {
+    max-width: 100%;
+  }
+  
+  .identity-card {
+    min-height: 140px;
+    padding: 20px;
+  }
+  
+  .empresa-details-area {
+    padding: 20px;
+    margin-top: 5px;
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  .nx-input-row {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+
+  .avatar-selection {
+    gap: 20px;
+    flex-wrap: wrap;
+  }
+
+  .avatar-option {
+    flex: 0 0 calc(50% - 10px);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .avatar-wrapper {
+    width: 100px;
+    height: 100px;
+    margin-bottom: 10px;
+  }
+
+  .initials-fallback {
+    font-size: 2.2rem;
+  }
+  
+  .btn-upload-avatar {
+    font-size: 0.75rem;
+    padding: 5px 12px;
+  }
+
+  .onboarding-footer {
+    padding: 15px 24px 30px;
+    flex-direction: column-reverse;
+    gap: 12px;
+  }
+
+  .btn-nx-next, .btn-nx-back {
+    width: 100%;
+    justify-content: center;
+    padding: 14px;
+    border-radius: 14px;
+  }
+}
