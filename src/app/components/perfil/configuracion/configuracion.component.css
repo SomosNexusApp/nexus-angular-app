@@ -1383,3 +1383,107 @@ input:checked + .premium-slider:before {
     display: none !important;
   }
 }
+
+/* ================= NAV DIVIDER & LOGOUT ================= */
+.nav-divider {
+  height: 1px;
+  background: rgba(255, 255, 255, 0.08);
+  margin: 16px 8px;
+}
+
+.logout-nav-item {
+  color: #ef4444 !important;
+  transition: all 0.3s ease;
+}
+
+.logout-nav-item:hover {
+  background: rgba(239, 68, 68, 0.1) !important;
+  color: #f87171 !important;
+  transform: translateX(4px);
+}
+
+.logout-nav-item i {
+  color: #ef4444 !important;
+}
+
+@media (max-width: 1100px) {
+  .nav-divider {
+    width: 1px;
+    height: 24px;
+    margin: auto 12px;
+    background: rgba(255, 255, 255, 0.15);
+    flex-shrink: 0;
+  }
+  
+  .logout-nav-item:hover {
+    transform: translateY(-2px);
+  }
+}
+
+/* ================= MOBILE LOGOUT SECTION ================= */
+.mobile-logout-section {
+  display: none;
+}
+
+@media (max-width: 1024px) {
+  .mobile-logout-section {
+    display: block;
+    margin-bottom: 60px;
+  }
+}
+
+.logout-card {
+  display: flex !important;
+  justify-content: space-between;
+  align-items: center;
+  background: rgba(239, 68, 68, 0.05) !important;
+  border: 1px solid rgba(239, 68, 68, 0.15) !important;
+  cursor: pointer;
+  padding: 24px 30px !important;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+}
+
+.logout-card:hover {
+  background: rgba(239, 68, 68, 0.1) !important;
+  border-color: rgba(239, 68, 68, 0.4) !important;
+  transform: translateY(-3px);
+  box-shadow: 0 15px 30px rgba(239, 68, 68, 0.1);
+}
+
+.logout-card-content {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.logout-card-content i {
+  font-size: 1.6rem;
+  color: #ef4444;
+  width: 50px;
+  height: 50px;
+  background: rgba(239, 68, 68, 0.1);
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.logout-card-content h3 {
+  margin: 0;
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: #fff;
+  background: none;
+  -webkit-text-fill-color: initial;
+}
+
+.logout-card-content p {
+  margin: 4px 0 0;
+  font-size: 0.9rem;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.arrow-icon {
+  color: rgba(255, 255, 255, 0.2);
+  font-size: 1rem;
+}

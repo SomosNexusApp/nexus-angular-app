@@ -24,6 +24,11 @@
                 <i [class]="sec.icon"></i>
                 <span>{{ sec.title }}</span>
               </a>
+              <div class="nav-divider"></div>
+              <a (click)="cerrarSesion()" class="nav-item logout-nav-item">
+                <i class="fas fa-sign-out-alt"></i>
+                <span>Cerrar sesión</span>
+              </a>
             </nav>
           </aside>
         </div>
@@ -565,6 +570,19 @@
               </button>
             </div>
           </div>
+        </div>
+      </section>
+      <!-- Logout Button (Mobile only or at the bottom) -->
+      <section class="config-section mobile-logout-section">
+        <div class="section-card logout-card" (click)="cerrarSesion()">
+           <div class="logout-card-content">
+             <i class="fas fa-sign-out-alt"></i>
+             <div>
+               <h3>Cerrar sesión</h3>
+               <p>Finalizar sesión actual de forma segura</p>
+             </div>
+           </div>
+           <i class="fas fa-chevron-right arrow-icon"></i>
         </div>
       </section>
     </main>

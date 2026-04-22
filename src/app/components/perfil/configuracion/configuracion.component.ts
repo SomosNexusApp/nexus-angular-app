@@ -101,6 +101,11 @@ export class ConfiguracionComponent implements OnInit, AfterViewInit, OnDestroy 
 
 
 
+  cerrarSesion() {
+    this.authService.logout();
+    this.router.navigate(['/auth/login']);
+  }
+
   constructor(
     private authStore: AuthStore,
     private authService: AuthService,
