@@ -69,6 +69,7 @@ export class MensajesContainerComponent implements OnInit, OnDestroy {
         };
 
         this.conversacionSeleccionada.set(fakeConv);
+        this.uiService.isAnyChatSelected.set(true);
       },
     });
   }
@@ -92,6 +93,7 @@ export class MensajesContainerComponent implements OnInit, OnDestroy {
         };
 
         this.conversacionSeleccionada.set(fakeConv);
+        this.uiService.isAnyChatSelected.set(true);
       },
     });
   }

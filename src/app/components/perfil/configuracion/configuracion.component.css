@@ -394,6 +394,10 @@
   transition: var(--transition-smooth);
 }
 
+.form-group textarea {
+  resize: none;
+}
+
 .form-group input:focus,
 .form-group textarea:focus {
   outline: none;

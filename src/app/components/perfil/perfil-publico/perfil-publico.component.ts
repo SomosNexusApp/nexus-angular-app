@@ -1,4 +1,4 @@
-import { Component, OnInit, inject, signal, computed, OnDestroy, ViewChild } from '@angular/core';
+import { Component, OnInit, inject, signal, computed, OnDestroy, ViewChild, HostListener } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
@@ -9,6 +9,7 @@ import { BloqueoService } from '../../../core/services/bloqueo.service';
 import { ReporteModalComponent } from '../../../shared/components/reporte-modal/reporte-modal.component';
 import { ProductoCardComponent } from '../../../shared/components/marketplace/product-card/producto-card.component';
 import { AvatarComponent } from '../../../shared/components/avatar/avatar.component';
+import { CoverImagePipe } from '../../../shared/pipes/cover-image.pipe';
 
 @Component({
   selector: 'app-perfil-publico',
@@ -20,13 +21,14 @@ import { AvatarComponent } from '../../../shared/components/avatar/avatar.compon
     ProductoCardComponent,
     ReporteModalComponent,
     AvatarComponent,
+    CoverImagePipe,
   ],
   templateUrl: './perfil-publico.component.html',
   styleUrls: ['./perfil-publico.component.css'],
 })
 export class PerfilPublicoComponent implements OnInit, OnDestroy {
   private route = inject(ActivatedRoute);
-  private router = inject(Router);
+  router = inject(Router);
   private http = inject(HttpClient);
   authStore = inject(AuthStore);
   private bloqueoService = inject(BloqueoService);
@@ -51,6 +53,16 @@ export class PerfilPublicoComponent implements OnInit, OnDestroy {
   valoraciones = signal<any[]>([]);
   resumenValoraciones = signal<any>(null);
   cargandoTab = signal(false);
+
+  // Mobile states
+  isMobileUI = signal(window.innerWidth <= 768);
+  activeMobileTab = signal<'cosas' | 'valoraciones' | 'info'>('cosas');
+  selectedCosasType = signal<'productos' | 'ofertas' | 'vehiculos'>('productos');
+
+  @HostListener('window:resize')
+  onResize() {
+    this.isMobileUI.set(window.innerWidth <= 768);
+  }
 
   esMiPerfil = computed(() => {
     const p = this.perfil();
@@ -108,6 +120,8 @@ export class PerfilPublicoComponent implements OnInit, OnDestroy {
         this.cargando.set(false);
         this.cargarResumenValoraciones(data.id);
         this.cargarTabProductos(data.id);
+        this.cargarTabVehiculos(data.id);
+        this.cargarTabOfertas(data.id);
 
         if (this.authStore.isLoggedIn() && data.id !== this.authStore.user()?.id) {
           this.bloqueoService.estaBloqueado(data.id).subscribe({
@@ -207,6 +221,24 @@ export class PerfilPublicoComponent implements OnInit, OnDestroy {
     const p = this.perfil();
     if (p) {
       this.router.navigate(['/mensajes'], { queryParams: { usuarioId: p.id } });
+    }
+  }
+
+  compartirPerfil() {
+    const url = window.location.href;
+    const p = this.perfil();
+    if (!p) return;
+    
+    if (navigator.share) {
+      navigator.share({
+        title: `Perfil de ${p.username} en Nexus`,
+        text: `¡Echa un vistazo al perfil de ${p.username} en Nexus!`,
+        url: url
+      }).catch(err => console.log('Error compartiendo:', err));
+    } else {
+      navigator.clipboard.writeText(url).then(() => {
+        alert('Enlace del perfil copiado al portapapeles');
+      });
     }
   }
 

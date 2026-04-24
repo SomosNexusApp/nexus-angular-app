@@ -439,11 +439,27 @@
 
               <div class="c-body">
                 @if (editandoId() === c.id) {
-                  <div class="edit-bundle">
-                    <textarea [(ngModel)]="textoEditando"></textarea>
-                    <div class="edit-btns">
-                      <button (click)="guardarEdicion()" class="btn-save">GUARDAR</button>
-                      <button (click)="editandoId.set(null)" class="btn-cancel">CANCELAR</button>
+                  <div class="edit-bundle" style="margin-top: 15px; padding: 20px; background: rgba(0,0,0,0.2); border-radius: 20px; border: 1px solid rgba(255,255,255,0.05);">
+                    <div class="composer-toolbar-centric" style="margin-bottom: 15px;">
+                      <button (click)="formatText('bold')" class="op-box" title="Negrita"><b>B</b></button>
+                      <button (click)="formatText('italic')" class="op-box" title="Cursiva"><i>I</i></button>
+                      <button (click)="formatText('list')" class="op-box" title="Lista"><i class="fas fa-list-ul"></i></button>
+                      <button (click)="formatText('header')" class="op-box" title="Título"><b>H</b></button>
+                    </div>
+                    <div class="textarea-shell" style="margin-bottom: 15px;">
+                      <div
+                        [id]="'editComposer_' + c.id"
+                        contenteditable="true"
+                        class="centric-textarea-rich"
+                        (keydown)="handleComposerKeydown($event)"
+                        style="min-height: 120px;"
+                      ></div>
+                    </div>
+                    <div class="centric-actions" style="display: flex; gap: 12px;">
+                      <button (click)="guardarEdicion()" class="btn-centric-submit" style="padding: 12px 24px; font-size: 0.9rem;">
+                        <i class="fas fa-save"></i> GUARDAR
+                      </button>
+                      <button (click)="editandoId.set(null)" class="btn-ghost-elite-centric" style="border: none;">CANCELAR</button>
                     </div>
                   </div>
                 } @else {

@@ -311,7 +311,8 @@ export class OfertaDetailComponent implements OnInit, OnDestroy {
       const selection = window.getSelection();
       if (selection && selection.rangeCount > 0) {
         let parent: HTMLElement | null = selection.anchorNode as HTMLElement;
-        while (parent && parent.tagName !== 'H3' && parent !== this.composer.nativeElement) {
+        const rootNode = this.editandoId() ? document.getElementById(`editComposer_${this.editandoId()}`) : this.composer?.nativeElement;
+        while (parent && parent.tagName !== 'H3' && parent !== rootNode) {
           parent = parent.parentElement;
         }
         
@@ -323,7 +324,12 @@ export class OfertaDetailComponent implements OnInit, OnDestroy {
       }
     }
     
-    if (this.composer?.nativeElement) this.composer.nativeElement.focus();
+    if (this.editandoId()) {
+      const editEl = document.getElementById(`editComposer_${this.editandoId()}`);
+      if (editEl) editEl.focus();
+    } else if (this.composer?.nativeElement) {
+      this.composer.nativeElement.focus();
+    }
   }
 
   handleComposerKeydown(event: KeyboardEvent) {
@@ -409,13 +415,21 @@ export class OfertaDetailComponent implements OnInit, OnDestroy {
 
   iniciarEdicion(c: any) {
     this.editandoId.set(c.id);
-    this.textoEditando = c.texto;
+    setTimeout(() => {
+      const editEl = document.getElementById(`editComposer_${c.id}`);
+      if (editEl) editEl.innerHTML = c.texto;
+    });
   }
 
   guardarEdicion() {
     const id = this.editandoId();
-    if (!id || !this.textoEditando.trim()) return;
-    this.http.put(`${environment.apiUrl}/comentario/${id}`, { texto: this.textoEditando }).subscribe({
+    if (!id) return;
+    const editEl = document.getElementById(`editComposer_${id}`);
+    if (!editEl) return;
+    const textoEditado = editEl.innerHTML;
+    if (!textoEditado.trim()) return;
+
+    this.http.put(`${environment.apiUrl}/comentario/${id}`, { texto: textoEditado }).subscribe({
       next: (res: any) => {
         this.comentarios.update(list => list.map(c => c.id === id ? { ...c, texto: res.texto } : c));
         this.editandoId.set(null);

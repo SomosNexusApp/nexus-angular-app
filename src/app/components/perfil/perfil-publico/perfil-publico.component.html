@@ -18,6 +18,7 @@
 
 <!-- Contenido del Perfil -->
 @if (!cargando() && !error() && perfil()) {
+<div *ngIf="!isMobileUI()">
   <div class="perfil-page">
     <!-- HEADER DEL PERFIL -->
     <header class="perfil-header">
@@ -31,20 +32,22 @@
             [avatarSource]="perfil().avatarSource"
             [nombre]="perfil().nombre"
             [username]="perfil().username"
-            [size]="120"
+            [size]="140"
             customClass="avatar-xl"
           ></app-avatar>
-          @if (perfil().esVerificado) {
-            <span class="verified-badge" title="Verificado">
-              <i class="fas fa-check-circle"></i>
-            </span>
-          }
         </div>
 
         <!-- Info Principal -->
         <div class="info-principal">
           <div class="name-row">
-            <h1 class="nombre">{{ perfil().nombre || perfil().username }}</h1>
+            <h1 class="nombre">
+              {{ perfil().nombre || perfil().username }}
+              @if (perfil().esVerificado) {
+                <span class="verified-badge" title="Verificado">
+                  <i class="fas fa-check-circle"></i>
+                </span>
+              }
+            </h1>
             <span class="username">@{{ perfil().username }}</span>
           </div>
 
@@ -325,6 +328,258 @@
         </div>
       }
     </main>
+  </div>
+</div>
+
+  <!-- VISTA APP MÓVIL (NATIVE STYLE) -->
+  <div class="mobile-app-profile" *ngIf="isMobileUI()">
+    <div class="mobile-p-scroll-area custom-scrollbar">
+      <!-- Centro: Avatar y Nombre -->
+      <div class="p-hero-section">
+        <div class="p-avatar-wrapper">
+          <app-avatar 
+            [avatarUrl]="perfil()?.avatar"
+            [googleAvatarUrl]="perfil()?.googleAvatarUrl"
+            [avatarSource]="perfil()?.avatarSource"
+            [nombre]="perfil()?.nombre"
+            [username]="perfil()?.username"
+            [size]="120"
+            customClass="p-native-avatar"
+          ></app-avatar>
+        </div>
+
+        <h2 class="p-native-name">
+          {{ perfil()?.nombre || perfil()?.username }}
+          @if (perfil().esVerificado) {
+            <span class="verified-badge" title="Verificado" style="font-size: 1.2rem; margin-left: 4px;">
+              <i class="fas fa-check-circle"></i>
+            </span>
+          }
+        </h2>
+        <div class="p-native-stars">
+          @for (starObj of getStarsArray(perfil().valoracionMedia || 0); track $index) {
+            <i class="fas fa-star" [class.filled]="starObj.full || starObj.half" [class.fa-star-half-alt]="starObj.half"></i>
+          }
+          <span class="p-rating-text">({{ (perfil().valoracionMedia || 0) | number:'1.1-1' }})</span>
+        </div>
+      </div>
+
+      <!-- Barra de Acciones Rápidas -->
+      <div class="p-quick-actions">
+        <div class="p-qa-item">
+          <button (click)="contactar()" class="p-qa-btn p-qa-btn--accent" [disabled]="esMiPerfil()">
+            <i class="fas fa-comment-dots"></i>
+          </button>
+          <span>Mensaje</span>
+        </div>
+
+        <div class="p-qa-item">
+          <button class="p-qa-btn" (click)="compartirPerfil()">
+            <i class="fas fa-share-nodes"></i>
+          </button>
+          <span>Compartir</span>
+        </div>
+
+        <div class="p-qa-item">
+          <button class="p-qa-btn" (click)="abrirReporte()">
+            <i class="fas fa-flag"></i>
+          </button>
+          <span>Reportar</span>
+        </div>
+        <div class="p-qa-sep"></div>
+        <div class="p-qa-item">
+          <button class="p-qa-btn" (click)="toggleBloqueo()">
+            <i class="fas fa-ban" [style.color]="estaBloqueado() ? '#ef4444' : 'inherit'"></i>
+          </button>
+          <span>Bloquear</span>
+        </div>
+      </div>
+
+      <!-- Fila de Estadísticas Principales -->
+      <div class="p-native-stats-row">
+        <div class="p-n-stat">
+          <i class="fas fa-chart-line"></i>
+          <div class="p-n-val">{{ perfil().ventasTotales || 0 }}</div>
+          <div class="p-n-lab">Ventas</div>
+        </div>
+        <div class="p-n-stat">
+          <i class="fas fa-shopping-bag"></i>
+          <div class="p-n-val">{{ perfil().comprasTotales || 0 }}</div>
+          <div class="p-n-lab">Compras</div>
+        </div>
+        <div class="p-n-stat">
+          <i class="fas fa-tags"></i>
+          <div class="p-n-val">{{ perfil().ofertasActivas || 0 }}</div>
+          <div class="p-n-lab">Ofertas</div>
+        </div>
+      </div>
+
+      <!-- Tabs Dinámicas -->
+      <div class="p-native-tabs">
+         <button 
+           class="p-n-tab-btn" 
+           [class.active]="activeMobileTab() === 'cosas'"
+           (click)="activeMobileTab.set('cosas')"
+         >
+           Publicaciones
+         </button>
+         <button 
+           class="p-n-tab-btn" 
+           [class.active]="activeMobileTab() === 'valoraciones'"
+           (click)="activeMobileTab.set('valoraciones'); cambiarTab('valoraciones')"
+         >
+           Valoraciones
+         </button>
+         <button 
+           class="p-n-tab-btn" 
+           [class.active]="activeMobileTab() === 'info'"
+           (click)="activeMobileTab.set('info')"
+         >
+           Info
+         </button>
+      </div>
+
+      <!-- Secciones Dinámicas -->
+
+      <!-- CONTENIDO: PUBLICACIONES -->
+      @if (activeMobileTab() === 'cosas') {
+        <!-- Sub-filtros de Mis Cosas -->
+        <div class="p-native-subfilters">
+          <button [class.active]="selectedCosasType() === 'productos'" (click)="selectedCosasType.set('productos'); cambiarTab('productos')">
+            Productos ({{ productos().length }})
+          </button>
+          <button [class.active]="selectedCosasType() === 'ofertas'" (click)="selectedCosasType.set('ofertas'); cambiarTab('ofertas')">
+            Ofertas ({{ ofertas().length }})
+          </button>
+          <button [class.active]="selectedCosasType() === 'vehiculos'" (click)="selectedCosasType.set('vehiculos'); cambiarTab('vehiculos')">
+            Vehículos ({{ vehiculos().length }})
+          </button>
+        </div>
+
+        <div class="p-native-grid-container">
+           @if (cargandoTab()) {
+             <div class="tab-loading"><div class="spinner-sm"></div></div>
+           } @else {
+             <div class="p-n-grid">
+               <!-- PRODUCTOS -->
+               @if (selectedCosasType() === 'productos') {
+                 @for (p of productos(); track p.id) {
+                    <div 
+                      class="p-n-card" 
+                      (click)="router.navigate(['/productos', p.id])"
+                    >
+                      <div class="p-n-card-img"><img [src]="p | coverImage"><div class="p-n-card-price">{{ p.precio | currency:'EUR':'symbol':'1.0-0' }}</div></div>
+                      <div class="p-n-card-body">
+                        <h3 class="p-n-card-title">{{ p.titulo }}</h3>
+                        <div class="p-n-card-footer">
+                          <span class="p-n-badge" [class.success]="p.estado === 'DISPONIBLE'">{{ p.estado }}</span>
+                        </div>
+                      </div>
+                    </div>
+                 }
+               }
+               <!-- OFERTAS -->
+               @if (selectedCosasType() === 'ofertas') {
+                 @for (o of ofertas(); track o.id) {
+                    <div 
+                      class="p-n-card" 
+                      (click)="router.navigate(['/ofertas', o.id])"
+                    >
+                      <div class="p-n-card-img"><img [src]="o | coverImage"><div class="p-n-card-price">{{ o.precioOferta | currency:'EUR':'symbol':'1.0-0' }}</div></div>
+                      <div class="p-n-card-body">
+                        <h3 class="p-n-card-title">{{ o.titulo }}</h3>
+                        <div class="p-n-card-footer">
+                          <span class="p-n-badge" [class.success]="o.estado === 'ACTIVA'">{{ o.estado }}</span>
+                        </div>
+                      </div>
+                    </div>
+                 }
+               }
+               <!-- VEHICULOS -->
+               @if (selectedCosasType() === 'vehiculos') {
+                 @for (v of vehiculos(); track v.id) {
+                   <div 
+                     class="p-n-card" 
+                     (click)="router.navigate(['/vehiculos', v.id])"
+                   >
+                     <div class="p-n-card-img"><img [src]="v.imagenPrincipal || 'assets/placeholder.jpg'"><div class="p-n-card-price">{{ v.precio | currency:'EUR':'symbol':'1.0-0' }}</div></div>
+                     <div class="p-n-card-body">
+                        <h3 class="p-n-card-title">{{ v.marca }} {{ v.modelo }}</h3>
+                        <div class="p-n-card-footer">
+                          <span class="p-n-badge" [class.success]="v.estadoVehiculo === 'DISPONIBLE'">{{ v.estadoVehiculo }}</span>
+                        </div>
+                      </div>
+                   </div>
+                 }
+               }
+             </div>
+             
+             @if ((selectedCosasType() === 'productos' && productos().length === 0) || (selectedCosasType() === 'ofertas' && ofertas().length === 0) || (selectedCosasType() === 'vehiculos' && vehiculos().length === 0)) {
+               <div class="p-n-empty">No hay elementos publicados en esta categoría.</div>
+             }
+           }
+        </div>
+      }
+
+      <!-- CONTENIDO: VALORACIONES -->
+      @if (activeMobileTab() === 'valoraciones') {
+        <div class="p-native-content-section">
+          @if (cargandoTab()) {
+            <div class="tab-loading"><div class="spinner-sm"></div></div>
+          } @else if (valoraciones().length === 0) {
+            <div class="p-n-empty-state">
+               <i class="fas fa-star-half-alt"></i>
+               <p>Todavía no hay valoraciones</p>
+            </div>
+          } @else {
+            <div class="p-n-reviews-list">
+               @for (val of valoraciones(); track val.id) {
+                 <div class="p-n-review-item">
+                   <div class="review-header">
+                     <app-avatar [avatarUrl]="val.autor?.avatar" [googleAvatarUrl]="val.autor?.googleAvatarUrl" [avatarSource]="val.autor?.avatarSource" [nombre]="val.autor?.nombre" [size]="40"></app-avatar>
+                     <div class="review-meta">
+                       <strong>{{ val.autor?.nombre || 'Usuario' }}</strong>
+                       <div class="review-stars">
+                         @for (s of getStarsArray(val.puntuacion); track $index) { <i class="fas fa-star" [class.filled]="s.full || s.half"></i> }
+                       </div>
+                     </div>
+                   </div>
+                   <p class="review-comment">{{ val.comentario }}</p>
+                 </div>
+               }
+            </div>
+          }
+        </div>
+      }
+
+      <!-- CONTENIDO: INFO -->
+      @if (activeMobileTab() === 'info') {
+        <div class="p-native-content-section">
+           <div class="p-n-info-card">
+             <div class="p-n-info-group">
+               <label>Biografía</label>
+               <p>{{ perfil()?.biografia || 'Sin biografía escrita.' }}</p>
+             </div>
+             <hr>
+             <div class="p-n-info-group">
+               <label>Ubicación</label>
+               <div class="info-row"><i class="fas fa-map-marker-alt"></i> <span>{{ perfil()?.ubicacion || 'No especificada' }}</span></div>
+             </div>
+             <div class="p-n-info-group">
+               <label>Miembro desde</label>
+               <div class="info-row"><i class="fas fa-calendar-alt"></i> <span>{{ fechaRegistroFormateada() }}</span></div>
+             </div>
+             <div class="p-n-info-group">
+               <label>Verificado</label>
+               <div class="info-row">
+                 <i class="fas" [class.fa-check-circle]="perfil()?.esVerificado" [class.fa-times-circle]="!perfil()?.esVerificado" [style.color]="perfil()?.esVerificado ? '#22c55e' : '#666'"></i> 
+                 <span>{{ perfil()?.esVerificado ? 'Cuenta Verificada' : 'No verificada' }}</span>
+               </div>
+             </div>
+           </div>
+        </div>
+      }
+    </div>
   </div>
 
   <app-reporte-modal></app-reporte-modal>
