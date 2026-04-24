@@ -84,6 +84,7 @@ export class ProductoDetailComponent implements OnInit, OnDestroy {
   modalOfertaAbierto = signal(false);
   modalBorrarAbierto = signal(false);
   precioOfertaInput = signal<number | null>(null);
+  minPrecioPermitido = signal<number>(0);
 
   // ── Descripción expandida ─────────────────────────────────────────────
   descExpandida = signal(false);
@@ -194,6 +195,7 @@ export class ProductoDetailComponent implements OnInit, OnDestroy {
     this.http.get<Producto>(`${environment.apiUrl}/producto/${id}`).subscribe({
       next: (p) => {
         this.producto.set(p);
+        this.minPrecioPermitido.set(Math.round(p.precio * 0.8 * 100) / 100);
         this.cargando.set(false);
         this.cargarVendedor(p);
         this.cargarRelacionados(p);
@@ -415,4 +417,20 @@ export class ProductoDetailComponent implements OnInit, OnDestroy {
       }
     });
   }
+
+  validarFormatoPrecio(event: any) {
+    const input = event.target as HTMLInputElement;
+    let value = input.value;
+    
+    if (value.includes('.')) {
+      const [entero, decimal] = value.split('.');
+      if (decimal.length > 2) {
+        value = entero + '.' + decimal.slice(0, 2);
+        input.value = value;
+      }
+    }
+    
+    this.precioOfertaInput.set(value === '' ? null : parseFloat(value));
+  }
 }
+

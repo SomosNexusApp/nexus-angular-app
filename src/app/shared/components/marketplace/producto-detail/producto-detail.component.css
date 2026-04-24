@@ -1409,3 +1409,74 @@
     grid-template-columns: 1fr 1fr;
   }
 }
+
+/* --- Negotiation Tips & Validation --- */
+.offer-tips {
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 16px;
+  padding: 16px;
+  margin-bottom: 24px;
+}
+
+.tip {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--text-dim);
+  font-size: 0.85rem;
+  line-height: 1.4;
+}
+
+.tip.warning {
+  color: var(--yellow);
+  background: rgba(251, 191, 36, 0.05);
+  padding: 8px 12px;
+  border-radius: 10px;
+  border: 1px solid rgba(251, 191, 36, 0.2);
+  margin-top: 12px;
+}
+
+.tip i {
+  font-size: 1rem;
+  color: var(--accent);
+  margin-top: 2px;
+}
+
+.price-input-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 24px;
+  gap: 12px;
+}
+
+.currency-prefix {
+  font-size: 2rem;
+  font-weight: 800;
+  color: var(--accent);
+}
+
+.elite-input {
+  background: transparent;
+  border: none;
+  color: #fff;
+  font-size: 3.5rem;
+  font-weight: 900;
+  width: 100%;
+  max-width: 220px;
+  outline: none;
+  font-family: "Outfit", sans-serif;
+  text-align: center;
+}
+
+.elite-input::placeholder {
+  color: rgba(255, 255, 255, 0.05);
+}
+
+.btn-nexus-submit:disabled {
+  background: rgba(255, 255, 255, 0.05);
+  color: rgba(255, 255, 255, 0.2);
+  cursor: not-allowed;
+  box-shadow: none;
+  transform: none;
+}

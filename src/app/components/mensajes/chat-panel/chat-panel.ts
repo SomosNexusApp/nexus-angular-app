@@ -549,4 +549,20 @@ export class ChatPanelComponent implements OnChanges, AfterViewChecked, OnDestro
     this.leidosSub?.unsubscribe();
     this.recibidosSub?.unsubscribe();
   }
+
+  validarFormatoPrecio(event: any) {
+    const input = event.target as HTMLInputElement;
+    let value = input.value;
+    
+    if (value.includes('.')) {
+      const [entero, decimal] = value.split('.');
+      if (decimal.length > 2) {
+        value = entero + '.' + decimal.slice(0, 2);
+        input.value = value;
+      }
+    }
+    
+    this.precioOferta.set(value === '' ? null : parseFloat(value));
+  }
 }
+

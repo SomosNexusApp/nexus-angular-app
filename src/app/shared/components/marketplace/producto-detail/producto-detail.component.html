@@ -519,11 +519,27 @@
                  type="number" 
                  placeholder="0.00"
                  [ngModel]="precioOfertaInput()" 
-                 (ngModelChange)="precioOfertaInput.set($event)" 
-                 min="1" />
+                 (input)="validarFormatoPrecio($event)" 
+                 min="1"
+                 step="0.01" />
         </div>
 
-        <button class="btn-nexus-submit" (click)="enviarOferta()" [disabled]="!precioOfertaInput()">
+        <div class="offer-tips">
+          <div class="tip">
+            <i class="fas fa-info-circle"></i>
+            <span>El vendedor recibirá una notificación con tu propuesta.</span>
+          </div>
+          <div class="tip" [class.warning]="precioOfertaInput() && precioOfertaInput()! < minPrecioPermitido()">
+            <i class="fas fa-percentage"></i>
+            <span>Descuento máximo permitido: 20% (Mínimo: {{ minPrecioPermitido() | currencyEs }})</span>
+          </div>
+        </div>
+
+        <button 
+          class="btn-nexus-submit" 
+          (click)="enviarOferta()" 
+          [disabled]="!precioOfertaInput() || precioOfertaInput()! <= 0 || precioOfertaInput()! < minPrecioPermitido()"
+        >
           ENVIAR PROPUESTA
         </button>
       </div>
