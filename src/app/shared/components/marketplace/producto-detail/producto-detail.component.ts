@@ -149,11 +149,13 @@ export class ProductoDetailComponent implements OnInit, OnDestroy {
   private routeSub: any;
 
   ngOnInit(): void {
-    window.scrollTo(0, 0);
     this.uiService.isDetailView.set(true);
     this.routeSub = this.route.paramMap.subscribe((params) => {
       const id = params.get('id');
-      if (id) this.cargarProducto(+id);
+      if (id) {
+        window.scrollTo(0, 0);
+        this.cargarProducto(+id);
+      }
     });
   }
 

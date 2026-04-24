@@ -1,5 +1,5 @@
 import { ApplicationConfig, APP_INITIALIZER, inject } from '@angular/core';
-import { provideRouter, withComponentInputBinding } from '@angular/router';
+import { provideRouter, withComponentInputBinding, withInMemoryScrolling } from '@angular/router';
 import { provideHttpClient, HTTP_INTERCEPTORS, withInterceptorsFromDi, withJsonpSupport } from '@angular/common/http';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import { catchError, of, Observable, forkJoin } from 'rxjs';
@@ -31,7 +31,14 @@ export function initializeUserData(authService: AuthService, jwtService: JwtServ
 
 export const appConfig: ApplicationConfig = {
   providers: [
-    provideRouter(routes, withComponentInputBinding()),
+    provideRouter(
+      routes, 
+      withComponentInputBinding(),
+      withInMemoryScrolling({
+        scrollPositionRestoration: 'enabled',
+        anchorScrolling: 'enabled'
+      })
+    ),
     provideHttpClient(withInterceptorsFromDi(), withJsonpSupport()),
     provideAnimationsAsync(),
 
