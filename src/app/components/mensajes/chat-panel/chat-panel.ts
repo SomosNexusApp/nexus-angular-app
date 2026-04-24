@@ -73,6 +73,8 @@ export class ChatPanelComponent implements OnChanges, AfterViewChecked, OnDestro
   private wsSub: Subscription | null = null;
   private leidosSub: Subscription | null = null;
   private recibidosSub: Subscription | null = null;
+  minPrecioPermitido = signal<number>(0);
+  esPrecioValido = signal(true);
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['conversacion'] && this.conversacion) {
@@ -196,6 +198,10 @@ export class ChatPanelComponent implements OnChanges, AfterViewChecked, OnDestro
         this.mensajes.set(msgs.sort((a, b) => new Date(a.fechaEnvio).getTime() - new Date(b.fechaEnvio).getTime()));
         this.cargando.set(false);
         this.autoScrollActivado = true;
+        
+        if (this.conversacion.producto) {
+          this.minPrecioPermitido.set(this.conversacion.producto.precio * 0.8);
+        }
       },
       error: () => {
         this.mensajes.set([]);
@@ -337,10 +343,17 @@ export class ChatPanelComponent implements OnChanges, AfterViewChecked, OnDestro
   }
 
   enviarOferta() {
-    if (!this.precioOferta() || this.precioOferta()! <= 0) return;
+    const precio = this.precioOferta();
+    if (!precio || precio <= 0) return;
+    
+    if (this.conversacion.producto && precio < this.minPrecioPermitido()) {
+      this.toast.error(`La oferta no puede ser inferior a ${this.minPrecioPermitido()}€ (máx. 20% de descuento)`);
+      return;
+    }
+
     this.onEnviarMensaje({ 
       tipo: 'OFERTA_PRECIO', 
-      precioPropuesto: this.precioOferta()! 
+      precioPropuesto: precio 
     } as ChatDraft);
     this.mostrarOfertaModal.set(false);
     this.precioOferta.set(null);

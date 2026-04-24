@@ -303,6 +303,10 @@
               <i class="fas fa-info-circle"></i>
               <span>El vendedor recibirá una notificación con tu propuesta.</span>
             </div>
+            <div class="tip" [class.warning]="precioOferta() && precioOferta()! < minPrecioPermitido()">
+              <i class="fas fa-percentage"></i>
+              <span>Descuento máximo permitido: 20% (Mínimo: {{ minPrecioPermitido() | currencyEs }})</span>
+            </div>
           </div>
 
           <button
