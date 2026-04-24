@@ -892,7 +892,7 @@
   border: 1px solid rgba(245, 158, 11, 0.2);
   padding: 10px 15px;
   border-radius: 8px;
-  margin-top: 15px;
+  margin: 35px 0 25px;
   color: #f59e0b;
   font-size: 0.9rem;
   animation: slideIn 0.3s ease-out;
