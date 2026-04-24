@@ -311,7 +311,7 @@
 
           <button
             class="btn-nexus-submit"
-            [disabled]="!precioOferta() || precioOferta()! <= 0"
+            [disabled]="!precioOferta() || precioOferta()! <= 0 || precioOferta()! < minPrecioPermitido()"
             (click)="enviarOferta()"
           >
             ENVIAR PROPUESTA

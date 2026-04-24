@@ -200,7 +200,7 @@ export class ChatPanelComponent implements OnChanges, AfterViewChecked, OnDestro
         this.autoScrollActivado = true;
         
         if (this.conversacion.producto) {
-          this.minPrecioPermitido.set(this.conversacion.producto.precio * 0.8);
+          this.minPrecioPermitido.set(Math.round(this.conversacion.producto.precio * 0.8 * 100) / 100);
         }
       },
       error: () => {
@@ -344,13 +344,8 @@ export class ChatPanelComponent implements OnChanges, AfterViewChecked, OnDestro
 
   enviarOferta() {
     const precio = this.precioOferta();
-    if (!precio || precio <= 0) return;
+    if (!precio || precio <= 0 || (this.conversacion.producto && precio < this.minPrecioPermitido())) return;
     
-    if (this.conversacion.producto && precio < this.minPrecioPermitido()) {
-      this.toast.error(`La oferta no puede ser inferior a ${this.minPrecioPermitido()}€ (máx. 20% de descuento)`);
-      return;
-    }
-
     this.onEnviarMensaje({ 
       tipo: 'OFERTA_PRECIO', 
       precioPropuesto: precio 
