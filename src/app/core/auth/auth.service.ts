@@ -12,7 +12,7 @@ import { AuthResponse, RegisterRequest, LoginRequest } from '../../models/auth.m
 import { Usuario } from '../../models/usuario.model';
 
 // servicio principal de autenticacion del frontend
-// centraliza todo: login, registro, logout, OAuth (Google/Facebook), 2FA y recuperacion de contraseña
+// centraliza todo: login, registro, logout, OAuth (Google), 2FA y recuperacion de contraseña
 @Injectable({ providedIn: 'root' })
 export class AuthService {
   private http = inject(HttpClient);
@@ -31,7 +31,10 @@ export class AuthService {
    * si el usuario tiene 2FA activado, devuelve requires2FA=true y el cliente debe verificar el codigo
    * si el login es directo (sin 2FA), guarda el token y carga el usuario completo
    */
-  login(credenciales: LoginRequest & { captchaToken?: string }, isAdmin = false): Observable<AuthResponse> {
+  login(
+    credenciales: LoginRequest & { captchaToken?: string },
+    isAdmin = false,
+  ): Observable<AuthResponse> {
     const payload = {
       user: credenciales.email || credenciales.username, // acepta tanto email como username
       password: credenciales.password,
@@ -129,7 +132,10 @@ export class AuthService {
   /**
    * RECUPERACIÓN DE CONTRASEÑA
    */
-  requestPasswordReset(email: string, captchaToken: string = 'token-omitido-en-dev'): Observable<void> {
+  requestPasswordReset(
+    email: string,
+    captchaToken: string = 'token-omitido-en-dev',
+  ): Observable<void> {
     return this.http.post<void>(`${this.AUTH_URL}/forgot-password`, { email, captchaToken });
   }
 
@@ -159,7 +165,7 @@ export class AuthService {
   }
 
   /**
-   * helper para procesar el login exitoso de OAuth (Google o Facebook)
+   * helper para procesar el login exitoso de OAuth (Google)
    * guarda el token, carga el usuario y muestra el onboarding si es la primera vez
    */
   procesarLoginExitoso(response: AuthResponse): Observable<AuthResponse> {
@@ -175,7 +181,7 @@ export class AuthService {
           this.guestPopup.closePopup();
         }
         return { ...response, usuario };
-      })
+      }),
     );
   }
 
@@ -184,9 +190,7 @@ export class AuthService {
    */
   procesarTokenSuccess(token: string): Observable<Usuario> {
     this.jwt.saveToken(token);
-    return this.loadCurrentUser().pipe(
-      tap(() => this.guestPopup.closePopup())
-    );
+    return this.loadCurrentUser().pipe(tap(() => this.guestPopup.closePopup()));
   }
 
   /**
@@ -198,9 +202,9 @@ export class AuthService {
       tap((response) => {
         this.jwt.saveToken(response.token, isAdmin);
       }),
-      switchMap((response) => this.loadCurrentUser(isAdmin).pipe(
-        map((usuario) => ({ ...response, usuario }))
-      ))
+      switchMap((response) =>
+        this.loadCurrentUser(isAdmin).pipe(map((usuario) => ({ ...response, usuario }))),
+      ),
     );
   }
 }

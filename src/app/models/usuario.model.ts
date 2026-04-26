@@ -23,7 +23,7 @@ export interface Usuario extends Actor {
   newsletterSuscrito: boolean;
   googleId?: string;
   googleAvatarUrl?: string;
-  facebookId?: string;
+
   isSocial?: boolean;
   versionTerminosAceptados?: string;
   fechaAceptacionTerminos?: string;
@@ -36,4 +36,3 @@ export interface Usuario extends Actor {
   direccionPorDefecto?: DireccionEnvio;
   onboardingCompletado: boolean;
 }
-

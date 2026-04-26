@@ -1,4 +1,12 @@
-import { Component, OnInit, AfterViewInit, OnDestroy, signal, ElementRef, Input } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  AfterViewInit,
+  OnDestroy,
+  signal,
+  ElementRef,
+  Input,
+} from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -20,11 +28,11 @@ import { AvatarComponent } from '../../../shared/components/avatar/avatar.compon
   selector: 'app-configuracion',
   standalone: true,
   imports: [
-    CommonModule, 
-    FormsModule, 
-    ToastContainerComponent, 
+    CommonModule,
+    FormsModule,
+    ToastContainerComponent,
     ConfirmModalComponent,
-    AvatarComponent
+    AvatarComponent,
   ],
   templateUrl: './configuracion.component.html',
   styleUrls: ['./configuracion.component.css'],
@@ -99,8 +107,6 @@ export class ConfiguracionComponent implements OnInit, AfterViewInit, OnDestroy 
   @ViewChild('disable2FAModal') disable2FAModal!: ConfirmModalComponent;
   @ViewChild('enableEmail2FAModal') enableEmail2FAModal!: ConfirmModalComponent;
 
-
-
   cerrarSesion() {
     this.authService.logout();
     this.router.navigate(['/auth/login']);
@@ -113,7 +119,7 @@ export class ConfiguracionComponent implements OnInit, AfterViewInit, OnDestroy 
     private router: Router,
     private route: ActivatedRoute,
     private toast: ToastService,
-    private el: ElementRef
+    private el: ElementRef,
   ) {
     this.user = this.authStore.user;
   }
@@ -124,7 +130,6 @@ export class ConfiguracionComponent implements OnInit, AfterViewInit, OnDestroy 
       return;
     }
     this.cargarDatosActuales();
-
 
     this.searchSubject
       .pipe(
@@ -144,7 +149,7 @@ export class ConfiguracionComponent implements OnInit, AfterViewInit, OnDestroy 
         error: () => this.sugerenciasUbicacion.set([]),
       });
 
-    this.route.fragment.subscribe(frag => {
+    this.route.fragment.subscribe((frag) => {
       if (frag) {
         this.scrollToSection(frag);
       }
@@ -179,13 +184,13 @@ export class ConfiguracionComponent implements OnInit, AfterViewInit, OnDestroy 
     const options = {
       root: null,
       rootMargin: '-150px 0px -80% 0px', // Activa cuando la sección llega a la parte superior (considerando el header)
-      threshold: 0
+      threshold: 0,
     };
 
     this.observer = new IntersectionObserver((entries) => {
       // Filtramos solo las que están entrando en la zona
-      const intersecting = entries.filter(e => e.isIntersecting);
-      
+      const intersecting = entries.filter((e) => e.isIntersecting);
+
       if (intersecting.length > 0) {
         // Si hay varias, cogemos la que esté más arriba en el viewport
         intersecting.sort((a, b) => a.boundingClientRect.top - b.boundingClientRect.top);
@@ -193,7 +198,7 @@ export class ConfiguracionComponent implements OnInit, AfterViewInit, OnDestroy 
       }
     }, options);
 
-    this.sections.forEach(sec => {
+    this.sections.forEach((sec) => {
       const element = document.getElementById(sec.id);
       if (element) {
         this.observer?.observe(element);
@@ -297,7 +302,7 @@ export class ConfiguracionComponent implements OnInit, AfterViewInit, OnDestroy 
         this.toast.success('Preferencia de imagen actualizada');
         this.authService.loadCurrentUser().subscribe();
       },
-      error: () => this.toast.error('Error al actualizar preferencia')
+      error: () => this.toast.error('Error al actualizar preferencia'),
     });
   }
 
@@ -309,7 +314,10 @@ export class ConfiguracionComponent implements OnInit, AfterViewInit, OnDestroy 
         this.toast.success('Perfil actualizado');
         this.authService.loadCurrentUser().subscribe();
       },
-      error: () => this.toast.error('Error guardando perfil'),
+      error: (err) => {
+        console.error('Error al guardar perfil:', err);
+        this.toast.error(err.error?.error || 'Error guardando perfil');
+      },
     });
   }
 
@@ -407,7 +415,7 @@ export class ConfiguracionComponent implements OnInit, AfterViewInit, OnDestroy 
 
   cambiarPassword() {
     const s = this.security();
-    
+
     // Front-end basic validation
     if (!s.passwordActual || !s.passwordNueva || !s.passwordConfirm) {
       this.toast.warning('Todos los campos son obligatorios.');
@@ -492,10 +500,10 @@ export class ConfiguracionComponent implements OnInit, AfterViewInit, OnDestroy 
       next: () => {
         this.toast.success('Autenticación por Email activada');
         this.authService.loadCurrentUser().subscribe({
-          complete: () => this.loading2FA.set(false)
+          complete: () => this.loading2FA.set(false),
         });
       },
-      error: () => this.loading2FA.set(false)
+      error: () => this.loading2FA.set(false),
     });
   }
 
@@ -507,10 +515,10 @@ export class ConfiguracionComponent implements OnInit, AfterViewInit, OnDestroy 
         this.show2FASetup.set(false);
         this.qrCodeUrl.set(null);
         this.authService.loadCurrentUser().subscribe({
-          complete: () => this.loading2FA.set(false)
+          complete: () => this.loading2FA.set(false),
         });
       },
-      error: () => this.loading2FA.set(false)
+      error: () => this.loading2FA.set(false),
     });
   }
 
@@ -531,7 +539,6 @@ export class ConfiguracionComponent implements OnInit, AfterViewInit, OnDestroy 
         error: (err) => this.toast.error(err.error?.error || 'Código incorrecto'),
       });
   }
-
 
   guardarNotificaciones() {
     this.http
@@ -561,7 +568,7 @@ export class ConfiguracionComponent implements OnInit, AfterViewInit, OnDestroy 
 
   confirmarEliminacion() {
     const u = this.user();
-    const isSocial = u?.googleId || u?.facebookId;
+    const isSocial = u?.googleId;
 
     if (this.deleteAccount().confirmText !== 'ELIMINAR') {
       this.toast.warning("Debes escribir 'ELIMINAR' para confirmar.");

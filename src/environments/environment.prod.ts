@@ -52,15 +52,6 @@ export const environment = {
   googleClientId: '402251087880-ekp6oaun5jpudvo8et2s7ho203gk0259.apps.googleusercontent.com',
 
   // ----------------------------------------------------------
-  // Facebook Login App ID
-  // Consola: https://developers.facebook.com/apps/
-  // En producción usa el App ID real (no el de test).
-  // Asegúrate de añadir tu dominio en "App Domains" y en
-  // "Valid OAuth Redirect URIs".
-  // ----------------------------------------------------------
-  facebookAppId: '2506327806436437',
-
-  // ----------------------------------------------------------
   // Google reCAPTCHA v2 / v3 — Site Key (clave pública)
   // Consola: https://www.google.com/recaptcha/admin
   // Añade el dominio de producción en la configuración del sitio.

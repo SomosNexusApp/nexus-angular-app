@@ -97,7 +97,6 @@
 }
 
 .btn-primary,
-.btn-facebook,
 .btn-secondary {
     width: 100%;
     padding: 0 24px;
@@ -126,17 +125,6 @@
     background: linear-gradient(135deg, #2b95ff 0%, #0070e0 100%);
     transform: translateY(-2px);
     box-shadow: 0 8px 25px rgba(10, 132, 255, 0.4);
-}
-
-.btn-facebook {
-    background: linear-gradient(135deg, #1877f2 0%, #0f5cce 100%);
-    color: #fff;
-}
-
-.btn-facebook:hover:not(:disabled) {
-    background: linear-gradient(135deg, #2b85f5 0%, #1167e6 100%);
-    transform: translateY(-2px);
-    box-shadow: 0 8px 25px rgba(24, 119, 242, 0.3);
 }
 
 .btn-secondary {
@@ -244,32 +232,6 @@
     font-weight: 700;
 }
 
-/* En register-popup.component.css — añadir debajo de .btn-google */
-.btn-facebook {
-    width: 100%;
-    padding: 14px;
-    border-radius: 12px;
-    font-weight: 600;
-    font-size: 0.95rem;
-    cursor: pointer;
-    transition: all 0.2s;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 10px;
-    border: none;
-    background: #1877f2;
-    color: #fff;
-}
-.btn-facebook:hover:not(:disabled) {
-    background: #0f5cce;
-    transform: translateY(-2px);
-}
-.btn-facebook:disabled {
-    opacity: 0.6;
-    cursor: not-allowed;
-}
-
 /* ── BOTTOM SHEET en móvil ─────────────────────────────── */
 @media (max-width: 768px) {
     .popup-overlay {
@@ -318,7 +280,6 @@
     }
 
     .btn-primary,
-    .btn-facebook,
     .btn-secondary {
         height: 46px;
         font-size: 15px;

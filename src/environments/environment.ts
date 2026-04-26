@@ -27,9 +27,6 @@ export const environment = {
   // Google OAuth (One Tap)
   googleClientId: '402251087880-ekp6oaun5jpudvo8et2s7ho203gk0259.apps.googleusercontent.com',
 
-  // Facebook Login (App de test/desarrollo)
-  facebookAppId: '2104965246903425',
-
   // reCAPTCHA — site key (funciona en localhost si está en la lista blanca)
   recaptchaSiteKey: '6LdGSXssAAAAAH_-ZPYEsPYY5zIa1n9sLYyD_eaY',
 

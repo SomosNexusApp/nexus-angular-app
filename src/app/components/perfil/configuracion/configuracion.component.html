@@ -1,706 +1,779 @@
 <!-- REFRESH -->
 @if (!isEmbedded) {
-  <app-toast-container></app-toast-container>
+    <app-toast-container></app-toast-container>
 }
 
 <div class="configuracion-page" [class.is-embedded]="isEmbedded">
-  <!-- Subtle Background Glow -->
-  <div class="hero-bg-glow"></div>
+    <!-- Subtle Background Glow -->
+    <div class="hero-bg-glow"></div>
 
-  <div class="config-layout-grid">
-    <!-- Sidebar / ScrollSpy (Fixed Container) -->
-    @if (!isEmbedded) {
-      <div class="sidebar-fixed-wrapper">
-        <div class="sidebar-alignment-container">
-          <aside class="config-sidebar">
-            <h3>Preferencias</h3>
-            <nav class="config-nav">
-              <a
-                *ngFor="let sec of sections"
-                (click)="scrollToSection(sec.id)"
-                [class.active]="activeSection() === sec.id"
-                class="nav-item"
-              >
-                <i [class]="sec.icon"></i>
-                <span>{{ sec.title }}</span>
-              </a>
-              <div class="nav-divider"></div>
-              <a (click)="cerrarSesion()" class="nav-item logout-nav-item">
-                <i class="fas fa-sign-out-alt"></i>
-                <span>Cerrar sesión</span>
-              </a>
-            </nav>
-          </aside>
-        </div>
-      </div>
-      <!-- Placeholder to keep the grid column occupied -->
-      <div class="config-sidebar-placeholder"></div>
-    }
-
-    <!-- Main Content -->
-    <main class="config-content">
-      <!-- 1. Datos del Perfil -->
-      <section id="perfil" class="config-section">
-        <h2><i class="fas fa-user-edit"></i> Datos del Perfil</h2>
-        <div class="section-card">
-          <div class="avatar-edit">
-            <div class="avatar-preview">
-              <app-avatar
-                [avatarUrl]="user()?.avatar"
-                [googleAvatarUrl]="user()?.googleAvatarUrl"
-                [avatarSource]="user()?.avatarSource"
-                [nombre]="user()?.nombre"
-                [username]="user()?.user"
-                [size]="140"
-              ></app-avatar>
-            </div>
-            <div class="avatar-actions">
-              <h3 class="user-handle">@{{ user()?.user }}</h3>
-              <div class="action-row">
-                <label class="btn-primary">
-                  <i class="fas fa-camera"></i> Cambiar imagen
-                  <input type="file" hidden (change)="onAvatarSelected($event)" accept="image/*" />
-                </label>
-                <div class="avatar-source-options">
-                  <button
-                    *ngIf="user()?.googleAvatarUrl || user()?.googleId"
-                    type="button"
-                    class="btn-source"
-                    [class.active]="user()?.avatarSource === 'GOOGLE'"
-                    (click)="setAvatarChoice('GOOGLE')"
-                  >
-                    <i class="fab fa-google"></i> Google
-                  </button>
-                  <button
-                    type="button"
-                    class="btn-source"
-                    [class.active]="user()?.avatarSource === 'INITIALS'"
-                    (click)="setAvatarChoice('INITIALS')"
-                  >
-                    <i class="fas fa-font"></i> Iniciales
-                  </button>
-                  <button
-                    *ngIf="user()?.customAvatarUrl"
-                    type="button"
-                    class="btn-source"
-                    [class.active]="user()?.avatarSource === 'CUSTOM'"
-                    (click)="setAvatarChoice('CUSTOM')"
-                  >
-                    <i class="fas fa-image"></i> Personalizada
-                  </button>
+    <div class="config-layout-grid">
+        <!-- Sidebar / ScrollSpy (Fixed Container) -->
+        @if (!isEmbedded) {
+            <div class="sidebar-fixed-wrapper">
+                <div class="sidebar-alignment-container">
+                    <aside class="config-sidebar">
+                        <h3>Preferencias</h3>
+                        <nav class="config-nav">
+                            <a
+                                *ngFor="let sec of sections"
+                                (click)="scrollToSection(sec.id)"
+                                [class.active]="activeSection() === sec.id"
+                                class="nav-item"
+                            >
+                                <i [class]="sec.icon"></i>
+                                <span>{{ sec.title }}</span>
+                            </a>
+                            <div class="nav-divider"></div>
+                            <a (click)="cerrarSesion()" class="nav-item logout-nav-item">
+                                <i class="fas fa-sign-out-alt"></i>
+                                <span>Cerrar sesión</span>
+                            </a>
+                        </nav>
+                    </aside>
                 </div>
-              </div>
-              <p class="help-text">JPG, GIF o PNG. Max 5MB.</p>
             </div>
-          </div>
+            <!-- Placeholder to keep the grid column occupied -->
+            <div class="config-sidebar-placeholder"></div>
+        }
 
-          <form (ngSubmit)="guardarPerfil()">
-            <div class="form-row">
-              <div class="form-group">
-                <label>Nombre</label>
-                <input
-                  type="text"
-                  [ngModel]="editPerfil().nombre"
-                  (ngModelChange)="updateEditPerfilField('nombre', $event)"
-                  name="nombre"
-                />
-              </div>
-              <div class="form-group">
-                <label>Apellidos</label>
-                <input
-                  type="text"
-                  [ngModel]="editPerfil().apellidos"
-                  (ngModelChange)="updateEditPerfilField('apellidos', $event)"
-                  name="apellidos"
-                />
-              </div>
-            </div>
+        <!-- Main Content -->
+        <main class="config-content">
+            <!-- 1. Datos del Perfil -->
+            <section id="perfil" class="config-section">
+                <h2><i class="fas fa-user-edit"></i> Datos del Perfil</h2>
+                <div class="section-card">
+                    <div class="avatar-edit">
+                        <div class="avatar-preview">
+                            <app-avatar
+                                [avatarUrl]="user()?.avatar"
+                                [googleAvatarUrl]="user()?.googleAvatarUrl"
+                                [avatarSource]="user()?.avatarSource"
+                                [nombre]="user()?.nombre"
+                                [username]="user()?.user"
+                                [size]="140"
+                            ></app-avatar>
+                        </div>
+                        <div class="avatar-actions">
+                            <h3 class="user-handle">@{{ user()?.user }}</h3>
+                            <div class="action-row">
+                                <label class="btn-primary">
+                                    <i class="fas fa-camera"></i> Cambiar imagen
+                                    <input
+                                        type="file"
+                                        hidden
+                                        (change)="onAvatarSelected($event)"
+                                        accept="image/*"
+                                    />
+                                </label>
+                                <div class="avatar-source-options">
+                                    <button
+                                        *ngIf="user()?.googleAvatarUrl || user()?.googleId"
+                                        type="button"
+                                        class="btn-source"
+                                        [class.active]="user()?.avatarSource === 'GOOGLE'"
+                                        (click)="setAvatarChoice('GOOGLE')"
+                                    >
+                                        <i class="fab fa-google"></i> Google
+                                    </button>
+                                    <button
+                                        type="button"
+                                        class="btn-source"
+                                        [class.active]="user()?.avatarSource === 'INITIALS'"
+                                        (click)="setAvatarChoice('INITIALS')"
+                                    >
+                                        <i class="fas fa-font"></i> Iniciales
+                                    </button>
+                                    <button
+                                        *ngIf="user()?.customAvatarUrl"
+                                        type="button"
+                                        class="btn-source"
+                                        [class.active]="user()?.avatarSource === 'CUSTOM'"
+                                        (click)="setAvatarChoice('CUSTOM')"
+                                    >
+                                        <i class="fas fa-image"></i> Personalizada
+                                    </button>
+                                </div>
+                            </div>
+                            <p class="help-text">JPG, GIF o PNG. Max 5MB.</p>
+                        </div>
+                    </div>
 
-            <div class="form-group">
-              <label>Biografía</label>
-              <textarea
-                rows="3"
-                maxlength="300"
-                [ngModel]="editPerfil().biografia"
-                (ngModelChange)="updateEditPerfilField('biografia', $event)"
-                name="bio"
-                placeholder="Cuenta algo sobre ti... (Máx 300 caracteres)"
-              ></textarea>
-            </div>
+                    <form (ngSubmit)="guardarPerfil()">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Nombre</label>
+                                <input
+                                    type="text"
+                                    [ngModel]="editPerfil().nombre"
+                                    (ngModelChange)="updateEditPerfilField('nombre', $event)"
+                                    name="nombre"
+                                />
+                            </div>
+                            <div class="form-group">
+                                <label>Apellidos</label>
+                                <input
+                                    type="text"
+                                    [ngModel]="editPerfil().apellidos"
+                                    (ngModelChange)="updateEditPerfilField('apellidos', $event)"
+                                    name="apellidos"
+                                />
+                            </div>
+                        </div>
 
-            <div class="form-group">
-              <label>Ubicación</label>
-              <div class="input-with-button">
-                <input
-                  type="text"
-                  [ngModel]="editPerfil().ubicacion"
-                  (ngModelChange)="onUbicacionInput($event)"
-                  name="ubicacion"
-                  placeholder="Tu ciudad o código postal (Ej: Madrid)"
-                  autocomplete="off"
-                />
-                <button type="button" class="btn-text" (click)="usarMiUbicacion()">
-                  <i class="fas fa-location-arrow"></i> Usar mi ubicación
-                </button>
+                        <div class="form-group">
+                            <label>Biografía</label>
+                            <textarea
+                                rows="3"
+                                maxlength="300"
+                                [ngModel]="editPerfil().biografia"
+                                (ngModelChange)="updateEditPerfilField('biografia', $event)"
+                                name="bio"
+                                placeholder="Cuenta algo sobre ti... (Máx 300 caracteres)"
+                            ></textarea>
+                        </div>
 
-                <div class="suggestions-dropdown" *ngIf="sugerenciasUbicacion().length > 0">
-                  <div
-                    class="suggestion-item"
-                    *ngFor="let sug of sugerenciasUbicacion()"
-                    (click)="seleccionarUbicacion(sug)"
-                  >
-                    <i class="fas fa-map-marker-alt"></i> {{ formatNominatimAddress(sug.address) }}
-                  </div>
+                        <div class="form-group">
+                            <label>Ubicación</label>
+                            <div class="input-with-button">
+                                <input
+                                    type="text"
+                                    [ngModel]="editPerfil().ubicacion"
+                                    (ngModelChange)="onUbicacionInput($event)"
+                                    name="ubicacion"
+                                    placeholder="Tu ciudad o código postal (Ej: Madrid)"
+                                    autocomplete="off"
+                                />
+                                <button type="button" class="btn-text" (click)="usarMiUbicacion()">
+                                    <i class="fas fa-location-arrow"></i> Usar mi ubicación
+                                </button>
+
+                                <div
+                                    class="suggestions-dropdown"
+                                    *ngIf="sugerenciasUbicacion().length > 0"
+                                >
+                                    <div
+                                        class="suggestion-item"
+                                        *ngFor="let sug of sugerenciasUbicacion()"
+                                        (click)="seleccionarUbicacion(sug)"
+                                    >
+                                        <i class="fas fa-map-marker-alt"></i>
+                                        {{ formatNominatimAddress(sug.address) }}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Teléfono <span class="badge badge-info">Opcional</span></label>
+                            <input
+                                type="tel"
+                                [ngModel]="editPerfil().telefono"
+                                (ngModelChange)="updateEditPerfilField('telefono', $event)"
+                                name="telefono"
+                                placeholder="+34 600 000 000"
+                            />
+                        </div>
+
+                        <div class="section-actions">
+                            <button type="submit" class="btn-primary">Guardar cambios</button>
+                        </div>
+                    </form>
                 </div>
-              </div>
-            </div>
+            </section>
 
-            <div class="form-group">
-              <label>Teléfono <span class="badge badge-info">Opcional</span></label>
-              <input
-                type="tel"
-                [ngModel]="editPerfil().telefono"
-                (ngModelChange)="updateEditPerfilField('telefono', $event)"
-                name="telefono"
-                placeholder="+34 600 000 000"
-              />
-            </div>
+            <section id="privacidad" class="config-section">
+                <h2><i class="fas fa-user-secret"></i> Privacidad</h2>
+                <div class="section-card">
+                    <div class="toggle-list">
+                        <div class="toggle-item">
+                            <div class="toggle-info">
+                                <h4>Mostrar ubicación</h4>
+                                <p>Los visitantes de tu perfil podrán ver tu ciudad.</p>
+                            </div>
+                            <label class="premium-toggle">
+                                <input
+                                    type="checkbox"
+                                    [ngModel]="privacidad().mostrarUbicacion"
+                                    (ngModelChange)="
+                                        updatePrivacidadField('mostrarUbicacion', $event)
+                                    "
+                                />
+                                <span class="premium-slider"></span>
+                            </label>
+                        </div>
 
-            <div class="section-actions">
-              <button type="submit" class="btn-primary">Guardar cambios</button>
-            </div>
-          </form>
-        </div>
-      </section>
+                        <div class="toggle-item">
+                            <div class="toggle-info">
+                                <h4>Mostrar teléfono en el perfil</h4>
+                                <p>Útil si prefieres que te contacten por WhatsApp o llamadas.</p>
+                            </div>
+                            <label class="premium-toggle">
+                                <input
+                                    type="checkbox"
+                                    [ngModel]="privacidad().mostrarTelefono"
+                                    (ngModelChange)="
+                                        updatePrivacidadField('mostrarTelefono', $event)
+                                    "
+                                />
+                                <span class="premium-slider"></span>
+                            </label>
+                        </div>
 
-      <section id="privacidad" class="config-section">
-        <h2><i class="fas fa-user-secret"></i> Privacidad</h2>
-        <div class="section-card">
-          <div class="toggle-list">
-            <div class="toggle-item">
-              <div class="toggle-info">
-                <h4>Mostrar ubicación</h4>
-                <p>Los visitantes de tu perfil podrán ver tu ciudad.</p>
-              </div>
-              <label class="premium-toggle">
-                <input
-                  type="checkbox"
-                  [ngModel]="privacidad().mostrarUbicacion"
-                  (ngModelChange)="updatePrivacidadField('mostrarUbicacion', $event)"
-                />
-                <span class="premium-slider"></span>
-              </label>
-            </div>
+                        <div class="toggle-item">
+                            <div class="toggle-info">
+                                <h4>Permitir mensajes directos</h4>
+                                <p>
+                                    Si está desactivado, solo tú puedes iniciar chats. Útil si
+                                    recibes mucho spam.
+                                </p>
+                            </div>
+                            <label class="premium-toggle">
+                                <input
+                                    type="checkbox"
+                                    [ngModel]="privacidad().permitirMensajesDesconocidos"
+                                    (ngModelChange)="
+                                        updatePrivacidadField(
+                                            'permitirMensajesDesconocidos',
+                                            $event
+                                        )
+                                    "
+                                />
+                                <span class="premium-slider"></span>
+                            </label>
+                        </div>
+                    </div>
 
-            <div class="toggle-item">
-              <div class="toggle-info">
-                <h4>Mostrar teléfono en el perfil</h4>
-                <p>Útil si prefieres que te contacten por WhatsApp o llamadas.</p>
-              </div>
-              <label class="premium-toggle">
-                <input
-                  type="checkbox"
-                  [ngModel]="privacidad().mostrarTelefono"
-                  (ngModelChange)="updatePrivacidadField('mostrarTelefono', $event)"
-                />
-                <span class="premium-slider"></span>
-              </label>
-            </div>
-
-            <div class="toggle-item">
-              <div class="toggle-info">
-                <h4>Permitir mensajes directos</h4>
-                <p>
-                  Si está desactivado, solo tú puedes iniciar chats. Útil si recibes mucho spam.
-                </p>
-              </div>
-              <label class="premium-toggle">
-                <input
-                  type="checkbox"
-                  [ngModel]="privacidad().permitirMensajesDesconocidos"
-                  (ngModelChange)="updatePrivacidadField('permitirMensajesDesconocidos', $event)"
-                />
-                <span class="premium-slider"></span>
-              </label>
-            </div>
-          </div>
-
-          <div class="section-actions">
-            <button class="btn-primary" (click)="guardarPrivacidad()">Guardar preferencias</button>
-          </div>
-        </div>
-      </section>
-
-      <section id="cuenta" class="config-section">
-        <h2><i class="fas fa-briefcase"></i> Tipo de Cuenta</h2>
-        <div class="section-card account-type-card">
-          <div
-            class="account-info"
-            *ngIf="!user()?.rol?.includes('ROLE_EMPRESA') && !showFormEmpresa()"
-          >
-            <div class="alert alert-info">
-              <i class="fas fa-info-circle"></i>
-              <div>
-                <strong>¿Quieres vender como profesional?</strong>
-                <p>
-                  Si cambias a Empresa, deberás proveer NIF/CIF y accederás a beneficios como
-                  catálogos masivos.
-                  <br /><strong class="text-danger" style="font-size: 0.85rem"
-                    >Nota: Esta acción es irreversible.</strong
-                  >
-                </p>
-              </div>
-            </div>
-            <button class="btn-primary" (click)="showFormEmpresa.set(true)">
-              <i class="fas fa-building"></i> Convertir a cuenta de Empresa
-            </button>
-          </div>
-
-          <div class="account-info" *ngIf="user()?.rol?.includes('ROLE_EMPRESA')">
-            <div class="alert alert-success">
-              <i class="fas fa-check-circle"></i>
-              <div>
-                <strong>Eres una cuenta verificada de Empresa</strong>
-                <p>
-                  Nexus Business Profile activo. Gestiona tus datos fiscales desde la sección de
-                  facturación.
-                </p>
-              </div>
-            </div>
-          </div>
-
-          <div
-            class="account-info"
-            *ngIf="showFormEmpresa() && !user()?.rol?.includes('ROLE_EMPRESA')"
-          >
-            <div class="form-migracion-empresa">
-              <h3 style="margin-top: 0">Migrar a cuenta de Empresa</h3>
-              <p class="section-desc">Por favor, facilítanos los datos de tu negocio.</p>
-
-              <div class="form-row">
-                <div class="form-group">
-                  <label>CIF / NIF <span class="text-danger">*</span></label>
-                  <input
-                    type="text"
-                    [ngModel]="datosEmpresa().cif"
-                    (ngModelChange)="updateDatosEmpresaField('cif', $event)"
-                    placeholder="Ej: B12345678"
-                  />
+                    <div class="section-actions">
+                        <button class="btn-primary" (click)="guardarPrivacidad()">
+                            Guardar preferencias
+                        </button>
+                    </div>
                 </div>
-                <div class="form-group">
-                  <label>Teléfono de contacto <span class="text-danger">*</span></label>
-                  <input
-                    type="tel"
-                    [ngModel]="datosEmpresa().telefonoEmpresa"
-                    (ngModelChange)="updateDatosEmpresaField('telefonoEmpresa', $event)"
-                    placeholder="Teléfono corporativo"
-                  />
-                </div>
-              </div>
-              <div class="form-group">
-                <label>Sitio Web <span class="badge badge-info">Opcional</span></label>
-                <input
-                  type="url"
-                  [ngModel]="datosEmpresa().web"
-                  (ngModelChange)="updateDatosEmpresaField('web', $event)"
-                  placeholder="https://www.tuempresa.com"
-                />
-              </div>
+            </section>
 
-              <div class="section-actions mt-4">
-                <button
-                  style="margin-right: 15px"
-                  class="btn-primary"
-                  (click)="prepararMigracionEmpresa()"
-                >
-                  Migrar cuenta
-                </button>
-                <button class="btn-outline" (click)="showFormEmpresa.set(false)">Cancelar</button>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section id="seguridad" class="config-section">
-        <h2><i class="fas fa-shield-alt"></i> Seguridad</h2>
-        <div class="section-card">
-          <div class="security-group">
-            <h3><i class="fas fa-key"></i> Gestión de Contraseña</h3>
-
-            @if (user(); as u) {
-              @if (!u.isSocial && !u.googleId) {
-                <!-- Usuarios Locales (JWT) -->
-                <div class="form-group">
-                  <input
-                    type="password"
-                    placeholder="Contraseña actual"
-                    [ngModel]="security().passwordActual"
-                    (ngModelChange)="updateSecurityField('passwordActual', $event)"
-                  />
-                </div>
-                <div class="form-row">
-                  <div class="form-group">
-                    <input
-                      type="password"
-                      placeholder="Nueva contraseña (min. 8 caracteres)"
-                      [ngModel]="security().passwordNueva"
-                      (ngModelChange)="updateSecurityField('passwordNueva', $event)"
-                    />
-                  </div>
-                  <div class="form-group">
-                    <input
-                      type="password"
-                      placeholder="Confirmar nueva contraseña"
-                      [ngModel]="security().passwordConfirm"
-                      (ngModelChange)="updateSecurityField('passwordConfirm', $event)"
-                    />
-                  </div>
-                </div>
-                <button class="btn-primary" (click)="cambiarPassword()">
-                  Actualizar Contraseña
-                </button>
-              } @else {
-                <!-- Usuarios Sociales (Google/Facebook) -->
-                <div class="alert alert-premium social-identity-card">
-                  <i class="fas fa-shield-halved"></i>
-                  <div class="alert-content">
-                    <strong>Identidad Gestionada Externamente</strong>
-                    <p>
-                      Tu cuenta está vinculada a
-                      <strong>Google.</strong>
-                      Por seguridad, debes gestionar tu contraseña directamente en su plataforma.
-                    </p>
-                    <a
-                      href="https://myaccount.google.com/security"
-                      target="_blank"
-                      class="btn-text"
+            <section id="cuenta" class="config-section">
+                <h2><i class="fas fa-briefcase"></i> Tipo de Cuenta</h2>
+                <div class="section-card account-type-card">
+                    <div
+                        class="account-info"
+                        *ngIf="!user()?.rol?.includes('ROLE_EMPRESA') && !showFormEmpresa()"
                     >
-                      Ir a ajustes de seguridad <i class="fas fa-external-link-alt"></i>
-                    </a>
-                  </div>
+                        <div class="alert alert-info">
+                            <i class="fas fa-info-circle"></i>
+                            <div>
+                                <strong>¿Quieres vender como profesional?</strong>
+                                <p>
+                                    Si cambias a Empresa, deberás proveer NIF/CIF y accederás a
+                                    beneficios como catálogos masivos.
+                                    <br /><strong class="text-danger" style="font-size: 0.85rem"
+                                        >Nota: Esta acción es irreversible.</strong
+                                    >
+                                </p>
+                            </div>
+                        </div>
+                        <button class="btn-primary" (click)="showFormEmpresa.set(true)">
+                            <i class="fas fa-building"></i> Convertir a cuenta de Empresa
+                        </button>
+                    </div>
+
+                    <div class="account-info" *ngIf="user()?.rol?.includes('ROLE_EMPRESA')">
+                        <div class="alert alert-success">
+                            <i class="fas fa-check-circle"></i>
+                            <div>
+                                <strong>Eres una cuenta verificada de Empresa</strong>
+                                <p>
+                                    Nexus Business Profile activo. Gestiona tus datos fiscales desde
+                                    la sección de facturación.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div
+                        class="account-info"
+                        *ngIf="showFormEmpresa() && !user()?.rol?.includes('ROLE_EMPRESA')"
+                    >
+                        <div class="form-migracion-empresa">
+                            <h3 style="margin-top: 0">Migrar a cuenta de Empresa</h3>
+                            <p class="section-desc">
+                                Por favor, facilítanos los datos de tu negocio.
+                            </p>
+
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label>CIF / NIF <span class="text-danger">*</span></label>
+                                    <input
+                                        type="text"
+                                        [ngModel]="datosEmpresa().cif"
+                                        (ngModelChange)="updateDatosEmpresaField('cif', $event)"
+                                        placeholder="Ej: B12345678"
+                                    />
+                                </div>
+                                <div class="form-group">
+                                    <label
+                                        >Teléfono de contacto
+                                        <span class="text-danger">*</span></label
+                                    >
+                                    <input
+                                        type="tel"
+                                        [ngModel]="datosEmpresa().telefonoEmpresa"
+                                        (ngModelChange)="
+                                            updateDatosEmpresaField('telefonoEmpresa', $event)
+                                        "
+                                        placeholder="Teléfono corporativo"
+                                    />
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label
+                                    >Sitio Web <span class="badge badge-info">Opcional</span></label
+                                >
+                                <input
+                                    type="url"
+                                    [ngModel]="datosEmpresa().web"
+                                    (ngModelChange)="updateDatosEmpresaField('web', $event)"
+                                    placeholder="https://www.tuempresa.com"
+                                />
+                            </div>
+
+                            <div class="section-actions mt-4">
+                                <button
+                                    style="margin-right: 15px"
+                                    class="btn-primary"
+                                    (click)="prepararMigracionEmpresa()"
+                                >
+                                    Migrar cuenta
+                                </button>
+                                <button class="btn-outline" (click)="showFormEmpresa.set(false)">
+                                    Cancelar
+                                </button>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-              }
-            }
-          </div>
+            </section>
 
-          <div class="divider-soft"></div>
+            <section id="seguridad" class="config-section">
+                <h2><i class="fas fa-shield-alt"></i> Seguridad</h2>
+                <div class="section-card">
+                    <div class="security-group">
+                        <h3><i class="fas fa-key"></i> Gestión de Contraseña</h3>
 
-          <div class="security-group">
-            <h3 class="mb-4">Autenticación en 2 Pasos (2FA)</h3>
+                        @if (user(); as u) {
+                            @if (!u.isSocial && !u.googleId) {
+                                <!-- Usuarios Locales (JWT) -->
+                                <div class="form-group">
+                                    <input
+                                        type="password"
+                                        placeholder="Contraseña actual"
+                                        [ngModel]="security().passwordActual"
+                                        (ngModelChange)="
+                                            updateSecurityField('passwordActual', $event)
+                                        "
+                                    />
+                                </div>
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <input
+                                            type="password"
+                                            placeholder="Nueva contraseña (min. 8 caracteres)"
+                                            [ngModel]="security().passwordNueva"
+                                            (ngModelChange)="
+                                                updateSecurityField('passwordNueva', $event)
+                                            "
+                                        />
+                                    </div>
+                                    <div class="form-group">
+                                        <input
+                                            type="password"
+                                            placeholder="Confirmar nueva contraseña"
+                                            [ngModel]="security().passwordConfirm"
+                                            (ngModelChange)="
+                                                updateSecurityField('passwordConfirm', $event)
+                                            "
+                                        />
+                                    </div>
+                                </div>
+                                <button class="btn-primary" (click)="cambiarPassword()">
+                                    Actualizar Contraseña
+                                </button>
+                            } @else {
+                                <!-- Usuarios Sociales (Google) -->
+                                <div class="alert alert-premium social-identity-card">
+                                    <i class="fas fa-shield-halved"></i>
+                                    <div class="alert-content">
+                                        <strong>Identidad Gestionada Externamente</strong>
+                                        <p>
+                                            Tu cuenta está vinculada a
+                                            <strong>Google.</strong>
+                                            Por seguridad, debes gestionar tu contraseña
+                                            directamente en su plataforma.
+                                        </p>
+                                        <a
+                                            href="https://myaccount.google.com/security"
+                                            target="_blank"
+                                            class="btn-text"
+                                        >
+                                            Ir a ajustes de seguridad
+                                            <i class="fas fa-external-link-alt"></i>
+                                        </a>
+                                    </div>
+                                </div>
+                            }
+                        }
+                    </div>
 
-            <div
-              class="two-fa-item"
-              [class.enabled]="user()?.twoFactorEnabled && user()?.twoFactorMethod === 'EMAIL'"
-            >
-              <div class="two-fa-info">
-                <i
-                  class="fas fa-envelope"
-                  [ngClass]="
-                    user()?.twoFactorEnabled && user()?.twoFactorMethod === 'EMAIL'
-                      ? 'text-primary'
-                      : ''
-                  "
-                ></i>
-                <div class="two-fa-text">
-                  <strong>Autenticación por Email</strong>
-                  <p class="help-text">Recibe un código en tu correo al iniciar sesión.</p>
+                    <div class="divider-soft"></div>
+
+                    <div class="security-group">
+                        <h3 class="mb-4">Autenticación en 2 Pasos (2FA)</h3>
+
+                        <div
+                            class="two-fa-item"
+                            [class.enabled]="
+                                user()?.twoFactorEnabled && user()?.twoFactorMethod === 'EMAIL'
+                            "
+                        >
+                            <div class="two-fa-info">
+                                <i
+                                    class="fas fa-envelope"
+                                    [ngClass]="
+                                        user()?.twoFactorEnabled &&
+                                        user()?.twoFactorMethod === 'EMAIL'
+                                            ? 'text-primary'
+                                            : ''
+                                    "
+                                ></i>
+                                <div class="two-fa-text">
+                                    <strong>Autenticación por Email</strong>
+                                    <p class="help-text">
+                                        Recibe un código en tu correo al iniciar sesión.
+                                    </p>
+                                </div>
+                            </div>
+                            <label class="premium-toggle">
+                                <input
+                                    type="checkbox"
+                                    [disabled]="loading2FA()"
+                                    [checked]="
+                                        user()?.twoFactorEnabled &&
+                                        user()?.twoFactorMethod === 'EMAIL'
+                                    "
+                                    (change)="toggle2FA('EMAIL')"
+                                />
+                                <span class="premium-slider"></span>
+                            </label>
+                        </div>
+
+                        <div
+                            class="two-fa-item"
+                            [class.enabled]="
+                                user()?.twoFactorEnabled && user()?.twoFactorMethod === 'APP'
+                            "
+                        >
+                            <div class="two-fa-info">
+                                <i class="fas fa-mobile-alt"></i>
+                                <div class="two-fa-text">
+                                    <strong>Google Authenticator (App)</strong>
+                                    <p class="help-text">
+                                        Usa tu móvil para generar códigos seguros.
+                                    </p>
+                                </div>
+                            </div>
+                            <label class="premium-toggle">
+                                <input
+                                    type="checkbox"
+                                    [disabled]="loading2FA()"
+                                    [checked]="
+                                        user()?.twoFactorEnabled &&
+                                        user()?.twoFactorMethod === 'APP'
+                                    "
+                                    (change)="toggle2FA('APP')"
+                                />
+                                <span class="premium-slider"></span>
+                            </label>
+                        </div>
+
+                        <div class="setup-2fa-panel" *ngIf="show2FASetup()">
+                            <h4>Configurar Authenticator</h4>
+                            <p class="help-text">1. Escanea este código QR con tu aplicación.</p>
+
+                            <div class="qr-container">
+                                <img *ngIf="qrCodeUrl()" [src]="qrCodeUrl()" alt="QR Code" />
+                                <div *ngIf="!qrCodeUrl()" class="spinner-sm"></div>
+                            </div>
+
+                            <p class="help-text">2. Introduce el código de 6 dígitos de la app:</p>
+                            <div class="totp-input-group">
+                                <input
+                                    type="text"
+                                    [(ngModel)]="totpCode"
+                                    placeholder="000000"
+                                    maxlength="6"
+                                />
+                                <button class="btn-primary" (click)="confirmar2FAApp()">
+                                    <i class="fas fa-check-circle"></i> Verificar
+                                </button>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-              </div>
-              <label class="premium-toggle">
-                <input
-                  type="checkbox"
-                  [disabled]="loading2FA()"
-                  [checked]="user()?.twoFactorEnabled && user()?.twoFactorMethod === 'EMAIL'"
-                  (change)="toggle2FA('EMAIL')"
-                />
-                <span class="premium-slider"></span>
-              </label>
-            </div>
+            </section>
 
-            <div
-              class="two-fa-item"
-              [class.enabled]="user()?.twoFactorEnabled && user()?.twoFactorMethod === 'APP'"
-            >
-              <div class="two-fa-info">
-                <i class="fas fa-mobile-alt"></i>
-                <div class="two-fa-text">
-                  <strong>Google Authenticator (App)</strong>
-                  <p class="help-text">Usa tu móvil para generar códigos seguros.</p>
+            <!-- 5. Notificaciones -->
+            <section id="notificaciones" class="config-section">
+                <h2><i class="fas fa-bell"></i> Notificaciones</h2>
+                <div class="section-card">
+                    <p class="section-desc">Escoge qué alertas quieres recibir.</p>
+
+                    <div class="toggle-list">
+                        <div class="toggle-item">
+                            <div class="toggle-info">
+                                <h4>Mensajes de chat</h4>
+                                <p>Avisar cuando recibas un DM.</p>
+                            </div>
+                            <label class="premium-toggle">
+                                <input
+                                    type="checkbox"
+                                    [ngModel]="notificaciones().notifNuevosMensajes"
+                                    (ngModelChange)="
+                                        updateNotificacionesField('notifNuevosMensajes', $event)
+                                    "
+                                />
+                                <span class="premium-slider"></span>
+                            </label>
+                        </div>
+
+                        <div class="toggle-item">
+                            <div class="toggle-info">
+                                <h4>Compras y Ventas</h4>
+                                <p>Alertas de transacciones realizadas.</p>
+                            </div>
+                            <label class="premium-toggle">
+                                <input
+                                    type="checkbox"
+                                    [ngModel]="notificaciones().notifNuevaCompra"
+                                    (ngModelChange)="
+                                        updateNotificacionesField('notifNuevaCompra', $event)
+                                    "
+                                />
+                                <span class="premium-slider"></span>
+                            </label>
+                        </div>
+
+                        <div class="toggle-item">
+                            <div class="toggle-info">
+                                <h4>Valoraciones</h4>
+                                <p>Cuando alguien te deje una review.</p>
+                            </div>
+                            <label class="premium-toggle">
+                                <input
+                                    type="checkbox"
+                                    [ngModel]="notificaciones().notifValoracion"
+                                    (ngModelChange)="
+                                        updateNotificacionesField('notifValoracion', $event)
+                                    "
+                                />
+                                <span class="premium-slider"></span>
+                            </label>
+                        </div>
+
+                        <div class="divider-soft"></div>
+
+                        <div class="toggle-item">
+                            <div class="toggle-info">
+                                <h4>Newsletter de Nexus</h4>
+                                <p>Novedades, ofertas y resúmenes de mercado.</p>
+                            </div>
+                            <label class="premium-toggle">
+                                <input
+                                    type="checkbox"
+                                    [ngModel]="notificaciones().newsletterSuscrito"
+                                    (ngModelChange)="
+                                        updateNotificacionesField('newsletterSuscrito', $event)
+                                    "
+                                />
+                                <span class="premium-slider"></span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="section-actions mt-4">
+                        <button class="btn-primary" (click)="guardarNotificaciones()">
+                            Guardar preferencias
+                        </button>
+                    </div>
                 </div>
-              </div>
-              <label class="premium-toggle">
-                <input
-                  type="checkbox"
-                  [disabled]="loading2FA()"
-                  [checked]="user()?.twoFactorEnabled && user()?.twoFactorMethod === 'APP'"
-                  (change)="toggle2FA('APP')"
-                />
-                <span class="premium-slider"></span>
-              </label>
-            </div>
+            </section>
 
-            <div class="setup-2fa-panel" *ngIf="show2FASetup()">
-              <h4>Configurar Authenticator</h4>
-              <p class="help-text">1. Escanea este código QR con tu aplicación.</p>
+            <!-- 6. Datos y Privacidad (GDPR) -->
+            <section id="gdpr" class="config-section">
+                <h2><i class="fas fa-file-invoice"></i> Datos y Privacidad</h2>
+                <div class="section-card">
+                    <div class="gdpr-item">
+                        <div class="gdpr-info">
+                            <h3>Descargar mis datos</h3>
+                            <p>Obtén un archivo JSON con toda tu información encriptada.</p>
+                        </div>
+                        <div class="gdpr-actions">
+                            <span class="gdpr-btn-help">Copia de seguridad local</span>
+                            <button class="btn-outline" (click)="descargarDatos()">
+                                <i class="fas fa-download"></i> Descargar
+                            </button>
+                        </div>
+                    </div>
 
-              <div class="qr-container">
-                <img *ngIf="qrCodeUrl()" [src]="qrCodeUrl()" alt="QR Code" />
-                <div *ngIf="!qrCodeUrl()" class="spinner-sm"></div>
-              </div>
+                    <div class="divider-soft"></div>
 
-              <p class="help-text">2. Introduce el código de 6 dígitos de la app:</p>
-              <div class="totp-input-group">
-                <input type="text" [(ngModel)]="totpCode" placeholder="000000" maxlength="6" />
-                <button class="btn-primary" (click)="confirmar2FAApp()">
-                  <i class="fas fa-check-circle"></i> Verificar
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <!-- 5. Notificaciones -->
-      <section id="notificaciones" class="config-section">
-        <h2><i class="fas fa-bell"></i> Notificaciones</h2>
-        <div class="section-card">
-          <p class="section-desc">Escoge qué alertas quieres recibir.</p>
-
-          <div class="toggle-list">
-            <div class="toggle-item">
-              <div class="toggle-info">
-                <h4>Mensajes de chat</h4>
-                <p>Avisar cuando recibas un DM.</p>
-              </div>
-              <label class="premium-toggle">
-                <input
-                  type="checkbox"
-                  [ngModel]="notificaciones().notifNuevosMensajes"
-                  (ngModelChange)="updateNotificacionesField('notifNuevosMensajes', $event)"
-                />
-                <span class="premium-slider"></span>
-              </label>
-            </div>
-
-            <div class="toggle-item">
-              <div class="toggle-info">
-                <h4>Compras y Ventas</h4>
-                <p>Alertas de transacciones realizadas.</p>
-              </div>
-              <label class="premium-toggle">
-                <input
-                  type="checkbox"
-                  [ngModel]="notificaciones().notifNuevaCompra"
-                  (ngModelChange)="updateNotificacionesField('notifNuevaCompra', $event)"
-                />
-                <span class="premium-slider"></span>
-              </label>
-            </div>
-
-            <div class="toggle-item">
-              <div class="toggle-info">
-                <h4>Valoraciones</h4>
-                <p>Cuando alguien te deje una review.</p>
-              </div>
-              <label class="premium-toggle">
-                <input
-                  type="checkbox"
-                  [ngModel]="notificaciones().notifValoracion"
-                  (ngModelChange)="updateNotificacionesField('notifValoracion', $event)"
-                />
-                <span class="premium-slider"></span>
-              </label>
-            </div>
-
-            <div class="divider-soft"></div>
-
-            <div class="toggle-item">
-              <div class="toggle-info">
-                <h4>Newsletter de Nexus</h4>
-                <p>Novedades, ofertas y resúmenes de mercado.</p>
-              </div>
-              <label class="premium-toggle">
-                <input
-                  type="checkbox"
-                  [ngModel]="notificaciones().newsletterSuscrito"
-                  (ngModelChange)="updateNotificacionesField('newsletterSuscrito', $event)"
-                />
-                <span class="premium-slider"></span>
-              </label>
-            </div>
-          </div>
-
-          <div class="section-actions mt-4">
-            <button class="btn-primary" (click)="guardarNotificaciones()">
-              Guardar preferencias
-            </button>
-          </div>
-        </div>
-      </section>
-
-      <!-- 6. Datos y Privacidad (GDPR) -->
-      <section id="gdpr" class="config-section">
-        <h2><i class="fas fa-file-invoice"></i> Datos y Privacidad</h2>
-        <div class="section-card">
-          <div class="gdpr-item">
-            <div class="gdpr-info">
-              <h3>Descargar mis datos</h3>
-              <p>Obtén un archivo JSON con toda tu información encriptada.</p>
-            </div>
-            <div class="gdpr-actions">
-              <span class="gdpr-btn-help">Copia de seguridad local</span>
-              <button class="btn-outline" (click)="descargarDatos()">
-                <i class="fas fa-download"></i> Descargar
-              </button>
-            </div>
-          </div>
-
-          <div class="divider-soft"></div>
-
-          <div class="gdpr-item">
-            <div class="gdpr-info">
-              <h3 class="text-danger">Eliminar mi cuenta</h3>
-              <p>Esta acción es irreversible y eliminará todos tus datos.</p>
-            </div>
-            <div class="gdpr-actions">
-              <span class="gdpr-btn-help text-danger">Eliminación definitiva</span>
-              <button class="btn-danger" (click)="showDeleteModal.set(true)">
-                <i class="fas fa-trash"></i> Eliminar
-              </button>
-            </div>
-          </div>
-        </div>
-      </section>
-      <!-- Logout Button (Mobile only or at the bottom) -->
-      <section class="config-section mobile-logout-section">
-        <div class="section-card logout-card" (click)="cerrarSesion()">
-           <div class="logout-card-content">
-             <i class="fas fa-sign-out-alt"></i>
-             <div>
-               <h3>Cerrar sesión</h3>
-               <p>Finalizar sesión actual de forma segura</p>
-             </div>
-           </div>
-           <i class="fas fa-chevron-right arrow-icon"></i>
-        </div>
-      </section>
-    </main>
-  </div>
+                    <div class="gdpr-item">
+                        <div class="gdpr-info">
+                            <h3 class="text-danger">Eliminar mi cuenta</h3>
+                            <p>Esta acción es irreversible y eliminará todos tus datos.</p>
+                        </div>
+                        <div class="gdpr-actions">
+                            <span class="gdpr-btn-help text-danger">Eliminación definitiva</span>
+                            <button class="btn-danger" (click)="showDeleteModal.set(true)">
+                                <i class="fas fa-trash"></i> Eliminar
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            <!-- Logout Button (Mobile only or at the bottom) -->
+            <section class="config-section mobile-logout-section">
+                <div class="section-card logout-card" (click)="cerrarSesion()">
+                    <div class="logout-card-content">
+                        <i class="fas fa-sign-out-alt"></i>
+                        <div>
+                            <h3>Cerrar sesión</h3>
+                            <p>Finalizar sesión actual de forma segura</p>
+                        </div>
+                    </div>
+                    <i class="fas fa-chevron-right arrow-icon"></i>
+                </div>
+            </section>
+        </main>
+    </div>
 </div>
 
 <div class="modal-overlay" *ngIf="showModalEmpresa()">
-  <div class="modal-content">
-    <div class="modal-header">
-      <h3><i class="fas fa-building"></i> ¿Convertir a Empresa?</h3>
-      <button class="btn-text" (click)="showModalEmpresa.set(false)">
-        <i class="fas fa-times"></i>
-      </button>
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3><i class="fas fa-building"></i> ¿Convertir a Empresa?</h3>
+            <button class="btn-text" (click)="showModalEmpresa.set(false)">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div class="modal-body">
+            <p>
+                Al hacer este cambio
+                <strong class="text-warning"
+                    >perderás tu historial de chats privados actuales y tus favoritos
+                    guardados</strong
+                >
+                para adaptar tu cuenta al formato profesional.
+            </p>
+            <p>¿Estás seguro de continuar?</p>
+        </div>
+        <div class="modal-footer">
+            <button class="btn-outline" (click)="showModalEmpresa.set(false)">Cancelar</button>
+            <button class="btn-primary" (click)="ejecutarMigracionEmpresa()">
+                Sí, convertir cuenta
+            </button>
+        </div>
     </div>
-    <div class="modal-body">
-      <p>
-        Al hacer este cambio
-        <strong class="text-warning"
-          >perderás tu historial de chats privados actuales y tus favoritos guardados</strong
-        >
-        para adaptar tu cuenta al formato profesional.
-      </p>
-      <p>¿Estás seguro de continuar?</p>
-    </div>
-    <div class="modal-footer">
-      <button class="btn-outline" (click)="showModalEmpresa.set(false)">Cancelar</button>
-      <button class="btn-primary" (click)="ejecutarMigracionEmpresa()">Sí, convertir cuenta</button>
-    </div>
-  </div>
 </div>
 
 <app-confirm-modal
-  #disable2FAModal
-  title="Desactivar Seguridad"
-  message="¿Seguro que quieres desactivar la Autenticación en 2 Pasos? Tu cuenta será mucho menos segura."
-  confirmText="Desactivar"
-  cancelText="Mantener Seguridad"
-  type="danger"
-  icon="fas fa-shield-halved"
-  (confirmed)="confirmDisable2FA()"
+    #disable2FAModal
+    title="Desactivar Seguridad"
+    message="¿Seguro que quieres desactivar la Autenticación en 2 Pasos? Tu cuenta será mucho menos segura."
+    confirmText="Desactivar"
+    cancelText="Mantener Seguridad"
+    type="danger"
+    icon="fas fa-shield-halved"
+    (confirmed)="confirmDisable2FA()"
 />
 
 <app-confirm-modal
-  #enableEmail2FAModal
-  title="Activar 2FA por Email"
-  message="Cada vez que inicies sesión, te enviaremos un código de seguridad a tu correo electrónico para verificar tu identidad."
-  confirmText="Activar ahora"
-  cancelText="Tal vez luego"
-  type="primary"
-  icon="fas fa-envelope-open-text"
-  (confirmed)="confirmEnableEmail2FA()"
+    #enableEmail2FAModal
+    title="Activar 2FA por Email"
+    message="Cada vez que inicies sesión, te enviaremos un código de seguridad a tu correo electrónico para verificar tu identidad."
+    confirmText="Activar ahora"
+    cancelText="Tal vez luego"
+    type="primary"
+    icon="fas fa-envelope-open-text"
+    (confirmed)="confirmEnableEmail2FA()"
 />
 
 <!-- Modal de Eliminación de Cuenta -->
 <div class="modal-overlay delete-modal-overlay" *ngIf="showDeleteModal()">
-  <div class="modal-content premium-delete-modal">
-    <div class="modal-header-premium">
-      <div class="danger-icon-wrapper">
-        <i class="fas fa-exclamation-triangle"></i>
-      </div>
-      <h3>¿Eliminar tu cuenta?</h3>
-      <p class="subtitle-danger">Esta acción no se puede deshacer.</p>
-      <button class="close-modal-btn" (click)="showDeleteModal.set(false)">
-        <i class="fas fa-times"></i>
-      </button>
-    </div>
-
-    <div class="modal-body">
-      <div class="danger-notice">
-        <p>
-          Al confirmar, perderás permanentemente el acceso a Nexus, incluyendo tus productos,
-          mensajes, favoritos y reputación acumulada.
-        </p>
-      </div>
-
-      <div class="confirmation-form">
-        <div class="form-group-premium">
-          <label>Escribe <span class="confirm-keyword">ELIMINAR</span> para confirmar</label>
-          <input
-            type="text"
-            placeholder="Escribe aquí..."
-            [ngModel]="deleteAccount().confirmText"
-            (ngModelChange)="updateDeleteAccountField('confirmText', $event)"
-            class="confirm-input-premium"
-          />
+    <div class="modal-content premium-delete-modal">
+        <div class="modal-header-premium">
+            <div class="danger-icon-wrapper">
+                <i class="fas fa-exclamation-triangle"></i>
+            </div>
+            <h3>¿Eliminar tu cuenta?</h3>
+            <p class="subtitle-danger">Esta acción no se puede deshacer.</p>
+            <button class="close-modal-btn" (click)="showDeleteModal.set(false)">
+                <i class="fas fa-times"></i>
+            </button>
         </div>
 
-        <!-- Solo pide contraseña si NO es de Google/Facebook -->
-        <div class="form-group-premium mt-4" *ngIf="!user()?.googleId">
-          <label>Confirma con tu contraseña</label>
-          <div class="input-icon-wrapper">
-            <i class="fas fa-lock"></i>
-            <input
-              type="password"
-              placeholder="••••••••"
-              [ngModel]="deleteAccount().password"
-              (ngModelChange)="updateDeleteAccountField('password', $event)"
-              class="password-input-premium"
-            />
-          </div>
-        </div>
-      </div>
-    </div>
+        <div class="modal-body">
+            <div class="danger-notice">
+                <p>
+                    Al confirmar, perderás permanentemente el acceso a Nexus, incluyendo tus
+                    productos, mensajes, favoritos y reputación acumulada.
+                </p>
+            </div>
 
-    <div class="modal-actions-premium">
-      <button class="btn-cancel-premium" (click)="showDeleteModal.set(false)">
-        No, volver atrás
-      </button>
-      <button
-        class="btn-delete-final"
-        [disabled]="
-          deleteAccount().confirmText !== 'ELIMINAR' ||
-          (!user()?.googleId && !deleteAccount().password)
-        "
-        (click)="confirmarEliminacion()"
-      >
-        <span>Eliminar Permanentemente</span>
-      </button>
+            <div class="confirmation-form">
+                <div class="form-group-premium">
+                    <label
+                        >Escribe <span class="confirm-keyword">ELIMINAR</span> para confirmar</label
+                    >
+                    <input
+                        type="text"
+                        placeholder="Escribe aquí..."
+                        [ngModel]="deleteAccount().confirmText"
+                        (ngModelChange)="updateDeleteAccountField('confirmText', $event)"
+                        class="confirm-input-premium"
+                    />
+                </div>
+
+                <!-- Solo pide contraseña si NO es de Google -->
+                <div class="form-group-premium mt-4" *ngIf="!user()?.googleId">
+                    <label>Confirma con tu contraseña</label>
+                    <div class="input-icon-wrapper">
+                        <i class="fas fa-lock"></i>
+                        <input
+                            type="password"
+                            placeholder="••••••••"
+                            [ngModel]="deleteAccount().password"
+                            (ngModelChange)="updateDeleteAccountField('password', $event)"
+                            class="password-input-premium"
+                        />
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal-actions-premium">
+            <button class="btn-cancel-premium" (click)="showDeleteModal.set(false)">
+                No, volver atrás
+            </button>
+            <button
+                class="btn-delete-final"
+                [disabled]="
+                    deleteAccount().confirmText !== 'ELIMINAR' ||
+                    (!user()?.googleId && !deleteAccount().password)
+                "
+                (click)="confirmarEliminacion()"
+            >
+                <span>Eliminar Permanentemente</span>
+            </button>
+        </div>
     </div>
-  </div>
 </div>

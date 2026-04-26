@@ -5,72 +5,72 @@
    ========================================= */
 
 :root {
-  /* --- Colores Primarios (Nexus Gradient) --- */
-  --nexus-blue: #a8b4ff; /* Periwinkle Blue */
-  --nexus-purple: #cdb0e8; /* Lavanda */
-  --nexus-pink: #ff91d5; /* Rosa Brillante */
-  --nexus-hot-pink: #ff69b4; /* Rosa Vibrante (Highlights) */
+    /* --- Colores Primarios (Nexus Gradient) --- */
+    --nexus-blue: #a8b4ff; /* Periwinkle Blue */
+    --nexus-purple: #cdb0e8; /* Lavanda */
+    --nexus-pink: #ff91d5; /* Rosa Brillante */
+    --nexus-hot-pink: #ff69b4; /* Rosa Vibrante (Highlights) */
 
-  /* --- Gradientes --- */
-  --gradient-primary: linear-gradient(
-    90deg,
-    var(--nexus-blue) 0%,
-    var(--nexus-purple) 50%,
-    var(--nexus-pink) 100%
-  );
-  --gradient-vertical: linear-gradient(
-    180deg,
-    var(--nexus-blue) 0%,
-    var(--nexus-purple) 50%,
-    var(--nexus-pink) 100%
-  );
-  --gradient-hover: linear-gradient(
-    90deg,
-    var(--nexus-pink) 0%,
-    var(--nexus-purple) 50%,
-    var(--nexus-blue) 100%
-  );
+    /* --- Gradientes --- */
+    --gradient-primary: linear-gradient(
+        90deg,
+        var(--nexus-blue) 0%,
+        var(--nexus-purple) 50%,
+        var(--nexus-pink) 100%
+    );
+    --gradient-vertical: linear-gradient(
+        180deg,
+        var(--nexus-blue) 0%,
+        var(--nexus-purple) 50%,
+        var(--nexus-pink) 100%
+    );
+    --gradient-hover: linear-gradient(
+        90deg,
+        var(--nexus-pink) 0%,
+        var(--nexus-purple) 50%,
+        var(--nexus-blue) 100%
+    );
 
-  /* --- Fondos (Modo Oscuro por Defecto) --- */
-  --bg-deep: #000000; /* Hero / Fondos principales */
-  --bg-surface: #0a0a0a; /* Tarjetas / Secciones */
-  --bg-glass: rgba(10, 10, 10, 0.75); /* Efecto cristal oscuro */
-  --bg-glass-border: rgba(255, 255, 255, 0.1);
+    /* --- Fondos (Modo Oscuro por Defecto) --- */
+    --bg-deep: #000000; /* Hero / Fondos principales */
+    --bg-surface: #0a0a0a; /* Tarjetas / Secciones */
+    --bg-glass: rgba(10, 10, 10, 0.75); /* Efecto cristal oscuro */
+    --bg-glass-border: rgba(255, 255, 255, 0.1);
 
-  /* --- Tipografía --- */
-  --font-primary: 'Outfit', sans-serif;
-  --font-display: 'Space Grotesk', sans-serif;
+    /* --- Tipografía --- */
+    --font-primary: 'Outfit', sans-serif;
+    --font-display: 'Space Grotesk', sans-serif;
 
-  /* --- Textos --- */
-  --text-primary: #ffffff;
-  --text-secondary: #e0e0e0;
-  --text-muted: #9ca3af;
+    /* --- Textos --- */
+    --text-primary: #ffffff;
+    --text-secondary: #e0e0e0;
+    --text-muted: #9ca3af;
 
-  /* --- Espaciados y Bordes --- */
-  --radius-sm: 8px;
-  --radius-md: 12px;
-  --radius-lg: 20px;
-  --radius-full: 9999px;
+    /* --- Espaciados y Bordes --- */
+    --radius-sm: 8px;
+    --radius-md: 12px;
+    --radius-lg: 20px;
+    --radius-full: 9999px;
 
-  --shadow-neon: 0 0 20px rgba(168, 180, 255, 0.15);
+    --shadow-neon: 0 0 20px rgba(168, 180, 255, 0.15);
 }
 
 /* =========================================
    RESET & BASE
    ========================================= */
 * {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
 }
 
 body {
-  font-family: var(--font-primary);
-  background-color: var(--bg-deep);
-  color: var(--text-primary);
-  line-height: 1.6;
-  overflow-x: hidden;
-  -webkit-font-smoothing: antialiased;
+    font-family: var(--font-primary);
+    background-color: var(--bg-deep);
+    color: var(--text-primary);
+    line-height: 1.6;
+    overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
 }
 
 /* =========================================
@@ -79,150 +79,149 @@ body {
 
 /* --- Wordmark Logo Style --- */
 .nexus-wordmark {
-  font-family: var(--font-primary);
-  font-weight: 700;
-  font-size: 28px; /* Ajustable según contexto */
-  letter-spacing: -0.03em;
-  color: var(--text-primary);
-  text-decoration: none;
-  position: relative;
-  display: inline-flex;
-  align-items: center;
+    font-family: var(--font-primary);
+    font-weight: 700;
+    font-size: 28px; /* Ajustable según contexto */
+    letter-spacing: -0.03em;
+    color: var(--text-primary);
+    text-decoration: none;
+    position: relative;
+    display: inline-flex;
+    align-items: center;
 }
 
 .nexus-wordmark::after {
-  content: '.';
-  color: var(--nexus-pink); /* Acento en el punto */
-  font-size: 1.2em;
-  line-height: 0;
-  margin-left: 2px;
+    content: '.';
+    color: var(--nexus-pink); /* Acento en el punto */
+    font-size: 1.2em;
+    line-height: 0;
+    margin-left: 2px;
 }
 
 /* --- Botones con Degradado --- */
 .btn-nexus-primary {
-  background: var(--gradient-primary);
-  border: none;
-  border-radius: var(--radius-full);
-  padding: 10px 24px;
-  color: #000; /* Texto oscuro sobre gradiente claro para contraste */
-  font-weight: 600;
-  font-family: var(--font-primary);
-  cursor: pointer;
-  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
-  position: relative;
-  overflow: hidden;
-  z-index: 1;
+    background: var(--gradient-primary);
+    border: none;
+    border-radius: var(--radius-full);
+    padding: 10px 24px;
+    color: #000; /* Texto oscuro sobre gradiente claro para contraste */
+    font-weight: 600;
+    font-family: var(--font-primary);
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+    position: relative;
+    overflow: hidden;
+    z-index: 1;
 }
 
 .btn-nexus-primary::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(
-    90deg,
-    var(--nexus-pink) 0%,
-    var(--nexus-purple) 50%,
-    var(--nexus-blue) 100%
-  );
-  z-index: -1;
-  transition: opacity 0.3s ease;
-  opacity: 0;
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+        90deg,
+        var(--nexus-pink) 0%,
+        var(--nexus-purple) 50%,
+        var(--nexus-blue) 100%
+    );
+    z-index: -1;
+    transition: opacity 0.3s ease;
+    opacity: 0;
 }
 
 /* Botón primario con hover */
 .btn-nexus-primary:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 10px 20px -5px rgba(205, 176, 232, 0.5);
+    transform: translateY(-2px);
+    box-shadow: 0 10px 20px -5px rgba(205, 176, 232, 0.5);
 }
 
 .btn-nexus-primary:hover::before {
-  opacity: 1;
+    opacity: 1;
 }
 /* Ajuste para que tus botones manuales midan exactamente lo mismo que el de Google */
-.btn-facebook,
 .btn-oauth {
-  width: 100%;
-  height: 40px; /* Igualamos la altura exacta del botón "large" de Google */
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 10px; /* Separación entre el icono y el texto */
-  border-radius: 4px; /* El borde rectangular estándar de Google */
-  font-size: 14px; /* Tamaño de texto equilibrado con el de Google */
-  font-weight: 500;
-  box-sizing: border-box;
+    width: 100%;
+    height: 40px; /* Igualamos la altura exacta del botón "large" de Google */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px; /* Separación entre el icono y el texto */
+    border-radius: 4px; /* El borde rectangular estándar de Google */
+    font-size: 14px; /* Tamaño de texto equilibrado con el de Google */
+    font-weight: 500;
+    box-sizing: border-box;
 }
 
 /* El contenedor del popup que hicimos antes */
 #google-popup-btn-container,
 #google-btn-container {
-  height: 40px; /* Le damos el mismo alto al contenedor para que no haya saltos raros */
-  display: flex;
-  justify-content: center;
+    height: 40px; /* Le damos el mismo alto al contenedor para que no haya saltos raros */
+    display: flex;
+    justify-content: center;
 }
 
 /* --- Botones Glass (Secundarios) --- */
 .btn-nexus-glass {
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid var(--bg-glass-border);
-  color: var(--text-primary);
-  padding: 10px 24px;
-  border-radius: var(--radius-full);
-  font-weight: 500;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  backdrop-filter: blur(10px);
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid var(--bg-glass-border);
+    color: var(--text-primary);
+    padding: 10px 24px;
+    border-radius: var(--radius-full);
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    backdrop-filter: blur(10px);
 }
 
 .btn-nexus-glass:hover {
-  background: rgba(255, 255, 255, 0.1);
-  border-color: var(--nexus-blue);
-  color: var(--nexus-blue);
+    background: rgba(255, 255, 255, 0.1);
+    border-color: var(--nexus-blue);
+    color: var(--nexus-blue);
 }
 
 /* --- Efecto Glassmorphism Genérico --- */
 .glass-panel {
-  background: var(--bg-glass);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border-bottom: 1px solid var(--bg-glass-border);
+    background: var(--bg-glass);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border-bottom: 1px solid var(--bg-glass-border);
 }
 
 /* --- Scrollbar Personalizado --- */
 ::-webkit-scrollbar {
-  width: 8px;
+    width: 8px;
 }
 ::-webkit-scrollbar-track {
-  background: var(--bg-deep);
+    background: var(--bg-deep);
 }
 ::-webkit-scrollbar-thumb {
-  background: #333;
-  border-radius: 4px;
+    background: #333;
+    border-radius: 4px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: var(--nexus-purple);
+    background: var(--nexus-purple);
 }
 
 /* --- Layout Containers --- */
 .container {
-  max-width: 1400px;
-  margin: 0 auto;
-  padding: 0 24px;
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 24px;
 }
 
 /* --- Avatar Initials Utility --- */
 .nexus-avatar-iniciales {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: var(--gradient-primary);
-  color: #000;
-  font-weight: 700;
-  border-radius: var(--radius-full);
-  text-align: center;
-  user-select: none;
-  font-family: var(--font-display);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--gradient-primary);
+    color: #000;
+    font-weight: 700;
+    border-radius: var(--radius-full);
+    text-align: center;
+    user-select: none;
+    font-family: var(--font-display);
 }
