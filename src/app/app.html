@@ -1,4 +1,4 @@
-@if (!isAdminRoute()) {
+@if (!isAdminRoute() && !isSearchRoute()) {
   @if (isMobileUI()) {
     @if (!uiService.isAnyChatSelected() && !uiService.isDetailView()) {
       <app-mobile-header></app-mobile-header>
@@ -33,7 +33,7 @@
     <router-outlet></router-outlet>
   </main>
 
-  @if (!isAdminRoute() && !isMessagesRoute() && !isSearchRoute()) {
+  @if (!isAdminRoute() && !isMessagesRoute() && !isSearchRoute() && !isVehiculosRoute()) {
     @if (!isMobileUI() || (!uiService.isAnyChatSelected() && !uiService.isDetailView())) {
       <app-footer></app-footer>
     }

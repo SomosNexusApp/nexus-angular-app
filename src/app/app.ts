@@ -62,6 +62,7 @@ export class AppComponent implements OnInit {
   isMessagesRoute = signal(window.location.pathname.startsWith('/mensajes'));
   isPublishRoute = signal(window.location.pathname.startsWith('/publicar'));
   isSearchRoute = signal(window.location.pathname.startsWith('/search'));
+  isVehiculosRoute = signal(window.location.pathname.startsWith('/vehiculos'));
   isMobileUI = signal(window.innerWidth <= 768); // <= 768px = movil
 
   // popups del flujo post-registro (se muestran en orden: 2FA → tipo cuenta → avatar)
@@ -137,6 +138,9 @@ export class AppComponent implements OnInit {
 
         const isSearch = url.startsWith('/search');
         this.isSearchRoute.set(isSearch);
+
+        const isVehiculos = url.startsWith('/vehiculos');
+        this.isVehiculosRoute.set(isVehiculos);
 
         if (isAdmin) {
           this.guestPopup.hidePopup(); // en el admin no mostramos nunca el popup de registro
