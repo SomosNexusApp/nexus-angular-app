@@ -28,16 +28,23 @@
   </div>
 }
 
-<router-outlet></router-outlet>
-<app-toast-container></app-toast-container>
-@if (!isAdminRoute() && !isMessagesRoute()) {
-  <app-support-chat-widget />
-}
+<div class="app-layout-container">
+  <main class="app-main-content">
+    <router-outlet></router-outlet>
+  </main>
 
-@if (guestPopup.isOpen() && !isAdminRoute()) {
-  <app-register-popup></app-register-popup>
-}
+  @if (!isAdminRoute() && !isMessagesRoute() && !isSearchRoute()) {
+    @if (!isMobileUI() || (!uiService.isAnyChatSelected() && !uiService.isDetailView())) {
+      <app-footer></app-footer>
+    }
+  }
+</div>
+
+<app-support-chat-widget />
+<app-register-popup *ngIf="guestPopup.isOpen() && !isAdminRoute()"></app-register-popup>
+<app-toast-container></app-toast-container>
 <app-onboarding-stepper></app-onboarding-stepper>
+
 @if (!isAdminRoute() && !isPublishRoute() && (!isMobileUI() || (!uiService.isAnyChatSelected() && !uiService.isDetailView()))) {
   <app-mobile-bottom-nav></app-mobile-bottom-nav>
 }

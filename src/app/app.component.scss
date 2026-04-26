@@ -85,3 +85,27 @@
     opacity: 1;
   }
 }
+
+/* --- Layout Estructural --- */
+.app-layout-container {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.app-main-content {
+  flex: 1; /* Esto empuja el footer hacia abajo */
+  width: 100%;
+  position: relative;
+}
+
+/* Evitar que el contenido se meta debajo del header fijo */
+:host {
+  display: block;
+}
+
+@media (min-width: 769px) {
+  .app-layout-container {
+    padding-top: 130px; /* Header (80px) + Bottom Bar (50px) */
+  }
+}

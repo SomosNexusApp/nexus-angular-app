@@ -30,6 +30,11 @@ export const environment = {
   appUrl: 'https://nexus-app.es',
 
   // ----------------------------------------------------------
+  // URL del sitio de documentación e información (Astro)
+  // ----------------------------------------------------------
+  aboutUrl: 'https://about.nexus-app.es',
+
+  // ----------------------------------------------------------
   // WebSocket (STOMP over SockJS)
   // En producción debe ser WSS (seguro). Normalmente apunta
   // al mismo servidor que apiUrl.

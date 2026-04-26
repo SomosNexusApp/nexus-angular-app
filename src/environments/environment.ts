@@ -16,6 +16,9 @@ export const environment = {
   // URL base de la app (para links compartibles en desarrollo)
   appUrl: 'http://localhost:4200',
 
+  // URL del sitio de documentación e información (Astro)
+  aboutUrl: 'http://localhost:4321',
+
   // WebSocket local (STOMP sobre SockJS, sin wss en local)
   wsUrl: 'http://localhost:8080',
 

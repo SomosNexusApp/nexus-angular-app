@@ -1,0 +1,9 @@
+:host {
+  display: block;
+}
+
+@media (max-width: 768px) {
+  :host {
+    margin-top: 0;
+  }
+}

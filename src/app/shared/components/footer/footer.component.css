@@ -1,0 +1,244 @@
+.nexus-footer {
+  position: relative;
+  background-color: var(--bg-surface);
+  border-top: 1px solid var(--bg-glass-border);
+  padding-top: 80px;
+  padding-bottom: 20px;
+  overflow: hidden;
+  color: var(--text-secondary);
+  font-family: var(--font-primary);
+}
+
+@media (max-width: 768px) {
+  .nexus-footer {
+    padding-bottom: 100px;
+  }
+}
+
+/* Glow Effects for Spectacular Feel */
+.footer-glow {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(100px);
+  opacity: 0.15;
+  z-index: 0;
+  pointer-events: none;
+}
+
+.glow-1 {
+  top: -100px;
+  left: -100px;
+  width: 300px;
+  height: 300px;
+  background: var(--nexus-purple);
+}
+
+.glow-2 {
+  bottom: -50px;
+  right: -50px;
+  width: 400px;
+  height: 400px;
+  background: var(--nexus-blue);
+}
+
+.footer-container {
+  position: relative;
+  z-index: 1;
+}
+
+/* Grid Layout */
+.footer-grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr 1fr;
+  gap: 40px;
+  margin-bottom: 60px;
+}
+
+@media (max-width: 1024px) {
+  .footer-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media (max-width: 640px) {
+  .footer-grid {
+    grid-template-columns: 1fr;
+    gap: 32px;
+  }
+}
+
+/* Brand Section */
+.footer-brand .nexus-wordmark {
+  font-size: 32px;
+  margin-bottom: 20px;
+  display: inline-block;
+}
+
+.brand-description {
+  color: var(--text-muted);
+  line-height: 1.6;
+  margin-bottom: 24px;
+  max-width: 350px;
+  font-size: 15px;
+}
+
+.brand-education {
+  border-left: 2px solid var(--nexus-purple);
+  padding-left: 15px;
+  margin-top: 10px;
+}
+
+.education-title {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  color: var(--nexus-pink);
+  font-weight: 700;
+  margin: 0;
+  opacity: 0.9;
+}
+
+.education-institute {
+  font-size: 15px;
+  color: var(--text-primary);
+  font-weight: 500;
+  margin: 2px 0 0 0;
+  font-family: var(--font-display);
+}
+
+/* Links Sections */
+.footer-links h3,
+.footer-social h3 {
+  color: var(--text-primary);
+  font-family: var(--font-display);
+  font-size: 18px;
+  font-weight: 700;
+  margin-bottom: 24px;
+  position: relative;
+  display: block;
+}
+
+/* Decoración minimalista: solo una pequeña marca de acento superior */
+.footer-links h3::before,
+.footer-social h3::before {
+  content: '';
+  position: absolute;
+  top: -8px;
+  left: 0;
+  width: 20px;
+  height: 2px;
+  background: var(--gradient-primary);
+  border-radius: var(--radius-full);
+}
+
+.footer-links ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.footer-links li {
+  margin-bottom: 12px;
+}
+
+.footer-links a {
+  color: var(--text-muted);
+  text-decoration: none;
+  font-size: 15px;
+  transition: all 0.3s ease;
+  display: inline-flex;
+  align-items: center;
+}
+
+.footer-links a:hover {
+  color: var(--nexus-blue);
+  transform: translateX(4px);
+}
+
+/* Social Icons */
+.social-icons {
+  display: flex;
+  gap: 16px;
+}
+
+.social-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--bg-glass-border);
+  color: var(--text-primary);
+  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+.social-btn:hover {
+  transform: translateY(-4px);
+  background: var(--bg-glass);
+}
+
+.social-btn.instagram:hover {
+  border-color: var(--nexus-pink);
+  color: var(--nexus-pink);
+  box-shadow: 0 4px 15px rgba(255, 105, 180, 0.2);
+}
+
+.social-btn.github:hover {
+  border-color: var(--nexus-purple);
+  color: var(--nexus-purple);
+  box-shadow: 0 4px 15px rgba(205, 176, 232, 0.2);
+}
+
+/* Bottom Bar */
+.footer-bottom {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 24px 0;
+  border-top: 1px solid var(--bg-glass-border);
+  font-size: 14px;
+  color: var(--text-muted);
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+@media (max-width: 640px) {
+  .footer-bottom {
+    flex-direction: column;
+    text-align: center;
+    justify-content: center;
+  }
+}
+
+.footer-ecentia {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.ecentia-link {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--text-primary);
+  text-decoration: none;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  padding: 4px 12px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid var(--bg-glass-border);
+  border-radius: var(--radius-full);
+}
+
+.ecentia-link:hover {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+.ecentia-icon {
+  width: 16px;
+  height: 16px;
+  object-fit: contain;
+}

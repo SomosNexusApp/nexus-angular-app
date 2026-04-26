@@ -20,6 +20,7 @@ import { MobileHeader } from './mobile/mobile-header/mobile-header';
 import { MobileBottomNav } from './mobile/mobile-bottom-nav/mobile-bottom-nav';
 import { CategoriaPanelComponent } from './shared/components/categoria-panel/categoria-panel.component';
 import { MobilePublishModalComponent } from './mobile/mobile-publish-modal/mobile-publish-modal';
+import { FooterComponent } from './shared/components/footer/footer.component';
 
 // componente raiz de la aplicacion. actua como shell global:
 // - monta el header, footer y router-outlet
@@ -41,6 +42,7 @@ import { MobilePublishModalComponent } from './mobile/mobile-publish-modal/mobil
     MobileHeader,
     CategoriaPanelComponent,
     MobilePublishModalComponent,
+    FooterComponent,
   ],
   templateUrl: './app.html',
   styleUrls: ['./app.component.scss'],
@@ -59,6 +61,7 @@ export class AppComponent implements OnInit {
   isAdminRoute = signal(window.location.pathname.startsWith('/admin'));
   isMessagesRoute = signal(window.location.pathname.startsWith('/mensajes'));
   isPublishRoute = signal(window.location.pathname.startsWith('/publicar'));
+  isSearchRoute = signal(window.location.pathname.startsWith('/search'));
   isMobileUI = signal(window.innerWidth <= 768); // <= 768px = movil
 
   // popups del flujo post-registro (se muestran en orden: 2FA → tipo cuenta → avatar)
@@ -131,6 +134,9 @@ export class AppComponent implements OnInit {
 
         const isPublish = url.startsWith('/publicar');
         this.isPublishRoute.set(isPublish);
+
+        const isSearch = url.startsWith('/search');
+        this.isSearchRoute.set(isSearch);
 
         if (isAdmin) {
           this.guestPopup.hidePopup(); // en el admin no mostramos nunca el popup de registro

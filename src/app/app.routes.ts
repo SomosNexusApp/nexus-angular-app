@@ -53,7 +53,9 @@ export const routes: Routes = [
   {
     path: 'legal/condiciones',
     loadComponent: () =>
-      import('./components/legal/condiciones-compra/condiciones-compra').then((m) => m.CondicionesCompra),
+      import('./components/legal/condiciones-compra/condiciones-compra').then(
+        (m) => m.CondicionesCompra,
+      ),
   },
   {
     path: 'search',
@@ -84,9 +86,7 @@ export const routes: Routes = [
   {
     path: 'vehiculos',
     loadComponent: () =>
-      import('./components/vehiculos/vehiculos.component').then(
-        (m) => m.VehiculosComponent,
-      ),
+      import('./components/vehiculos/vehiculos.component').then((m) => m.VehiculosComponent),
   },
   {
     path: 'vehiculos/:id',
@@ -188,9 +188,7 @@ export const routes: Routes = [
   {
     path: 'notificaciones',
     loadComponent: () =>
-      import('./components/notificaciones/notificaciones').then(
-        (m) => m.NotificacionesComponent,
-      ),
+      import('./components/notificaciones/notificaciones').then((m) => m.NotificacionesComponent),
     canActivate: [authGuard],
   },
   // {
@@ -240,18 +238,6 @@ export const routes: Routes = [
   },
 
   // Legal
-  {
-    path: 'legal/terminos',
-    loadComponent: () =>
-      import('./components/legal/terminos/terminos.component').then((m) => m.TerminosComponent),
-  },
-  {
-    path: 'legal/privacidad',
-    loadComponent: () =>
-      import('./components/legal/privacidad/privacidad.component').then(
-        (m) => m.PrivacidadComponent,
-      ),
-  },
   {
     path: 'darse-baja',
     loadComponent: () =>
@@ -317,8 +303,7 @@ export const routes: Routes = [
 
   {
     path: 'ayuda',
-    loadComponent: () =>
-      import('./components/help/help.component').then((m) => m.HelpComponent),
+    loadComponent: () => import('./components/help/help.component').then((m) => m.HelpComponent),
   },
   {
     path: 'denegado',
