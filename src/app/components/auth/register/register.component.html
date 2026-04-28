@@ -1,7 +1,7 @@
-<div class="register-container">
-  <div class="register-card">
+<div class="register-container" [class.step-verification]="step() === 2">
+  <div class="register-card" [class.card-verification]="step() === 2">
     <div class="brand-header">
-      <img src="/logo.webp" alt="Nexus Logo" class="logo" />
+      <img src="https://about.nexus-app.es/logo.webp" alt="Nexus Logo" class="logo" />
       <h2>Únete a Nexus</h2>
       @if (step() === 1) {
         <p class="subtitle">Crea tu cuenta para empezar a comprar y vender</p>
@@ -140,7 +140,7 @@
             <span class="label-text">
               He leído y acepto las
               <a routerLink="/legal/terminos">Condiciones de uso</a> y la
-              <a routerLink="/legal/privacidad">Política de privacidad</a> de Nexus.
+              <a href="https://about.nexus-app.es/legal/privacidad" target="_blank">Política de privacidad</a> de Nexus.
               *
             </span>
           </label>
@@ -168,7 +168,7 @@
                 registro y enviar comunicaciones comerciales (si lo autorizas).
                 <strong>Legitimación:</strong> Consentimiento. <strong>Derechos:</strong> Acceder,
                 rectificar y suprimir datos según la
-                <a routerLink="/legal/privacidad" target="_blank">Política de privacidad</a>.
+                <a href="https://about.nexus-app.es/legal/privacidad" target="_blank">Política de privacidad</a>.
               </p>
             </div>
           </div>
@@ -243,21 +243,7 @@
       </div>
     }
 
-    <!-- Paso 3: Sugerencia de Seguridad -->
-    @if (step() === 3) {
-      <div class="suggestion-step text-center fade-in">
-        <h3 class="text-xl font-bold mb-2">Aumenta tu seguridad</h3>
-        <p class="text-muted mb-6">
-          Activa la Autenticación en dos pasos (2FA) para proteger tus compras y ventas.
-        </p>
-        <button class="btn-primary w-full mb-3" (click)="abrirConfiguracion2FA()">
-          Configurar 2FA
-        </button>
-        <button class="btn-secondary w-full" (click)="finalizarEIrATipoCuenta()">
-          Hacerlo más tarde
-        </button>
-      </div>
-    }
+    
   </div>
 </div>
 

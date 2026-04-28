@@ -3,10 +3,10 @@
     <!-- Header with Progress -->
     <div class="onboarding-header">
       <div class="step-indicator">
-        <div class="indicator-dot" [class.active]="currentStep === 0" [class.completed]="currentStep > 0"></div>
+        <div class="indicator-dot" *ngIf="isSocialUser" [class.active]="currentStep === 0" [class.completed]="currentStep > 0"></div>
         <div class="indicator-dot" [class.active]="currentStep === 1" [class.completed]="currentStep > 1"></div>
         <div class="indicator-dot" [class.active]="currentStep === 2" [class.completed]="currentStep > 2"></div>
-        <div class="indicator-dot" *ngIf="isSocialUser" [class.active]="currentStep === 3" [class.completed]="currentStep > 3"></div>
+        <div class="indicator-dot" [class.active]="currentStep === 3" [class.completed]="currentStep > 3"></div>
       </div>
     </div>
 
@@ -243,7 +243,7 @@
 
     <!-- Footer Actions -->
     <div class="onboarding-footer">
-      <button class="btn-nx-back" (click)="prevStep()" *ngIf="currentStep > 0 && !isLoading()">
+      <button class="btn-nx-back" (click)="prevStep()" *ngIf="currentStep > minStep && !isLoading()">
         Atrás
       </button>
       <div *ngIf="currentStep === 0"></div>

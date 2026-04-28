@@ -196,6 +196,7 @@ export class RegisterComponent implements OnInit {
         this.emailParaVerificar.set(request.email);
         localStorage.setItem('email_verificacion', request.email);
         this.step.set(2);
+        window.scrollTo({ top: 0, behavior: 'smooth' });
       },
       error: () => {
         this.isLoading.set(false);
@@ -215,18 +216,15 @@ export class RegisterComponent implements OnInit {
     this.authService.verifyEmail(email, codigo).subscribe({
       next: () => {
         this.isLoading.set(false);
-        this.step.set(3); // Avanzar a sugerencia 2FA
+        // Saltamos el paso 3 (2FA del register) y abrimos el onboarding completo
+        this.guestPopup.showOnboarding();
+        setTimeout(() => this.guestPopup.closePopup(), 50);
       },
       error: () => this.isLoading.set(false),
     });
   }
 
-  // Steps simulados para el final del flujo
-  irPasoAccountType() {
-    this.step.set(4);
-  }
-
   finalizarRegistro() {
-    this.router.navigate(['/']);
+    this.guestPopup.closePopup();
   }
 }

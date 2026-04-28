@@ -63,6 +63,7 @@ export class AppComponent implements OnInit {
   isPublishRoute = signal(window.location.pathname.startsWith('/publicar'));
   isSearchRoute = signal(window.location.pathname.startsWith('/search'));
   isVehiculosRoute = signal(window.location.pathname.startsWith('/vehiculos'));
+  isConfigRoute = signal(window.location.pathname.startsWith('/configuracion'));
   isMobileUI = signal(window.innerWidth <= 768); // <= 768px = movil
 
   // popups del flujo post-registro (se muestran en orden: 2FA → tipo cuenta → avatar)
@@ -82,9 +83,23 @@ export class AppComponent implements OnInit {
     // effect: se re-ejecuta automaticamente cuando cambia isLoggedIn()
     // conectamos el websocket al hacer login y lo cerramos al hacer logout
     effect(() => {
-      if (this.authStore.isLoggedIn()) {
+      const user = this.authStore.user();
+      if (this.authStore.isLoggedIn() && user) {
         this.wsService.connect(); // abrimos la conexion STOMP/SockJS
         this.notifService.init(); // iniciamos el contador de no leidas
+        
+        // PERSISTENCIA DEL ONBOARDING: si el usuario no lo ha completado, lo abrimos al recargar
+        if (!user.onboardingCompletado && !this.isAdminRoute()) {
+          this.guestPopup.showOnboarding();
+        }
+
+        // Bloqueo de scroll si el onboarding está abierto
+        if (this.guestPopup.isOnboardingOpen()) {
+          document.body.style.overflow = 'hidden';
+        } else {
+          document.body.style.overflow = '';
+        }
+
         // esperamos un tick para que la sesion este lista antes de pedir notifs destacadas
         queueMicrotask(() => {
           this.notifService.getDestacadasPendientes().subscribe((list) => {
@@ -141,6 +156,9 @@ export class AppComponent implements OnInit {
 
         const isVehiculos = url.startsWith('/vehiculos');
         this.isVehiculosRoute.set(isVehiculos);
+
+        const isConfig = url.startsWith('/configuracion');
+        this.isConfigRoute.set(isConfig);
 
         if (isAdmin) {
           this.guestPopup.hidePopup(); // en el admin no mostramos nunca el popup de registro

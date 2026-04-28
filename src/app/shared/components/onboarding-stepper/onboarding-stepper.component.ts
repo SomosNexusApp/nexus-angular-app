@@ -1,4 +1,4 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, inject, signal, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
@@ -14,7 +14,7 @@ import { environment } from '../../../../environments/environment';
   templateUrl: './onboarding-stepper.component.html',
   styleUrls: ['./onboarding-stepper.component.css']
 })
-export class OnboardingStepperComponent {
+export class OnboardingStepperComponent implements OnInit {
   public popupService = inject(GuestPopupService);
   private authStore = inject(AuthStore);
   private http = inject(HttpClient);
@@ -42,6 +42,15 @@ export class OnboardingStepperComponent {
     customAvatarPreview: null as string | null,
     customAvatarFile: null as File | null
   };
+
+  ngOnInit() {
+    // Si el usuario no es de Google, saltamos el paso de términos (ya lo aceptó al registrarse)
+    if (!this.isSocialUser) {
+      this.currentStep = 1; 
+      // Marcamos términos como aceptados para que las validaciones internas no fallen
+      this.localState.termsAccepted = true;
+    }
+  }
 
   // ── helpers ──────────────────────────────────────────────────────────────────
 
@@ -79,14 +88,16 @@ export class OnboardingStepperComponent {
    *    se asignan iniciales automáticamente.
    */
   get isLastStep(): boolean {
-    return this.isSocialUser
-      ? this.currentStep === 3
-      : this.currentStep === 2;
+    return this.currentStep === 3;
   }
 
   /** Número total de pasos a mostrar (para los indicadores) */
   get totalSteps(): number {
     return this.isSocialUser ? 4 : 3;
+  }
+
+  get minStep(): number {
+    return this.isSocialUser ? 0 : 1;
   }
 
   canContinue(): boolean {
@@ -122,7 +133,7 @@ export class OnboardingStepperComponent {
   }
 
   prevStep() {
-    if (this.currentStep > 0) this.currentStep--;
+    if (this.currentStep > this.minStep) this.currentStep--;
   }
 
   // ── pasos ─────────────────────────────────────────────────────────────────────
@@ -180,9 +191,9 @@ export class OnboardingStepperComponent {
             this.isLoading.set(false);
           });
         } else {
-          // Usuario de email: avatar = INITIALS automático, finalizamos directamente
-          this.localState.avatarChoice = 'INITIALS';
-          this.saveAvatarChoiceAndFinish();
+          // Usuario de email: ahora también permitimos elegir avatar
+          this.currentStep++;
+          this.isLoading.set(false);
         }
       },
       error: (err) => {

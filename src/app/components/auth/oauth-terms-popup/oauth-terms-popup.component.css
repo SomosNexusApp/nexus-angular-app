@@ -141,7 +141,7 @@
   position: relative;
   cursor: pointer;
   font-size: 0.85rem;
-  color: var(--nexus-text-muted);
+  color: rgba(255, 255, 255, 0.85);
   user-select: none;
   gap: 12px;
 }

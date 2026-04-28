@@ -267,6 +267,10 @@ input.error {
     text-decoration: underline;
 }
 
+.legal-notice {
+    color: rgba(255, 255, 255, 0.8) !important;
+}
+
 .auth-footer a,
 .legal-notice a {
     color: var(--nexus-blue);
