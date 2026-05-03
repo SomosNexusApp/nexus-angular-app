@@ -26,7 +26,7 @@ import { ToastService } from '../../../../core/services/toast.service';
 import { ReporteModalComponent } from '../../reporte-modal/reporte-modal.component';
 import { GuestPopupService } from '../../../../core/services/guest-popup.service';
 import { UiService } from '../../../../core/services/ui.service';
-import { extractIdFromSlug } from '../../../../shared/utils/slug-utils';
+import { extractIdFromSlug, createFriendlySlug } from '../../../../shared/utils/slug-utils';
 
 @Component({
   selector: 'app-producto-detail',
@@ -281,7 +281,8 @@ export class ProductoDetailComponent implements OnInit, OnDestroy {
     this.http.get<Producto>(`${environment.apiUrl}/producto/${id}`).subscribe({
       next: (p) => {
         if (p.estado === 'DISPONIBLE' && p.tipoOferta !== 'INTERCAMBIO') {
-          this.router.navigate(['/checkout', id]);
+          const slug = createFriendlySlug(p.titulo, p.id);
+          this.router.navigate(['/checkout', slug]);
         } else {
           this.producto.set(p);
           if (p.tipoOferta === 'INTERCAMBIO') this.toast.info('Los productos de intercambio deben negociarse por chat.');
@@ -437,4 +438,3 @@ export class ProductoDetailComponent implements OnInit, OnDestroy {
     this.precioOfertaInput.set(value === '' ? null : parseFloat(value));
   }
 }
-

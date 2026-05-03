@@ -248,7 +248,7 @@ export const routes: Routes = [
 
   // Compras / Checkout
   {
-    path: 'checkout/:productoId',
+    path: 'checkout/:slug',
     loadComponent: () =>
       import('./components/compras/checkout/checkout.component').then((m) => m.CheckoutComponent),
     canActivate: [authGuard],

@@ -29,6 +29,7 @@ import { TipoEnvio } from '../../../models/compra.model';
 import { PuntoRecogidaSelector, PuntoRecogida } from '../../../shared/components/punto-recogida-selector/punto-recogida-selector';
 import { ScrollService } from '../../../core/services/scroll.service';
 import { AvatarComponent } from '../../../shared/components/avatar/avatar.component';
+import { createFriendlySlug } from '../../../shared/utils/slug-utils';
 
 const MAX_PRICE = 1000;
 
@@ -128,9 +129,14 @@ export class CheckoutComponent implements OnInit, OnDestroy {
   // ── Init ──────────────────────────────────────────────────────────────
   ngOnInit(): void {
     this.buildForms();
-    const id = this.route.snapshot.paramMap.get('productoId');
-    if (id) {
-      this.cargarProducto(+id);
+    const slug = this.route.snapshot.paramMap.get('slug');
+    if (slug) {
+      const id = slug.split('-').pop();
+      if (id) {
+        this.cargarProducto(+id);
+      } else {
+        this.router.navigate(['/']);
+      }
     } else {
       this.router.navigate(['/']);
     }
@@ -610,8 +616,13 @@ export class CheckoutComponent implements OnInit, OnDestroy {
   }
 
   volver(): void {
-    const id = this.producto()?.id;
-    this.router.navigate(id ? ['/productos', id] : ['/']);
+    const p = this.producto();
+    if (p) {
+      const slug = createFriendlySlug(p.titulo, p.id);
+      this.router.navigate(['/productos', slug]);
+    } else {
+      this.router.navigate(['/']);
+    }
   }
 
   hasError(form: FormGroup, field: string): boolean {
