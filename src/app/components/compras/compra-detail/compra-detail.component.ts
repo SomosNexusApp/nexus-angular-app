@@ -7,12 +7,13 @@ import { Compra } from '../../../models/compra.model';
 import { TimeAgoPipe } from '../../../shared/pipes/time-ago.pipe';
 import { CurrencyEsPipe } from '../../../shared/pipes/currency-es.pipe';
 import { CoverImagePipe } from '../../../shared/pipes/cover-image.pipe';
+import { SlugPipe } from '../../../shared/pipes/slug-pipe';
 import { ValoracionModalComponent } from '../../../shared/components/valoracion-modal/valoracion-modal.component';
 
 @Component({
   selector: 'app-compra-detail',
   standalone: true,
-  imports: [CommonModule, RouterModule, CurrencyEsPipe, CoverImagePipe, ValoracionModalComponent],
+  imports: [CommonModule, RouterModule, CurrencyEsPipe, CoverImagePipe, ValoracionModalComponent, SlugPipe],
   templateUrl: './compra-detail.component.html',
   styleUrl: './compra-detail.component.css',
 })

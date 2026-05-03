@@ -21,7 +21,7 @@
     </div>
 
     @if (conversacion.producto) {
-      <div class="header-product" [routerLink]="['/productos', conversacion.producto.id]">
+      <div class="header-product" [routerLink]="['/productos', conversacion.producto.id | slugify:conversacion.producto.titulo]">
         <img [src]="conversacion.producto | coverImage" class="thumb" />
         <div class="prod-info">
           <span class="prod-title">{{ conversacion.producto.titulo }}</span>
