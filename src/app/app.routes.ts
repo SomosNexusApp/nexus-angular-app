@@ -70,14 +70,14 @@ export const routes: Routes = [
   //     ),
   // },
   {
-    path: 'productos/:id',
+    path: 'productos/:slug',
     loadComponent: () =>
       import('./shared/components/marketplace/producto-detail/producto-detail.component').then(
         (m) => m.ProductoDetailComponent,
       ),
   },
   {
-    path: 'ofertas/:id',
+    path: 'ofertas/:slug',
     loadComponent: () =>
       import('./components/ofertas/oferta-detail/oferta-detail.component').then(
         (m) => m.OfertaDetailComponent,
@@ -89,7 +89,7 @@ export const routes: Routes = [
       import('./components/vehiculos/vehiculos.component').then((m) => m.VehiculosComponent),
   },
   {
-    path: 'vehiculos/:id',
+    path: 'vehiculos/:slug',
     loadComponent: () =>
       import('./components/vehiculos/vehiculo-detail/vehiculo-detail.component').then(
         (m) => m.VehiculoDetailComponent,

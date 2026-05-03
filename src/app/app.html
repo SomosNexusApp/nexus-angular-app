@@ -1,4 +1,4 @@
-@if (!isAdminRoute() && !isSearchRoute() && !guestPopup.isOnboardingOpen()) {
+@if (!isAdminRoute() && !guestPopup.isOnboardingOpen()) {
   @if (isMobileUI()) {
     @if (!uiService.isAnyChatSelected() && !uiService.isDetailView()) {
       <app-mobile-header></app-mobile-header>

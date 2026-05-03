@@ -9,6 +9,7 @@ import { Vehiculo } from '../../../models/vehiculo.model';
 import { MarketplaceItem } from '../../../models/marketplace-item.model';
 import { FavoritoService } from '../../../core/services/favorito.service';
 import { AuthStore } from '../../../core/auth/auth-store';
+import { createFriendlySlug } from '../../utils/slug-utils';
 
 @Component({
   selector: 'app-vehiculo-card',
@@ -84,7 +85,8 @@ export class VehiculoCardComponent implements OnInit {
 
   navigateToDetail(): void {
     if (!this.vehiculo?.id) return;
-    this.router.navigate(['/vehiculos', this.vehiculo.id]);
+    const slug = createFriendlySlug(this.vehiculo.titulo, this.vehiculo.id);
+    this.router.navigate(['/vehiculos', slug]);
   }
 
   toggleFavorito(event: MouseEvent): void {

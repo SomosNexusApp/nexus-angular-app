@@ -272,7 +272,7 @@
                   Por <strong>@{{ v.comprador?.user || 'Anónimo' }}</strong>
                   @if (v.compra?.producto) {
                     ·
-                    <a [routerLink]="['/productos', v.compra.producto.id]" class="val-product-link">
+                    <a [routerLink]="['/productos', v.compra.producto.id | slugify:v.compra.producto.titulo]" class="val-product-link">
                       {{ v.compra.producto.titulo }}
                     </a>
                   }
@@ -466,7 +466,7 @@
                  @for (p of productos(); track p.id) {
                     <div 
                       class="p-n-card" 
-                      (click)="router.navigate(['/productos', p.id])"
+                      (click)="navigateToDetail(p, 'productos')"
                     >
                       <div class="p-n-card-img"><img [src]="p | coverImage"><div class="p-n-card-price">{{ p.precio | currency:'EUR':'symbol':'1.0-0' }}</div></div>
                       <div class="p-n-card-body">
@@ -483,7 +483,7 @@
                  @for (o of ofertas(); track o.id) {
                     <div 
                       class="p-n-card" 
-                      (click)="router.navigate(['/ofertas', o.id])"
+                      (click)="navigateToDetail(o, 'ofertas')"
                     >
                       <div class="p-n-card-img"><img [src]="o | coverImage"><div class="p-n-card-price">{{ o.precioOferta | currency:'EUR':'symbol':'1.0-0' }}</div></div>
                       <div class="p-n-card-body">
@@ -500,7 +500,7 @@
                  @for (v of vehiculos(); track v.id) {
                    <div 
                      class="p-n-card" 
-                     (click)="router.navigate(['/vehiculos', v.id])"
+                     (click)="navigateToDetail(v, 'vehiculos')"
                    >
                      <div class="p-n-card-img"><img [src]="v.imagenPrincipal || 'assets/placeholder.jpg'"><div class="p-n-card-price">{{ v.precio | currency:'EUR':'symbol':'1.0-0' }}</div></div>
                      <div class="p-n-card-body">

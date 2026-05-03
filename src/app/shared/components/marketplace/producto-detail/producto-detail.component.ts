@@ -26,6 +26,7 @@ import { ToastService } from '../../../../core/services/toast.service';
 import { ReporteModalComponent } from '../../reporte-modal/reporte-modal.component';
 import { GuestPopupService } from '../../../../core/services/guest-popup.service';
 import { UiService } from '../../../../core/services/ui.service';
+import { extractIdFromSlug } from '../../../../shared/utils/slug-utils';
 
 @Component({
   selector: 'app-producto-detail',
@@ -151,7 +152,8 @@ export class ProductoDetailComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.uiService.isDetailView.set(true);
     this.routeSub = this.route.paramMap.subscribe((params) => {
-      const id = params.get('id');
+      const slug = params.get('slug');
+      const id = slug ? extractIdFromSlug(slug) : null;
       if (id) {
         window.scrollTo(0, 0);
         this.cargarProducto(+id);

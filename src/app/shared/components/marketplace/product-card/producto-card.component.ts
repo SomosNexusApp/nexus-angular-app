@@ -8,6 +8,7 @@ import { CoverImagePipe } from '../../../pipes/cover-image.pipe';
 import { MarketplaceItem } from '../../../../models/marketplace-item.model';
 import { AuthStore } from '../../../../core/auth/auth-store';
 import { FavoritoService } from '../../../../core/services/favorito.service';
+import { createFriendlySlug } from '../../../../shared/utils/slug-utils';
 
 @Component({
   selector: 'app-producto-card',
@@ -98,7 +99,8 @@ export class ProductoCardComponent implements OnInit {
   }
 
   navigateToDetail(event: MouseEvent): void {
-    this.router.navigate(['/productos', this.producto.id]);
+    const slug = createFriendlySlug(this.producto.titulo, this.producto.id);
+    this.router.navigate(['/productos', slug]);
   }
 
   toggleFavorito(event: MouseEvent): void {

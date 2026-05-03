@@ -20,6 +20,8 @@ import { PagosComponent } from '../pagos/pagos.component';
 import { ConfiguracionComponent } from '../configuracion/configuracion.component';
 import { VehiculoCardComponent } from '../../../shared/components/vehiculo-card/vehiculo-card.component';
 import { FavoritoService } from '../../../core/services/favorito.service';
+import { SlugPipe } from '../../../shared/pipes/slug-pipe';
+import { createFriendlySlug } from '../../../shared/utils/slug-utils';
 
 type SidebarSection =
   | 'resumen'
@@ -53,6 +55,7 @@ type SidebarSection =
     ConfiguracionComponent,
     AvatarComponent,
     VehiculoCardComponent,
+    SlugPipe,
   ],
   templateUrl: './mi-cuenta.component.html',
   styleUrls: ['./mi-cuenta.component.css'],
@@ -895,6 +898,11 @@ export class MiCuentaComponent implements OnInit {
       this.selectedItemForMenu.set(null);
       this.selectedItemType.set(null);
     }, 300);
+  }
+
+  navigateToDetail(item: any, type: 'productos' | 'ofertas' | 'vehiculos') {
+    const slug = createFriendlySlug(item.titulo || `${item.marca} ${item.modelo}`, item.id);
+    this.router.navigate([`/${type}`, slug]);
   }
 
   executeMenuAction(action: string) {

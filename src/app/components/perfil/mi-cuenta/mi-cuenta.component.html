@@ -145,7 +145,7 @@
               <div class="product-list-item">
                 <img [src]="p | coverImage" class="product-list-thumb" alt="Producto" />
                 <div class="product-list-info">
-                  <a [routerLink]="['/productos', p.id]" class="product-list-title">{{
+                  <a [routerLink]="['/productos', p.id | slugify:p.titulo]" class="product-list-title">{{
                     p.titulo
                   }}</a>
                   <span class="product-list-price">{{ p.precio | currencyEs }}</span>
@@ -299,7 +299,7 @@
               >
                 <img [src]="o | coverImage" class="product-list-thumb" alt="Oferta" />
                 <div class="product-list-info">
-                  <a [routerLink]="['/ofertas', o.id]" class="product-list-title">{{ o.titulo }}</a>
+                  <a [routerLink]="['/ofertas', o.id | slugify:o.titulo]" class="product-list-title">{{ o.titulo }}</a>
                   <span class="product-list-price">
                     {{ o.precioOriginal | currencyEs }} &rarr; {{ o.precioOferta | currencyEs }}
                   </span>
@@ -389,7 +389,7 @@
               <div class="product-list-item" [class.sold]="v.estadoVehiculo === 'VENDIDO'" [class.reserved]="v.estadoVehiculo === 'RESERVADO'" [class.paused]="v.estadoVehiculo === 'PAUSADO'">
                 <img [src]="v.imagenPrincipal" class="product-list-thumb" alt="Vehículo" />
                 <div class="product-list-info">
-                  <a [routerLink]="['/vehiculos', v.id]" class="product-list-title">
+                  <a [routerLink]="['/vehiculos', v.id | slugify:(v.marca + ' ' + v.modelo)]" class="product-list-title">
                     {{ v.marca }} {{ v.modelo }} ({{ v.anio }})
                   </a>
                   <div class="v-specs-mini">
@@ -926,7 +926,7 @@
                     (pointerup)="onPressEnd()"
                     (pointerleave)="onPressEnd()"
                     (contextmenu)="$event.preventDefault()"
-                    (click)="!showActionSheet() ? router.navigate(['/productos', p.id]) : null"
+                    (click)="!showActionSheet() ? navigateToDetail(p, 'productos') : null"
                   >
                     <div class="p-n-card-img"><img [src]="p | coverImage"><div class="p-n-card-price">{{ p.precio | currencyEs }}</div></div>
                     <div class="p-n-card-body">
@@ -957,7 +957,7 @@
                     (pointerup)="onPressEnd()"
                     (pointerleave)="onPressEnd()"
                     (contextmenu)="$event.preventDefault()"
-                    (click)="!showActionSheet() ? router.navigate(['/ofertas', o.id]) : null"
+                    (click)="!showActionSheet() ? navigateToDetail(o, 'ofertas') : null"
                   >
                     <div class="p-n-card-img"><img [src]="o | coverImage"><div class="p-n-card-price">{{ o.precioOferta | currencyEs }}</div></div>
                     <div class="p-n-card-body">
@@ -983,7 +983,7 @@
                    (pointerup)="onPressEnd()"
                    (pointerleave)="onPressEnd()"
                    (contextmenu)="$event.preventDefault()"
-                   (click)="!showActionSheet() ? router.navigate(['/vehiculos', v.id]) : null"
+                   (click)="!showActionSheet() ? navigateToDetail(v, 'vehiculos') : null"
                  >
                    <div class="p-n-card-img"><img [src]="v.imagenPrincipal"><div class="p-n-card-price">{{ v.precio | currencyEs }}</div></div>
                    <div class="p-n-card-body">

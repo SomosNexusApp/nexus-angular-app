@@ -2,12 +2,13 @@ import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { SearchService } from '../../../core/services/search.service';
+import { SlugPipe } from '../../../shared/pipes/slug-pipe';
 import { trigger, transition, style, animate, query, stagger } from '@angular/animations';
 
 @Component({
   selector: 'app-viajes-portal',
   standalone: true,
-  imports: [CommonModule, RouterModule],
+  imports: [CommonModule, RouterModule, SlugPipe],
   template: `
     <div class="viajes-container">
       <!-- Hero Section -->
@@ -45,7 +46,7 @@ import { trigger, transition, style, animate, query, stagger } from '@angular/an
         } @else {
           <div class="travel-grid" [@listAnimation]="items.length">
             @for (item of items; track item.id) {
-              <div class="travel-card glass" [routerLink]="['/ofertas', item.id]">
+              <div class="travel-card glass" [routerLink]="['/ofertas', item.id | slugify:item.titulo]">
                 <div class="card-image-wrapper">
                   <img [src]="item.imagenPrincipal || 'assets/images/placeholder-travel.jpg'" [alt]="item.titulo">
                   <div class="price-tag glass">

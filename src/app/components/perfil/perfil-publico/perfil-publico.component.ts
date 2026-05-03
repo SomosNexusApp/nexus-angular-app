@@ -10,6 +10,8 @@ import { ReporteModalComponent } from '../../../shared/components/reporte-modal/
 import { ProductoCardComponent } from '../../../shared/components/marketplace/product-card/producto-card.component';
 import { AvatarComponent } from '../../../shared/components/avatar/avatar.component';
 import { CoverImagePipe } from '../../../shared/pipes/cover-image.pipe';
+import { SlugPipe } from '../../../shared/pipes/slug-pipe';
+import { createFriendlySlug } from '../../../shared/utils/slug-utils';
 
 @Component({
   selector: 'app-perfil-publico',
@@ -22,6 +24,7 @@ import { CoverImagePipe } from '../../../shared/pipes/cover-image.pipe';
     ReporteModalComponent,
     AvatarComponent,
     CoverImagePipe,
+    SlugPipe,
   ],
   templateUrl: './perfil-publico.component.html',
   styleUrls: ['./perfil-publico.component.css'],
@@ -302,5 +305,10 @@ export class PerfilPublicoComponent implements OnInit, OnDestroy {
 
   cerrarModalBloqueo() {
     this.mostrandoModalBloqueo.set(false);
+  }
+
+  navigateToDetail(item: any, type: 'productos' | 'ofertas' | 'vehiculos') {
+    const slug = createFriendlySlug(item.titulo || `${item.marca} ${item.modelo}`, item.id);
+    this.router.navigate([`/${type}`, slug]);
   }
 }

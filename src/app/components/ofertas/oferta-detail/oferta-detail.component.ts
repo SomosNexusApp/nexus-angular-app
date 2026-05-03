@@ -14,6 +14,7 @@ import { UiService } from '../../../core/services/ui.service';
 import { Location } from '@angular/common';
 import { FavoritoService } from '../../../core/services/favorito.service';
 import { GuestPopupService } from '../../../core/services/guest-popup.service';
+import { extractIdFromSlug } from '../../../shared/utils/slug-utils';
 
 export interface PollOption { text: string; votes: number; }
 export interface PollData { question: string; options: PollOption[]; totalVotes: number; votedUsers: number[]; }
@@ -93,8 +94,11 @@ export class OfertaDetailComponent implements OnInit, OnDestroy {
     window.scrollTo(0, 0);
     this.uiService.isDetailView.set(true);
     this.route.params.subscribe(params => {
-      const id = params['id'];
-      if (id) this.cargarOferta(id);
+      const slug = params['slug'];
+      if (slug) {
+        const id = extractIdFromSlug(slug);
+        if (id) this.cargarOferta(id);
+      }
     });
   }
 

@@ -5,6 +5,7 @@ import { SearchService } from '../../../core/services/search.service';
 import { AuthStore } from '../../../core/auth/auth-store';
 import { GuestPopupService } from '../../../core/services/guest-popup.service';
 import { AvatarComponent } from '../../../shared/components/avatar/avatar.component';
+import { createFriendlySlug } from '../../../shared/utils/slug-utils';
 import { of } from 'rxjs';
 
 interface ProductSlide {
@@ -119,7 +120,10 @@ export class HeroComponent implements OnInit, OnDestroy {
 
   goToProduct(index: number) {
     const slide = this.slides[index];
-    if (slide?.id) this.router.navigate(['/productos', slide.id]);
+    if (slide?.id) {
+      const slug = createFriendlySlug(slide.title, slide.id);
+      this.router.navigate(['/productos', slug]);
+    }
   }
 
 

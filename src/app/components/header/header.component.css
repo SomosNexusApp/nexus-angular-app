@@ -121,7 +121,9 @@
   border-radius: 20px;
   box-shadow: 0 30px 70px rgba(0, 0, 0, 0.85);
   z-index: 1000;
-  overflow: hidden;
+  overflow-y: auto;
+  max-height: 450px;
+  overscroll-behavior: contain;
   animation: fadeInUp 0.3s cubic-bezier(0.16, 1, 0.3, 1);
 }
 

@@ -12,6 +12,7 @@ import { ToastService } from '../../../core/services/toast.service';
 import { ViewChild } from '@angular/core';
 import { FavoritoService } from '../../../core/services/favorito.service';
 import { UiService } from '../../../core/services/ui.service';
+import { extractIdFromSlug } from '../../../shared/utils/slug-utils';
 
 import { AvatarComponent } from '../../../shared/components/avatar/avatar.component';
 
@@ -55,11 +56,14 @@ export class VehiculoDetailComponent implements OnInit, OnDestroy {
     this.uiService.isDetailView.set(true);
     
     this.route.params.subscribe((params) => {
-      const id = params['id'];
-      if (id) {
-        this.cargando.set(true);
-        this.vehiculo.set(null);
-        this.cargarVehiculo(id);
+      const slug = params['slug'];
+      if (slug) {
+        const id = extractIdFromSlug(slug);
+        if (id) {
+          this.cargando.set(true);
+          this.vehiculo.set(null);
+          this.cargarVehiculo(id);
+        }
       }
     });
   }

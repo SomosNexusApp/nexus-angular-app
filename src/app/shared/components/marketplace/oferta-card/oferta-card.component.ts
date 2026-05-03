@@ -22,6 +22,7 @@ import { environment } from '../../../../../environments/environment';
 import { AuthStore } from '../../../../core/auth/auth-store';
 import { ToastService } from '../../../../core/services/toast.service';
 import { FavoritoService } from '../../../../core/services/favorito.service';
+import { createFriendlySlug } from '../../../../shared/utils/slug-utils';
 
 @Component({
   selector: 'app-oferta-card',
@@ -289,7 +290,8 @@ export class OfertaCardComponent implements OnInit, OnDestroy, OnChanges {
 
   navigateToDetail(): void {
     if (this.oferta.id === 9999) return;
-    this.router.navigate(['/ofertas', this.oferta.id]);
+    const slug = createFriendlySlug(this.oferta.titulo, this.oferta.id);
+    this.router.navigate(['/ofertas', slug]);
   }
 
   toggleFavorito(event: MouseEvent): void {

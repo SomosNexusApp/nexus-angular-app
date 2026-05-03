@@ -26,6 +26,8 @@ import { ConfirmModalComponent } from '../../../shared/components/confirm-modal/
 import { ReporteModalComponent } from '../../../shared/components/reporte-modal/reporte-modal.component';
 import { AvatarComponent } from '../../../shared/components/avatar/avatar.component';
 import { Subscription } from 'rxjs';
+import { SlugPipe } from '../../../shared/pipes/slug-pipe';
+import { createFriendlySlug } from '../../../shared/utils/slug-utils';
 
 @Component({
   selector: 'app-chat-panel',
@@ -40,7 +42,8 @@ import { Subscription } from 'rxjs';
     CoverImagePipe, 
     ReporteModalComponent,
     ConfirmModalComponent,
-    AvatarComponent
+    AvatarComponent,
+    SlugPipe
   ],
   templateUrl: './chat-panel.html',
   styleUrl: './chat-panel.css',
@@ -563,6 +566,12 @@ export class ChatPanelComponent implements OnChanges, AfterViewChecked, OnDestro
     }
     
     this.precioOferta.set(value === '' ? null : parseFloat(value));
+  }
+
+  navigateToProduct(item: any) {
+    if (!item) return;
+    const slug = createFriendlySlug(item.titulo, item.id);
+    this.router.navigate(['/productos', slug]);
   }
 }
 

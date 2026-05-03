@@ -497,6 +497,7 @@ h3,
   box-shadow: 0 20px 50px rgba(0, 0, 0, 0.9);
   max-height: 380px;
   overflow-y: auto;
+  overscroll-behavior: contain; /* Evita que el scroll se propague al contenedor padre */
   padding: 8px;
   z-index: 9999;
 }
