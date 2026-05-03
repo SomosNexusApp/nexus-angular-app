@@ -342,7 +342,7 @@
       <section class="details-panel vendor-panel glass-card">
         <h2 class="panel-title">{{ vendedor()?.nombre || vendedor()?.username || vendedor()?.user || 'Vendedor' }}</h2>
         @if (vendedor()) {
-          <div class="vendor-showcase" [routerLink]="['/perfil', vendedor()!.id]" style="cursor: pointer;">
+          <div class="vendor-showcase" [routerLink]="['/perfil', vendedor()!.user || vendedor()!.username]" style="cursor: pointer;">
             <div class="vendor-avatar-wrap">
               @if (vendedor()!.avatar) {
                 <img [src]="vendedor()!.avatar" [alt]="vendedor()!.nombre" class="vendor-img" />

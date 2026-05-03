@@ -164,7 +164,7 @@
     <!-- Vendedor -->
     <section class="details-panel vendor-panel glass-card">
       <h2 class="panel-title">Vendedor</h2>
-      <div class="vendor-showcase" *ngIf="vehiculo().publicador" [routerLink]="['/perfil', vehiculo().publicador.id]" style="cursor: pointer;">
+      <div class="vendor-showcase" *ngIf="vehiculo().publicador" [routerLink]="['/perfil', vehiculo().publicador.user]" style="cursor: pointer;">
         <div class="vendor-avatar-wrap">
           <app-avatar 
             [avatarUrl]="vehiculo().publicador.avatar"
@@ -215,7 +215,7 @@
     </div>
     <div class="related-scroll-container">
       <div class="related-grid">
-          <div class="elite-mini-card" *ngFor="let s of similares()" [routerLink]="['/vehiculos', s.id]">
+          <div class="elite-mini-card" *ngFor="let s of similares()" (click)="irAVehiculoSimilar(s)">
               <img [src]="s.imagenPrincipal" alt="Miniatura">
               <div class="mini-card-info">
                   <h5>{{ s.marca }} {{ s.modelo }}</h5>

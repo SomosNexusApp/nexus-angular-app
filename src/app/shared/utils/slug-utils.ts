@@ -16,8 +16,9 @@ export function slugify(text: string): string {
  * Crea un slug amigable combinando algunas palabras del título y el ID al final.
  * Ejemplo: "LEGO Icons 10281 Árbol Bonsái", 10 -> "lego-icons-10281-arbol-bonsai-10"
  */
-export function createFriendlySlug(text: string, id: number | string): string {
-  const slug = slugify(text);
+export function createFriendlySlug(text: string | null | undefined, id: number | string | null | undefined): string {
+  if (id === null || id === undefined) return '';
+  const slug = slugify(text || '');
   // Limitamos a unas 6-8 palabras para que no sea infinito
   const slugParts = slug.split('-').slice(0, 10).join('-');
   return `${slugParts}-${id}`;

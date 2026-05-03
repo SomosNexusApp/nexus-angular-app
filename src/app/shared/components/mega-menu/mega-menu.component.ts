@@ -3,6 +3,8 @@ import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { CurrencyEsPipe } from '../../pipes/currency-es.pipe';
 
+import { createFriendlySlug } from '../../utils/slug-utils';
+
 export interface MegaMenuConfig {
   id: string;
   title: string;
@@ -198,9 +200,10 @@ export class MegaMenuComponent {
   onItemClick() { this.navigate.emit(); }
 
   getRoute(item: any): any[] {
-    if (item.searchType === 'VEHICULO') return ['/vehiculos', item.id];
-    if (item.categoria?.slug === 'viajes') return ['/viajes', item.id];
-    return ['/ofertas', item.id];
+    const slug = createFriendlySlug(item.titulo, item.id);
+    if (item.searchType === 'VEHICULO') return ['/vehiculos', slug];
+    if (item.categoria?.slug === 'viajes') return ['/ofertas', slug];
+    return ['/ofertas', slug];
   }
 
   getBadge(item: any) {

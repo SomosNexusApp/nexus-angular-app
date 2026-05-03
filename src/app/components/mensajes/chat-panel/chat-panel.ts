@@ -11,7 +11,7 @@ import {
   OnDestroy,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { ChatService } from '../../../core/services/chat.service';
 import { ChatMensaje, WebSocketService } from '../../../core/services/websocket.service';
@@ -59,6 +59,7 @@ export class ChatPanelComponent implements OnChanges, AfterViewChecked, OnDestro
   authStore = inject(AuthStore);
   bloqueoService = inject(BloqueoService);
   private toast = inject(ToastService);
+  private router = inject(Router);
 
   mensajes = signal<ChatMensaje[]>([]);
   otroUsuario = signal<any>(null);

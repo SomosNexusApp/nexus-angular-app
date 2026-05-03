@@ -10,8 +10,8 @@ export class SlugPipe implements PipeTransform {
    * Transforma un ID y un título en un slug amigable.
    * Uso: {{ item.id | slugify:item.titulo }}
    */
-  transform(id: number | string, titulo: string): string {
-    if (!id) return '';
+  transform(id: any, titulo: any): string {
+    if (id === undefined || id === null || id === '') return '';
     return createFriendlySlug(titulo || '', id);
   }
 }

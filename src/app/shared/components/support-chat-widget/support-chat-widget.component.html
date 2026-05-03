@@ -43,7 +43,7 @@
                   <div class="scw-rich-icon"><i class="fas fa-box"></i></div>
                   <div class="scw-rich-info">
                     <strong>Producto Sugerido</strong>
-                    <a [routerLink]="['/productos', m.referenciaId]" (click)="$event.stopPropagation()">Ver detalles</a>
+                    <a [routerLink]="['/productos', m.referenciaId | slugify:'nexus']" (click)="$event.stopPropagation()">Ver detalles</a>
                   </div>
                 </div>
               }
@@ -52,7 +52,7 @@
                   <div class="scw-rich-icon"><i class="fas fa-tag"></i></div>
                   <div class="scw-rich-info">
                     <strong>Oferta Destacada</strong>
-                    <a [routerLink]="['/ofertas', m.referenciaId]" (click)="$event.stopPropagation()">Aprovechar ahora</a>
+                    <a [routerLink]="['/ofertas', m.referenciaId | slugify:'nexus']" (click)="$event.stopPropagation()">Aprovechar ahora</a>
                   </div>
                 </div>
               }
@@ -61,7 +61,7 @@
                   <div class="scw-rich-icon"><i class="fas fa-car"></i></div>
                   <div class="scw-rich-info">
                     <strong>Vehículo Recomendado</strong>
-                    <a [routerLink]="['/vehiculos', m.referenciaId]" (click)="$event.stopPropagation()">Ver vehículo</a>
+                    <a [routerLink]="['/vehiculos', m.referenciaId | slugify:'nexus']" (click)="$event.stopPropagation()">Ver vehículo</a>
                   </div>
                 </div>
               }

@@ -100,7 +100,15 @@ export class ProductoCardComponent implements OnInit {
 
   navigateToDetail(event: MouseEvent): void {
     const slug = createFriendlySlug(this.producto.titulo, this.producto.id);
-    this.router.navigate(['/productos', slug]);
+    const type = (this.producto.searchType || 'PRODUCTO').toUpperCase();
+    
+    if (type === 'VEHICULO') {
+      this.router.navigate(['/vehiculos', slug]);
+    } else if (type === 'OFERTA') {
+      this.router.navigate(['/ofertas', slug]);
+    } else {
+      this.router.navigate(['/productos', slug]);
+    }
   }
 
   toggleFavorito(event: MouseEvent): void {

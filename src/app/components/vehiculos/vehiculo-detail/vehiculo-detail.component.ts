@@ -12,7 +12,7 @@ import { ToastService } from '../../../core/services/toast.service';
 import { ViewChild } from '@angular/core';
 import { FavoritoService } from '../../../core/services/favorito.service';
 import { UiService } from '../../../core/services/ui.service';
-import { extractIdFromSlug } from '../../../shared/utils/slug-utils';
+import { extractIdFromSlug, createFriendlySlug } from '../../../shared/utils/slug-utils';
 
 import { AvatarComponent } from '../../../shared/components/avatar/avatar.component';
 
@@ -134,7 +134,6 @@ export class VehiculoDetailComponent implements OnInit, OnDestroy {
 
   verificarFavorito(vehiculoId: number) {
     if (!this.authStore.isLoggedIn()) return;
-    // Asumiendo que el servicio de favoritos maneja tanto productos como vehículos o solo IDs
     this.favoritoService.getFavoritosIds().subscribe({
       next: (ids) => this.esFavorito.set(ids.includes(`vehiculo_${vehiculoId}`))
     });
@@ -171,6 +170,11 @@ export class VehiculoDetailComponent implements OnInit, OnDestroy {
       navigator.clipboard.writeText(window.location.href);
       this.toast.success('Enlace copiado al portapapeles');
     }
+  }
+
+  irAVehiculoSimilar(v: any) {
+    const slug = createFriendlySlug(`${v.marca} ${v.modelo}`, v.id);
+    this.router.navigate(['/vehiculos', slug]);
   }
 }
 

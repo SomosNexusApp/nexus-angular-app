@@ -13,11 +13,12 @@ import { filter, interval, Subscription } from 'rxjs';
 import { SupportChatService, SoporteMsg } from '../../../core/services/support-chat.service';
 import { AuthStore } from '../../../core/auth/auth-store';
 import { GuestPopupService } from '../../../core/services/guest-popup.service';
+import { SlugPipe } from '../../../shared/pipes/slug-pipe';
 
 @Component({
   selector: 'app-support-chat-widget',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterLink],
+  imports: [CommonModule, FormsModule, RouterLink, SlugPipe],
   templateUrl: './support-chat-widget.component.html',
   styleUrls: ['./support-chat-widget.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,
