@@ -48,6 +48,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
   private searchService = inject(SearchService);
   public uiService = inject(UiService);
   private http = inject(HttpClient);
+  public environment = environment;
 
   private destroy$ = new Subject<void>();
 
