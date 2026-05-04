@@ -21,6 +21,7 @@ import { MobileBottomNav } from './mobile/mobile-bottom-nav/mobile-bottom-nav';
 import { CategoriaPanelComponent } from './shared/components/categoria-panel/categoria-panel.component';
 import { MobilePublishModalComponent } from './mobile/mobile-publish-modal/mobile-publish-modal';
 import { FooterComponent } from './shared/components/footer/footer.component';
+import { CookieConsentComponent } from './shared/components/cookie-consent/cookie-consent.component';
 
 // componente raiz de la aplicacion. actua como shell global:
 // - monta el header, footer y router-outlet
@@ -43,6 +44,7 @@ import { FooterComponent } from './shared/components/footer/footer.component';
     CategoriaPanelComponent,
     MobilePublishModalComponent,
     FooterComponent,
+    CookieConsentComponent,
   ],
   templateUrl: './app.html',
   styleUrls: ['./app.component.scss'],

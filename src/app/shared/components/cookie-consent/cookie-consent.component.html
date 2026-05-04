@@ -1,0 +1,76 @@
+@if (!cookieService.consentAccepted() && hasScrolled()) {
+  <div class="cookie-consent-wrapper" @slideInOut>
+    <div class="cookie-card">
+      <div class="cookie-header">
+        <div class="cookie-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 2a10 10 0 1 0 10 10 4 4 0 0 1-5-5 4 4 0 0 1-5-5" />
+            <path d="M8.5 8.5v.01" />
+            <path d="M16 15.5v.01" />
+            <path d="M12 12v.01" />
+            <path d="M11 17v.01" />
+            <path d="M7 14v.01" />
+          </svg>
+        </div>
+        <div class="cookie-info">
+          <h3>Nos importan tus datos</h3>
+          <p>
+            Utilizamos cookies propias y de terceros para mejorar tu experiencia de navegación y ofrecerte contenidos de interés. Lee nuestra <a [href]="policyUrl" target="_blank" class="policy-link">política de cookies</a>.
+          </p>
+        </div>
+      </div>
+
+      @if (!showManage) {
+        <div class="cookie-actions">
+          <button type="button" class="btn-manage" (click)="toggleManage()">
+            Gestionar
+          </button>
+          <button type="button" class="btn-accept" (click)="acceptAll()">
+            Aceptar todas
+          </button>
+        </div>
+      } @else {
+        <div class="manage-options" @slideInOut>
+          <div class="option-item">
+            <div class="option-info">
+              <span>Técnicas y Necesarias</span>
+              <p>Indispensables para el funcionamiento de la web.</p>
+            </div>
+            <label class="switch">
+              <input type="checkbox" checked disabled>
+              <span class="slider"></span>
+            </label>
+          </div>
+
+          <div class="option-item">
+            <div class="option-info">
+              <span>Analíticas</span>
+              <p>Nos ayudan a entender cómo usas nuestra plataforma.</p>
+            </div>
+            <label class="switch">
+              <input type="checkbox" #analytics>
+              <span class="slider"></span>
+            </label>
+          </div>
+
+          <div class="option-item">
+            <div class="option-info">
+              <span>Publicidad</span>
+              <p>Contenido personalizado según tus intereses.</p>
+            </div>
+            <label class="switch">
+              <input type="checkbox" #marketing>
+              <span class="slider"></span>
+            </label>
+          </div>
+
+          <div class="manage-footer">
+            <button type="button" class="btn-save" (click)="savePreferences(analytics.checked, marketing.checked)">
+              Guardar preferencias
+            </button>
+          </div>
+        </div>
+      }
+    </div>
+  </div>
+}
