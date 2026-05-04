@@ -8,17 +8,25 @@ export class CookieService {
   
   // Usamos un signal para que la UI reaccione automáticamente
   consentAccepted = signal<boolean>(this.hasConsent());
+  
+  // Preferencias actuales
+  currentPreferences = signal<any>(this.getStoredPreferences());
 
   constructor() {
     // Si ya existe consentimiento, notificamos a GTM al iniciar
     if (this.hasConsent()) {
-      const stored = localStorage.getItem(this.COOKIE_CONSENT_KEY);
-      try {
-        const prefs = JSON.parse(stored || '{}');
-        this.notifyGTM(prefs);
-      } catch (e) {
-        this.notifyGTM({ essential: true, analytics: true, marketing: true });
-      }
+      const prefs = this.getStoredPreferences();
+      this.notifyGTM(prefs);
+    }
+  }
+
+  private getStoredPreferences(): any {
+    if (typeof window === 'undefined') return { essential: true, analytics: false, marketing: false };
+    const stored = localStorage.getItem(this.COOKIE_CONSENT_KEY);
+    try {
+      return stored ? JSON.parse(stored) : { essential: true, analytics: false, marketing: false };
+    } catch (e) {
+      return { essential: true, analytics: true, marketing: true };
     }
   }
 
@@ -33,6 +41,7 @@ export class CookieService {
       const prefs = { essential: true, analytics: true, marketing: true };
       localStorage.setItem(this.COOKIE_CONSENT_KEY, JSON.stringify(prefs));
       this.consentAccepted.set(true);
+      this.currentPreferences.set(prefs);
       this.notifyGTM(prefs);
     }
   }
@@ -41,6 +50,7 @@ export class CookieService {
     if (typeof window !== 'undefined') {
       localStorage.setItem(this.COOKIE_CONSENT_KEY, JSON.stringify(preferences));
       this.consentAccepted.set(true);
+      this.currentPreferences.set(preferences);
       this.notifyGTM(preferences);
     }
   }

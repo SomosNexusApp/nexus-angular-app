@@ -436,6 +436,16 @@
   color: var(--text-dim);
 }
 
+.subsection-title {
+  font-size: 1.1rem;
+  font-weight: 800;
+  color: #fff;
+  margin: 10px 0 20px 10px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  opacity: 0.8;
+}
+
 /* CUSTOM PREMIUM SWITCH */
 .premium-toggle {
   position: relative;

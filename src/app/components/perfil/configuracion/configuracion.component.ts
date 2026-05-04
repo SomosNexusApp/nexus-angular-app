@@ -23,6 +23,8 @@ import { Subject } from 'rxjs';
 import { debounceTime, distinctUntilChanged, switchMap } from 'rxjs/operators';
 
 import { AvatarComponent } from '../../../shared/components/avatar/avatar.component';
+import { CookieService } from '../../../core/services/cookie.service';
+import { inject } from '@angular/core';
 
 @Component({
   selector: 'app-configuracion',
@@ -39,6 +41,7 @@ import { AvatarComponent } from '../../../shared/components/avatar/avatar.compon
 })
 export class ConfiguracionComponent implements OnInit, AfterViewInit, OnDestroy {
   @Input() isEmbedded = false;
+  cookieService = inject(CookieService);
   private observer: IntersectionObserver | null = null;
   activeSection = signal<string>('perfil');
   private backendUrl = environment.apiUrl;
@@ -372,6 +375,15 @@ export class ConfiguracionComponent implements OnInit, AfterViewInit, OnDestroy 
       next: () => this.toast.success('Ajustes de privacidad guardados'),
       error: () => this.toast.error('Error guardando privacidad'),
     });
+  }
+
+  updateCookiePreference(field: string, value: boolean) {
+    const current = this.cookieService.currentPreferences();
+    this.cookieService.savePreferences({
+      ...current,
+      [field]: value
+    });
+    this.toast.success('Preferencias de cookies actualizadas');
   }
 
   updateDatosEmpresaField(field: string, value: string) {

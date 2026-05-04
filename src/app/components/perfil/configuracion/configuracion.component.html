@@ -242,6 +242,39 @@
                                 <span class="premium-slider"></span>
                             </label>
                         </div>
+
+                        <div class="divider-soft"></div>
+                        <h3 class="subsection-title">Cookies y Seguimiento</h3>
+
+                        <div class="toggle-item">
+                            <div class="toggle-info">
+                                <h4>Cookies Analíticas</h4>
+                                <p>Nos permiten entender cómo interactúas con la web para mejorar la experiencia.</p>
+                            </div>
+                            <label class="premium-toggle">
+                                <input
+                                    type="checkbox"
+                                    [ngModel]="cookieService.currentPreferences().analytics"
+                                    (ngModelChange)="updateCookiePreference('analytics', $event)"
+                                />
+                                <span class="premium-slider"></span>
+                            </label>
+                        </div>
+
+                        <div class="toggle-item">
+                            <div class="toggle-info">
+                                <h4>Cookies de Publicidad</h4>
+                                <p>Permiten mostrarte anuncios y contenido personalizado según tus intereses.</p>
+                            </div>
+                            <label class="premium-toggle">
+                                <input
+                                    type="checkbox"
+                                    [ngModel]="cookieService.currentPreferences().marketing"
+                                    (ngModelChange)="updateCookiePreference('marketing', $event)"
+                                />
+                                <span class="premium-slider"></span>
+                            </label>
+                        </div>
                     </div>
 
                     <div class="section-actions">
