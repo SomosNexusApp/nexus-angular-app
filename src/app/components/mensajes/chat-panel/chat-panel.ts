@@ -101,7 +101,6 @@ export class ChatPanelComponent implements OnChanges, AfterViewChecked, OnDestro
     // Identificar si el otro es el vendedor del producto
     const prod = this.conversacion.producto;
     if (prod && this.otroUsuario()) {
-      // El campo en Producto.java es 'vendedor' (Actor), no 'usuario'
       const vendedorId = prod.vendedor?.id || prod.usuario?.id;
       this.esVendedor.set(vendedorId === this.otroUsuario().id);
       this.puedeNegociar.set(prod.tipoOferta === 'VENTA');
@@ -139,6 +138,13 @@ export class ChatPanelComponent implements OnChanges, AfterViewChecked, OnDestro
     this.wsSub = this.wsService.mensajes.subscribe((msg: ChatMensaje) => {
       // Solo agregar si es de esta conversación y no es un duplicado
       if (msg.roomId === roomId || (msg.producto?.id === productoId && productoId !== null)) {
+        // Verificar si el mensaje está oculto para mí
+        const isHiddenForMe =
+          (msg.remitente.id === currUser.id && msg.eliminadoParaRemitente) ||
+          (msg.receptor?.id === currUser.id && msg.eliminadoParaReceptor);
+
+        if (isHiddenForMe) return;
+
         const existe = this.mensajes().some((m) => m.id === msg.id);
         if (!existe) {
           // Reemplazar mensaje optimista si existe
@@ -148,8 +154,8 @@ export class ChatPanelComponent implements OnChanges, AfterViewChecked, OnDestro
           });
           this.autoScrollActivado = true;
 
-          // Si el mensaje es para mí, marcarlo como leído inmediatamente (ya que tengo el chat abierto)
-          if (msg.receptor.id === currUser.id) {
+          // Si el mensaje es para mí, marcarlo como leído inmediatamente
+          if (msg.receptor?.id === currUser.id) {
             this.wsService.marcarComoRecibido(roomId, currUser.id);
             this.wsService.marcarComoLeido(roomId, currUser.id);
           }
@@ -575,4 +581,3 @@ export class ChatPanelComponent implements OnChanges, AfterViewChecked, OnDestro
     this.router.navigate(['/productos', slug]);
   }
 }
-

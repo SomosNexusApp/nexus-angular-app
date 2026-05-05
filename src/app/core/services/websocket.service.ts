@@ -23,6 +23,8 @@ export interface ChatMensaje {
   precioPropuesto?: number;
   estadoPropuesta?: string;
   roomId?: string;
+  eliminadoParaRemitente?: boolean;
+  eliminadoParaReceptor?: boolean;
 }
 
 export interface Notificacion {
