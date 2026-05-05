@@ -37,7 +37,7 @@
       0 25px 50px rgba(0, 0, 0, 0.5),
       inset 0 0 0 1px rgba(255, 255, 255, 0.05);
     position: relative;
-    overflow: hidden;
+    overflow: visible;
   }
 
   /* Glow lineal superior ultradelgado (cristal cortado) */
@@ -174,8 +174,8 @@
 
   .badge {
     position: absolute;
-    top: 10px;
-    right: 15%;
+    top: -5px;
+    right: -5px;
     background: linear-gradient(135deg, #f43f5e, #fb7185);
     color: white;
     font-size: 0.65rem;
