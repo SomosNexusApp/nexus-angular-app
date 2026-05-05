@@ -61,7 +61,12 @@ export class NotificationService {
     this.ws.notificaciones.subscribe((raw) => {
       const notif = raw as Notificacion & Partial<NotificacionInAppDto> & { metadata?: string };
       if (notif.id != null && notif.titulo) {
-        this.unread.update((n) => n + 1); // incrementamos el contador
+        // Solo incrementamos el contador general si NO es un mensaje de chat
+        // (los mensajes tienen su propio contador en el icono de chat)
+        if (notif.tipo !== 'NUEVO_MENSAJE' && notif.tipo !== 'OFERTA_CHAT') {
+          this.unread.update((n) => n + 1);
+        }
+        
         this.triggerBadgeAnimation();
 
         // Lógica de supresión de notificaciones de chat redundantes
