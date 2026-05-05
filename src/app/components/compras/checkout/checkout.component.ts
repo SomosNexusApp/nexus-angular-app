@@ -42,6 +42,7 @@ const MAX_PRICE = 1000;
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CheckoutComponent implements OnInit, OnDestroy {
+  environment = environment;
   private route = inject(ActivatedRoute);
   private router = inject(Router);
   private http = inject(HttpClient);
