@@ -113,18 +113,21 @@ export class PublishOfertaComponent implements OnInit {
     const val = this.formValue();
     const imgs = this.images();
     
+    const priceOff = this.parsePrice(val?.precioOferta);
+    const priceOrig = this.parsePrice(val?.precioOriginal);
+    
     return {
       id: 9999,
       titulo: val?.titulo || 'Título de tu oferta',
-      precio: val?.precioOferta ?? 0,
-      precioOferta: val?.precioOferta ?? undefined,
-      precioOriginal: val?.precioOriginal ?? undefined,
+      precio: priceOff,
+      precioOferta: priceOff || undefined,
+      precioOriginal: priceOrig || undefined,
       // Si no hay imágenes, usamos un placeholder profesional de Nexus
       imagenPrincipal: imgs.length > 0 ? imgs[0].url : 'https://images.unsplash.com/photo-1555421689-491a97ff2040?q=80&w=1000&auto=format&fit=crop', 
       tienda: val?.tienda || 'Tienda',
       fechaPublicacion: new Date(),
       fechaExpiracion: val?.fechaExpiracion ? new Date(val.fechaExpiracion) : undefined,
-      badge: this.calculateBadge(val?.precioOferta, val?.precioOriginal),
+      badge: this.calculateBadge(priceOff, priceOrig),
       sparkCount: 42,
       dripCount: 5,
       miVoto: null,

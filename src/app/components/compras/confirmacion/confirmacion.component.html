@@ -17,6 +17,20 @@
 <!-- ════════════════════ SUCCESS -->
 @if (!cargando() && !error() && compra()) {
   <div class="conf-page">
+    @if (pagoOk()) {
+      <div class="conf-confetti">
+        <div class="confetti-piece" style="--i: 1"></div>
+        <div class="confetti-piece" style="--i: 2"></div>
+        <div class="confetti-piece" style="--i: 3"></div>
+        <div class="confetti-piece" style="--i: 4"></div>
+        <div class="confetti-piece" style="--i: 5"></div>
+        <div class="confetti-piece" style="--i: 6"></div>
+        <div class="confetti-piece" style="--i: 7"></div>
+        <div class="confetti-piece" style="--i: 8"></div>
+        <div class="confetti-piece" style="--i: 9"></div>
+        <div class="confetti-piece" style="--i: 10"></div>
+      </div>
+    }
     <div class="conf-card">
       <!-- Check animation -->
       @if (pagoOk()) {
@@ -139,7 +153,7 @@
           Seguir comprando
         </a>
         <!-- Link a historial futuro; por ahora navega a inicio si no existe -->
-        <a routerLink="/" class="conf-btn conf-btn--primary">
+        <a routerLink="/perfil" [queryParams]="{ tab: 'compras' }" class="conf-btn conf-btn--primary">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             width="16"
