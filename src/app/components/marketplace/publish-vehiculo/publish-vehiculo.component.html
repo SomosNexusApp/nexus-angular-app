@@ -341,7 +341,7 @@
               <div class="input-group" [class.error]="getErrorMessage(step3Form, 'precio')">
                 <label><i data-lucide="euro"></i> Precio *</label>
                 <div class="input-wrapper">
-                  <input type="number" formControlName="precio" class="premium-number-input" placeholder="Ej: 15500">
+                  <input type="text" formControlName="precio" class="premium-number-input" placeholder="Ej: 15500" (input)="onPriceInput($event)">
                   <span class="input-suffix">€</span>
                 </div>
                 <span class="error-msg">{{ getErrorMessage(step3Form, 'precio') }}</span>

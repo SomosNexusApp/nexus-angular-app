@@ -69,7 +69,7 @@
           <div class="input-group" [class.error]="getErrorMessage('precioOferta')">
             <label>Precio Rebajado *</label>
             <div class="input-wrapper">
-              <input type="number" formControlName="precioOferta" class="price-premium">
+              <input type="text" formControlName="precioOferta" class="price-premium" (input)="onPriceInput($event, 'precioOferta')">
               <span class="input-suffix">€</span>
             </div>
             <span class="error-msg">{{ getErrorMessage('precioOferta') }}</span>
@@ -78,7 +78,7 @@
           <div class="input-group">
             <label>Precio Original</label>
             <div class="input-wrapper">
-              <input type="number" formControlName="precioOriginal">
+              <input type="text" formControlName="precioOriginal" (input)="onPriceInput($event, 'precioOriginal')">
               <span class="input-suffix">€</span>
             </div>
           </div>

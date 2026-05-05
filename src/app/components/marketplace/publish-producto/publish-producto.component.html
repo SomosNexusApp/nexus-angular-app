@@ -223,7 +223,7 @@
               <!-- TIPO DE ANUNCIO -->
               <div class="offer-type-selector">
                 <button type="button" class="offer-card" [class.active]="step3Form.get('tipoOferta')?.value === 'VENTA'" (click)="step3Form.get('tipoOferta')?.setValue('VENTA')">
-                  <div class="card-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg></div>
+                  <div class="card-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 10h12"/><path d="M4 14h9"/><path d="M19 6a7.7 7.7 0 0 0-5.2-2A7.9 7.9 0 0 0 6 12c0 4.4 3.5 8 7.8 8 2 0 3.8-.8 5.2-2"/></svg></div>
                   <span>Venta</span>
                 </button>
                 <button type="button" class="offer-card" [class.active]="step3Form.get('tipoOferta')?.value === 'INTERCAMBIO'" (click)="step3Form.get('tipoOferta')?.setValue('INTERCAMBIO')">
@@ -236,7 +236,7 @@
               @if (step3Form.get('tipoOferta')?.value === 'VENTA') {
                 <div class="price-console-unit animate-slide-up">
                   <div class="price-input-wrapper">
-                    <input type="number" formControlName="precio" placeholder="0.00" min="0" />
+                    <input type="text" formControlName="precio" placeholder="0.00" (input)="onPriceInput($event)" />
                     <span class="currency-symbol">€</span>
                   </div>
                   

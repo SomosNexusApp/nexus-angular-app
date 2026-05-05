@@ -94,8 +94,8 @@ export class PublishOfertaComponent implements OnInit {
     urlOferta: ['', [Validators.required, Validators.pattern(/^(https?:\/\/)?([\da-z.-]+)\.([a-z.]{2,6})([/\w .-]*)*\/?$/)]],
     titulo: ['', [Validators.required, Validators.minLength(10), Validators.maxLength(100)]],
     descripcion: ['', [Validators.required, Validators.minLength(20), Validators.maxLength(1000)]],
-    precioOferta: [null as number | null, [Validators.required, Validators.min(0)]],
-    precioOriginal: [null as number | null, [Validators.min(0)]],
+    precioOferta: ['', [Validators.required, Validators.pattern(/^[0-9]+([.,][0-9]{0,2})?$/)]],
+    precioOriginal: ['', [Validators.pattern(/^[0-9]+([.,][0-9]{0,2})?$/)]],
     tienda: ['', [Validators.required]],
     codigoDescuento: [''],
     esOnline: [true],
@@ -134,11 +134,33 @@ export class PublishOfertaComponent implements OnInit {
 
   discountPercent = computed(() => {
     const val = this.formValue();
-    const off = val?.precioOferta;
-    const orig = val?.precioOriginal;
+    const off = this.parsePrice(val?.precioOferta);
+    const orig = this.parsePrice(val?.precioOriginal);
     if (!off || !orig || orig <= off) return 0;
     return Math.round(((orig - off) / orig) * 100);
   });
+
+  parsePrice(val: any): number {
+    if (!val) return 0;
+    if (typeof val === 'number') return val;
+    const str = String(val).replace(',', '.');
+    const num = parseFloat(str);
+    return isNaN(num) ? 0 : num;
+  }
+
+  onPriceInput(event: any, controlName: string): void {
+    const input = event.target;
+    let value = input.value;
+    const parts = value.split(/[.,]/);
+    if (parts.length > 2) {
+      value = parts[0] + '.' + parts.slice(1).join('');
+    }
+    if (parts.length === 2 && parts[1].length > 2) {
+      value = parts[0] + (value.includes(',') ? ',' : '.') + parts[1].substring(0, 2);
+    }
+    input.value = value;
+    this.ofertaForm.get(controlName)?.setValue(value, { emitEvent: false });
+  }
 
   ngOnInit(): void {
     if (!this.authStore.isLoggedIn()) { this.router.navigate(['/login']); return; }
@@ -148,7 +170,7 @@ export class PublishOfertaComponent implements OnInit {
     this.ofertaForm.get('esGratis')?.valueChanges.subscribe(isGratis => {
       const priceControl = this.ofertaForm.get('precioOferta');
       if (isGratis) {
-        priceControl?.setValue(0);
+        priceControl?.setValue('0');
         priceControl?.disable();
       } else {
         priceControl?.enable();
@@ -173,8 +195,8 @@ export class PublishOfertaComponent implements OnInit {
           urlOferta: oferta.urlOferta,
           titulo: oferta.titulo,
           descripcion: oferta.descripcion,
-          precioOferta: oferta.precioOferta,
-          precioOriginal: oferta.precioOriginal,
+          precioOferta: oferta.precioOferta?.toString() || '',
+          precioOriginal: oferta.precioOriginal?.toString() || '',
           tienda: oferta.tienda,
           codigoDescuento: oferta.codigoDescuento,
           esOnline: oferta.esOnline,
@@ -470,6 +492,8 @@ export class PublishOfertaComponent implements OnInit {
     const val = this.ofertaForm.getRawValue();
     const ofertaData = { 
       ...val, 
+      precioOferta: this.parsePrice(val.precioOferta),
+      precioOriginal: this.parsePrice(val.precioOriginal),
       fechaExpiracion: val.fechaExpiracion ? val.fechaExpiracion : null,
       categoria: { id: this.selectedCategory()?.id } 
     };

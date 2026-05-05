@@ -87,7 +87,7 @@ export class PublishProductoComponent implements OnInit, AfterViewInit {
     modelo: this.fb.control<string>(''),
   });
   step3Form = this.fb.group({
-    precio: this.fb.control<number | null>(null, [Validators.required, Validators.min(0)]),
+    precio: this.fb.control<string>('', [Validators.required, Validators.pattern(/^[0-9]+([.,][0-9]{0,2})?$/)]),
     precioNegociable: this.fb.control<boolean>(false, { nonNullable: true }),
     tipoOferta: this.fb.control<string>('VENTA', {
       validators: [Validators.required],
@@ -165,7 +165,7 @@ export class PublishProductoComponent implements OnInit, AfterViewInit {
 
     return {
       titulo: s2?.titulo || 'Título del anuncio',
-      precio: s3?.precio || 0,
+      precio: this.parsePrice(s3?.precio),
       imagenPrincipal:
         imgs.length > 0
           ? imgs[0].url
@@ -209,6 +209,35 @@ export class PublishProductoComponent implements OnInit, AfterViewInit {
   applyTemplate(content: string): void {
     const current = this.step2Form.get('descripcion')?.value || '';
     this.step2Form.patchValue({ descripcion: current + (current ? '\n\n' : '') + content });
+  }
+
+  parsePrice(val: any): number {
+    if (!val) return 0;
+    if (typeof val === 'number') return val;
+    const str = String(val).replace(',', '.');
+    const num = parseFloat(str);
+    return isNaN(num) ? 0 : num;
+  }
+
+  onPriceInput(event: any): void {
+    const input = event.target;
+    let value = input.value;
+
+    // Reemplazar coma por punto para validación interna si se prefiere, 
+    // pero mantendremos lo que el usuario escribe y validaremos con regex.
+    // Solo permitimos un separador decimal.
+    const parts = value.split(/[.,]/);
+    if (parts.length > 2) {
+      value = parts[0] + '.' + parts.slice(1).join('');
+    }
+
+    // Limitar a 2 decimales
+    if (parts.length === 2 && parts[1].length > 2) {
+      value = parts[0] + (value.includes(',') ? ',' : '.') + parts[1].substring(0, 2);
+    }
+
+    input.value = value;
+    this.step3Form.get('precio')?.setValue(value, { emitEvent: false });
   }
 
   // Helper para el editor Word-style
@@ -321,7 +350,7 @@ export class PublishProductoComponent implements OnInit, AfterViewInit {
     this.step3Form.get('esRegalo')?.valueChanges.subscribe((isRegalo) => {
       const priceControl = this.step3Form.get('precio');
       if (isRegalo) {
-        priceControl?.setValue(0);
+        priceControl?.setValue('0');
         priceControl?.disable();
       } else {
         priceControl?.enable();
@@ -354,7 +383,7 @@ export class PublishProductoComponent implements OnInit, AfterViewInit {
         // Step 3
         const envioVal = p.admiteEnvio ? 'SI' : 'NO';
         this.step3Form.patchValue({
-          precio: p.precio,
+          precio: p.precio?.toString() || '',
           tipoOferta: p.tipoOferta,
           envio: envioVal,
           peso: p.peso,
@@ -739,7 +768,7 @@ export class PublishProductoComponent implements OnInit, AfterViewInit {
       descripcion: s2.descripcion,
       marca: s2.marca,
       modelo: s2.modelo,
-      precio: s3.precio,
+      precio: this.parsePrice(s3.precio),
       precioNegociable: s3.precioNegociable,
       tipoOferta: s3.tipoOferta,
       admiteEnvio: s3.envio !== 'NO',

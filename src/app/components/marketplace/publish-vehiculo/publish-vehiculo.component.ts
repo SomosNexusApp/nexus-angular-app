@@ -94,7 +94,7 @@ export class PublishVehiculoComponent implements OnInit, AfterViewInit {
 
   step3Form = this.fb.group({
     condicion: this.fb.control<string>('MUY_BUEN_ESTADO', Validators.required),
-    precio: this.fb.control<number | null>(null, [Validators.required, Validators.min(100), Validators.max(10000000)]),
+    precio: this.fb.control<string>('', [Validators.required, Validators.pattern(/^[0-9]+([.,][0-9]{0,2})?$/)]),
     tipoOferta: this.fb.control<string>('VENTA', Validators.required),
     matricula: this.fb.control<string>('', [
       Validators.pattern(/^[0-9]{4}[A-Z]{3}$|^[A-Z]{1,2}[0-9]{4}[A-Z]{1,2}$/)
@@ -269,6 +269,28 @@ export class PublishVehiculoComponent implements OnInit, AfterViewInit {
     return options.find(o => o.value === value)?.icon || 'chevron-down';
   }
 
+  onPriceInput(event: any): void {
+    const input = event.target;
+    let value = input.value;
+    const parts = value.split(/[.,]/);
+    if (parts.length > 2) {
+      value = parts[0] + '.' + parts.slice(1).join('');
+    }
+    if (parts.length === 2 && parts[1].length > 2) {
+      value = parts[0] + (value.includes(',') ? ',' : '.') + parts[1].substring(0, 2);
+    }
+    input.value = value;
+    this.step3Form.get('precio')?.setValue(value, { emitEvent: false });
+  }
+
+  parsePrice(val: any): number {
+    if (!val) return 0;
+    if (typeof val === 'number') return val;
+    const str = String(val).replace(',', '.');
+    const num = parseFloat(str);
+    return isNaN(num) ? 0 : num;
+  }
+
   getIconSvg(name: string): SafeHtml {
     const icons: { [key: string]: string } = {
       'zap': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-zap"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg>',
@@ -364,7 +386,7 @@ export class PublishVehiculoComponent implements OnInit, AfterViewInit {
         });
         this.step3Form.patchValue({
           condicion: v.condicion,
-          precio: v.precio,
+          precio: v.precio?.toString() || '',
           tipoOferta: v.tipoOferta,
           matricula: v.matricula,
           ubicacion: v.ubicacion
@@ -657,7 +679,7 @@ export class PublishVehiculoComponent implements OnInit, AfterViewInit {
     const vehiculoData = {
       titulo: s4.titulo,
       descripcion: s4.descripcion,
-      precio: s3.precio,
+      precio: this.parsePrice(s3.precio),
       tipoOferta: s3.tipoOferta,
       tipoVehiculo: s1.tipoVehiculo,
       condicion: s3.condicion,
