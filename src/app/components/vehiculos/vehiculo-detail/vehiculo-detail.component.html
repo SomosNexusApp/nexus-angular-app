@@ -99,11 +99,19 @@
 
       <!-- ── ACCIONES ─────────────────────────────────────── -->
       <div class="actions-block" *ngIf="!uiService.isMobileUI()">
-        <button class="btn-elite primary" (click)="contactar()">
-          <div class="glow"></div>
-          <i class="fas fa-comments"></i>
-          <span>Chat</span>
-        </button>
+        <ng-container *ngIf="!estaVendido() || esPropietario()">
+          <button class="btn-elite primary" (click)="contactar()">
+            <div class="glow"></div>
+            <i class="fas fa-comments"></i>
+            <span>Chat</span>
+          </button>
+        </ng-container>
+
+        <div class="status-alert danger sold-prominent" *ngIf="estaVendido() && !esPropietario()">
+          <i class="fas fa-handshake-slash"></i>
+          <span>Este vehículo ya no está disponible</span>
+        </div>
+
         <button class="btn-elite ghost fav" [class.active]="esFavorito()" (click)="toggleFavorito()">
           <i class="fas fa-heart"></i>
           <span>{{ esFavorito() ? 'Guardado' : 'Guardar' }}</span>
@@ -242,10 +250,17 @@
     <span class="mobile-price">{{ vehiculo().precio | currencyEs }}</span>
     <span class="mobile-status">{{ vehiculo().estadoVehiculo || 'Disponible' }}</span>
   </div>
-  <button class="btn-mobile-chat" (click)="contactar()">
-    <i class="fas fa-comments"></i>
-    <span>Chat</span>
-  </button>
+  
+  <ng-container *ngIf="!estaVendido() || esPropietario()">
+    <button class="btn-mobile-chat" (click)="contactar()">
+      <i class="fas fa-comments"></i>
+      <span>Chat</span>
+    </button>
+  </ng-container>
+
+  <div class="sticky-sold-label" *ngIf="estaVendido() && !esPropietario()">
+    VENDIDO
+  </div>
 </div>
 
 <app-reporte-modal></app-reporte-modal>

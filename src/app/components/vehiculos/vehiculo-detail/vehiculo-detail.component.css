@@ -698,3 +698,31 @@
   box-shadow: 0 8px 20px var(--accent-glow);
 }
 
+/* --- Sold State Styles --- */
+.sold-prominent {
+  background: rgba(239, 68, 68, 0.1) !important;
+  color: #ff5a5a !important;
+  border: 1px solid rgba(239, 68, 68, 0.3) !important;
+  padding: 24px !important;
+  margin-top: 10px !important;
+  justify-content: center;
+  font-size: 1.1rem !important;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.sticky-sold-label {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(239, 68, 68, 0.1);
+  color: #ff5a5a;
+  border: 1px solid rgba(239, 68, 68, 0.2);
+  border-radius: 14px;
+  font-weight: 800;
+  font-size: 1rem;
+  letter-spacing: 2px;
+  height: 48px;
+}
+

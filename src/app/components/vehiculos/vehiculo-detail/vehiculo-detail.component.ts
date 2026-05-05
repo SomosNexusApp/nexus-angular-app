@@ -1,4 +1,4 @@
-import { Component, OnInit, inject, signal, OnDestroy } from '@angular/core';
+import { Component, OnInit, inject, signal, OnDestroy, computed } from '@angular/core';
 import { CommonModule, Location } from '@angular/common';
 import { ActivatedRoute, RouterModule, Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
@@ -50,6 +50,15 @@ export class VehiculoDetailComponent implements OnInit, OnDestroy {
   cargando = signal(true);
   imgPrincipal = signal<string>('');
   esFavorito = signal(false);
+
+  estaVendido = computed(() => this.vehiculo()?.estadoVehiculo === 'VENDIDO' || this.vehiculo()?.estadoVehiculo === 'RESERVADO');
+  
+  esPropietario = computed(() => {
+    const v = this.vehiculo();
+    const user = this.authStore.user();
+    if (!v || !user) return false;
+    return v.publicador?.id === user.id;
+  });
 
   ngOnInit() {
     window.scrollTo(0, 0);

@@ -173,7 +173,22 @@
 
         <!-- ── ACCIONES ─────────────────────────────────────── -->
         <div class="actions-block">
-          @if (puedeComprar()) {
+          @if (estaVendido() && !esVendedorPropietario()) {
+            <div class="status-alert danger sold-prominent">
+              <i class="fas fa-handshake-slash"></i>
+              <span>Este artículo ya ha sido vendido</span>
+            </div>
+            <button class="btn-elite ghost fav" [class.active]="esFavorito()" (click)="toggleFavorito()">
+              <i class="fas fa-heart"></i>
+              <span>{{ esFavorito() ? 'Guardado' : 'Guardar' }}</span>
+            </button>
+            <button class="btn-elite ghost share" (click)="compartir()">
+              <i class="fas fa-share-alt"></i>
+              <span>Compartir</span>
+            </button>
+          }
+
+          @if (puedeComprar() && !estaVendido()) {
             <button class="btn-elite primary" (click)="comprarAhora()">
               <div class="glow"></div>
               <i class="fas fa-shopping-cart"></i>
@@ -199,7 +214,7 @@
             </div>
           }
 
-          @if (soloRecogidaPersonal() && isLoggedIn() && !esVendedorPropietario()) {
+          @if (soloRecogidaPersonal() && isLoggedIn() && !esVendedorPropietario() && !estaVendido()) {
             <div class="status-alert info">
               <i class="fas fa-handshake"></i>
               <span>Solo recogida en persona</span>
@@ -214,7 +229,7 @@
             </button>
           }
 
-          @if (esIntercambio() && isLoggedIn() && !esVendedorPropietario()) {
+          @if (esIntercambio() && isLoggedIn() && !esVendedorPropietario() && !estaVendido()) {
             <div class="status-alert info">
               <i class="fas fa-sync-alt"></i>
               <span>Artículo disponible para intercambio</span>
@@ -229,7 +244,7 @@
             </button>
           }
 
-          @if (esDonacion() && isLoggedIn() && !esVendedorPropietario()) {
+          @if (esDonacion() && isLoggedIn() && !esVendedorPropietario() && !estaVendido()) {
             <div class="status-alert info">
               <i class="fas fa-gift"></i>
               <span>Éste artículo se regala (Donación)</span>
@@ -244,7 +259,7 @@
             </button>
           }
 
-          @if (!isLoggedIn()) {
+          @if (!isLoggedIn() && !estaVendido()) {
             @if (producto()!.tipoOferta === 'VENTA') {
               <button class="btn-elite primary" (click)="comprarAhora()">
                 <i class="fas fa-shopping-cart"></i>
@@ -440,54 +455,61 @@
 
     <!-- ── Mobile Sticky Bottom Bar ──────────────────────── -->
     <div class="mobile-sticky-actions">
-      @if (puedeComprar()) {
-        <button class="sticky-btn primary" (click)="comprarAhora()">
-          <span>Comprar</span>
-        </button>
-        <button class="sticky-btn secondary" (click)="irAlChat()">
-          <i class="fas fa-comments"></i>
-        </button>
+      @if (estaVendido() && !esVendedorPropietario()) {
+        <div class="sticky-sold-label">VENDIDO</div>
         <button class="sticky-btn share" (click)="compartir()">
           <i class="fas fa-share-alt"></i>
         </button>
-      } @else if (soloRecogidaPersonal() && isLoggedIn() && !esVendedorPropietario()) {
-        <button class="sticky-btn primary" (click)="irAlChat()">
-          <span>Contactar</span>
-        </button>
-        <button class="sticky-btn share" (click)="compartir()">
-          <i class="fas fa-share-alt"></i>
-        </button>
-      } @else if (esIntercambio() && isLoggedIn() && !esVendedorPropietario()) {
-        <button class="sticky-btn primary" (click)="irAlChat()">
-          <span>Proponer Intercambio</span>
-        </button>
-        <button class="sticky-btn share" (click)="compartir()">
-          <i class="fas fa-share-alt"></i>
-        </button>
-      } @else if (esDonacion() && isLoggedIn() && !esVendedorPropietario()) {
-        <button class="sticky-btn primary" (click)="irAlChat()">
-          <span>Solicitar</span>
-        </button>
-        <button class="sticky-btn share" (click)="compartir()">
-          <i class="fas fa-share-alt"></i>
-        </button>
-      } @else if (!isLoggedIn()) {
-        <button class="sticky-btn primary" (click)="comprarAhora()">
-          <span>Comprar</span>
-        </button>
-        <button class="sticky-btn secondary" (click)="irAlChat()">
-          <i class="fas fa-comments"></i>
-        </button>
-        <button class="sticky-btn share" (click)="compartir()">
-          <i class="fas fa-share-alt"></i>
-        </button>
-      } @else if (esVendedorPropietario()) {
-        <a [routerLink]="['/publicar/editar', producto()!.id]" class="sticky-btn primary">
-          <span>Editar</span>
-        </a>
-        <button class="sticky-btn share" (click)="compartir()">
-          <i class="fas fa-share-alt"></i>
-        </button>
+      } @else {
+        @if (puedeComprar() && !estaVendido()) {
+          <button class="sticky-btn primary" (click)="comprarAhora()">
+            <span>Comprar</span>
+          </button>
+          <button class="sticky-btn secondary" (click)="irAlChat()">
+            <i class="fas fa-comments"></i>
+          </button>
+          <button class="sticky-btn share" (click)="compartir()">
+            <i class="fas fa-share-alt"></i>
+          </button>
+        } @else if (soloRecogidaPersonal() && isLoggedIn() && !esVendedorPropietario() && !estaVendido()) {
+          <button class="sticky-btn primary" (click)="irAlChat()">
+            <span>Contactar</span>
+          </button>
+          <button class="sticky-btn share" (click)="compartir()">
+            <i class="fas fa-share-alt"></i>
+          </button>
+        } @else if (esIntercambio() && isLoggedIn() && !esVendedorPropietario() && !estaVendido()) {
+          <button class="sticky-btn primary" (click)="irAlChat()">
+            <span>Proponer Intercambio</span>
+          </button>
+          <button class="sticky-btn share" (click)="compartir()">
+            <i class="fas fa-share-alt"></i>
+          </button>
+        } @else if (esDonacion() && isLoggedIn() && !esVendedorPropietario() && !estaVendido()) {
+          <button class="sticky-btn primary" (click)="irAlChat()">
+            <span>Solicitar</span>
+          </button>
+          <button class="sticky-btn share" (click)="compartir()">
+            <i class="fas fa-share-alt"></i>
+          </button>
+        } @else if (!isLoggedIn() && !estaVendido()) {
+          <button class="sticky-btn primary" (click)="comprarAhora()">
+            <span>Comprar</span>
+          </button>
+          <button class="sticky-btn secondary" (click)="irAlChat()">
+            <i class="fas fa-comments"></i>
+          </button>
+          <button class="sticky-btn share" (click)="compartir()">
+            <i class="fas fa-share-alt"></i>
+          </button>
+        } @else if (esVendedorPropietario()) {
+          <a [routerLink]="['/publicar/editar', producto()!.id]" class="sticky-btn primary">
+            <span>Editar</span>
+          </a>
+          <button class="sticky-btn share" (click)="compartir()">
+            <i class="fas fa-share-alt"></i>
+          </button>
+        }
       }
       <button class="sticky-btn fav" [class.active]="esFavorito()" (click)="toggleFavorito()">
         <i class="fas fa-heart"></i>
@@ -564,6 +586,32 @@
         <div class="danger-actions">
           <button class="btn-ghost" (click)="modalBorrarAbierto.set(false)">Cancelar</button>
           <button class="btn-danger-solid" (click)="eliminarProducto()">Eliminar Anuncio</button>
+        </div>
+      </div>
+    </div>
+  </div>
+}
+
+@if (modalVendidoAbierto()) {
+  <div class="modal-overlay" (click)="modalVendidoAbierto.set(false)">
+    <div class="elite-modal warning" (click)="$event.stopPropagation()">
+      <header class="modal-header">
+        <div class="modal-icon" style="background: rgba(251, 191, 36, 0.1); color: var(--yellow);">
+          <i class="fas fa-check-circle"></i>
+        </div>
+        <div class="modal-title-group">
+          <h3>¿Marcar como Vendido?</h3>
+          <p>Confirma que has vendido este producto fuera de Nexus o por otro medio.</p>
+        </div>
+      </header>
+      
+      <div class="modal-body">
+        <p style="color: var(--text-dim); font-size: 0.9rem; margin-bottom: 24px;">
+          Esta acción ocultará el producto de la búsqueda y no podrá revertirse fácilmente.
+        </p>
+        <div class="danger-actions">
+          <button class="btn-ghost" (click)="modalVendidoAbierto.set(false)">Cancelar</button>
+          <button class="btn-elite primary" style="padding: 12px 24px;" (click)="confirmarVendido()">Confirmar Venta</button>
         </div>
       </div>
     </div>

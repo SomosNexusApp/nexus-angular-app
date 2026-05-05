@@ -84,6 +84,7 @@ export class ProductoDetailComponent implements OnInit, OnDestroy {
   // ── Modales ──────────────────────────────────────────────────────────
   modalOfertaAbierto = signal(false);
   modalBorrarAbierto = signal(false);
+  modalVendidoAbierto = signal(false);
   precioOfertaInput = signal<number | null>(null);
   minPrecioPermitido = signal<number>(0);
 
@@ -144,6 +145,7 @@ export class ProductoDetailComponent implements OnInit, OnDestroy {
   });
 
   descLarga = computed(() => (this.producto()?.descripcion?.length ?? 0) > 220);
+  estaVendido = computed(() => this.producto()?.estado === 'VENDIDO' || this.producto()?.estado === 'RESERVADO');
   esIntercambio = computed(() => this.producto()?.tipoOferta === 'INTERCAMBIO');
   esDonacion = computed(() => this.producto()?.tipoOferta === 'DONACION');
 
@@ -333,12 +335,24 @@ export class ProductoDetailComponent implements OnInit, OnDestroy {
 
   // ── Acciones vendedor ─────────────────────────────────────────────────
   marcarVendido(): void {
+    this.modalVendidoAbierto.set(true);
+  }
+
+  confirmarVendido(): void {
     const id = this.producto()?.id;
     if (!id) return;
     this.http
       .patch(`${environment.apiUrl}/producto/${id}/estado`, { estado: 'VENDIDO' })
       .subscribe({
-        next: () => this.producto.update((p) => (p ? { ...p, estado: 'VENDIDO' } : p)),
+        next: () => {
+          this.producto.update((p) => (p ? { ...p, estado: 'VENDIDO' } : p));
+          this.modalVendidoAbierto.set(false);
+          this.toast.success('Producto marcado como vendido');
+        },
+        error: () => {
+          this.toast.error('Error al marcar como vendido');
+          this.modalVendidoAbierto.set(false);
+        }
       });
   }
 

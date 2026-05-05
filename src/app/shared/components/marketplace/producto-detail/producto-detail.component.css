@@ -1113,6 +1113,10 @@
   border-color: rgba(239, 68, 68, 0.3);
 }
 
+.elite-modal.warning {
+  border-color: rgba(251, 191, 36, 0.3);
+}
+
 .danger-actions {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -1479,4 +1483,36 @@
   cursor: not-allowed;
   box-shadow: none;
   transform: none;
+}
+
+/* --- Sold State Styles --- */
+.sold-prominent {
+  background: rgba(239, 68, 68, 0.1) !important;
+  color: #ff5a5a !important;
+  border: 1px solid rgba(239, 68, 68, 0.3) !important;
+  padding: 24px !important;
+  margin-bottom: 20px !important;
+  justify-content: center;
+  font-size: 1.1rem !important;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.sold-prominent i {
+  font-size: 1.5rem;
+}
+
+.sticky-sold-label {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(239, 68, 68, 0.1);
+  color: #ff5a5a;
+  border: 1px solid rgba(239, 68, 68, 0.2);
+  border-radius: 14px;
+  font-weight: 800;
+  font-size: 1rem;
+  letter-spacing: 2px;
+  height: 54px;
 }
