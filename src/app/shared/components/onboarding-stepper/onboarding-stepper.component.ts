@@ -6,11 +6,12 @@ import { Router } from '@angular/router';
 import { AuthStore } from '../../../core/auth/auth-store';
 import { GuestPopupService } from '../../../core/services/guest-popup.service';
 import { environment } from '../../../../environments/environment';
+import { AvatarComponent } from '../avatar/avatar.component';
 
 @Component({
   selector: 'app-onboarding-stepper',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, AvatarComponent],
   templateUrl: './onboarding-stepper.component.html',
   styleUrls: ['./onboarding-stepper.component.css']
 })

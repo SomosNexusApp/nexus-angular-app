@@ -198,7 +198,11 @@
           *ngIf="isGoogleAvatarReal"
         >
           <div class="avatar-wrapper">
-            <img [src]="user()?.googleAvatarUrl" alt="Google" />
+            <app-avatar
+              [googleAvatarUrl]="user()?.googleAvatarUrl"
+              avatarSource="GOOGLE"
+              [size]="130"
+            ></app-avatar>
           </div>
           <span>Foto de Google</span>
         </div>
