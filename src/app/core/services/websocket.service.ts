@@ -55,6 +55,8 @@ export class WebSocketService {
   private recibidos$ = new Subject<{ roomId: string; usuarioId: number }>();
   // signal de Angular para el contador de conversaciones no leidas (actualiza la UI automaticamente)
   unreadConvCount = signal(0);
+  // flag temporal para animar el icono de chat en el header
+  newMsgTrigger = signal(false);
 
   // exponemos los subjects como observables de solo lectura para que los componentes puedan suscribirse
   readonly mensajes = this.mensajes$.asObservable();
@@ -65,6 +67,8 @@ export class WebSocketService {
   // guardamos los topics a los que ya estamos suscritos para no suscribirnos dos veces
   // si nos suscribimos dos veces recibiríamos cada mensaje duplicado
   private subscribedTopics = new Set<string>();
+  // topics que queremos suscribir pero estamos esperando a que conecte el socket
+  private pendingSubscriptions = new Set<string>();
 
   connect(): void {
     const token = this.jwt.getToken();
@@ -73,10 +77,14 @@ export class WebSocketService {
 
     this.client = new Client({
       // usamos SockJS como transporte (soporta fallback a polling HTTP)
-      webSocketFactory: () => new SockJS(`${environment.wsUrl}/ws`),
+      webSocketFactory: () => new SockJS(`${environment.wsUrl}/ws`, null, {
+        transports: ['websocket', 'xhr-streaming', 'xhr-polling']
+      }),
       // mandamos el JWT en la cabecera de conexion para que el backend nos identifique
       connectHeaders: { Authorization: `Bearer ${token}` },
       reconnectDelay: 5000, // reintenta la conexion cada 5 segundos si se cae
+      heartbeatIncoming: 4000,
+      heartbeatOutgoing: 4000,
       onConnect: () => {
         const userId = this.auth.user()?.id;
         if (!userId) return;
@@ -84,36 +92,82 @@ export class WebSocketService {
         // cola privada de notificaciones: solo las recibe este usuario
         // el /user/ prefix hace que STOMP enrute el mensaje solo a esta sesion
         this.client!.subscribe(`/user/queue/notificaciones`, (msg) => {
+          console.log('🔔 Notificación recibida por WS:', msg.body);
           this.notificaciones$.next(JSON.parse(msg.body));
           // actualizamos el contador cada vez que llega una notificacion
           this.refreshUnreadCount();
+          this.triggerBadgeAnimation();
         });
 
         // hacemos la primera consulta al conectar para tener el conteo actualizado
         this.refreshUnreadCount();
+        console.log('✅ WebSocket conectado y suscrito a notificaciones');
+
+        // procesamos suscripciones pendientes
+        this.pendingSubscriptions.forEach(topic => this.ejecutarSuscripcion(topic));
+        this.pendingSubscriptions.clear();
       },
       onStompError: (frame) => {
-        console.error('STOMP error:', frame.headers['message'], frame.body);
+        console.error('❌ STOMP error:', frame.headers['message'], frame.body);
       },
+      onWebSocketError: (event) => {
+        console.error('❌ WebSocket error:', event);
+      }
     });
 
     this.client.activate();
   }
 
-  /**
-   * Suscribirse al topic de una sala de chat para recibir mensajes en tiempo real.
-   * Se llama desde ChatPanelComponent cuando el usuario abre una conversación.
-   * El roomId identifica la conversación (formato: productoId_userId1_userId2).
-   */
   suscribirseAlChat(roomId: string): void {
     const topicKey = `/topic/chat/${roomId}`;
-    // si ya estamos suscritos o no estamos conectados, salimos
-    if (!this.client?.connected || this.subscribedTopics.has(topicKey)) return;
-
-    this.subscribedTopics.add(topicKey);
-    this.client.subscribe(topicKey, (msg) => {
+    this.gestionarSuscripcion(topicKey, (msg) => {
       this.mensajes$.next(JSON.parse(msg.body));
     });
+  }
+
+  /**
+   * Helper para manejar suscripciones diferidas si el socket aún no está listo.
+   */
+  private gestionarSuscripcion(topic: string, callback: (msg: any) => void): void {
+    if (this.subscribedTopics.has(topic)) return;
+
+    if (this.client?.connected) {
+      this.ejecutarSuscripcion(topic, callback);
+    } else {
+      this.pendingSubscriptions.add(topic);
+      // guardamos el callback para cuando conecte (en un mapa si fuera necesario, 
+      // pero aquí los callbacks son fijos por tipo de topic)
+    }
+  }
+
+  private ejecutarSuscripcion(topic: string, callback?: (msg: any) => void): void {
+    if (!this.client?.connected || this.subscribedTopics.has(topic)) return;
+
+    console.log('📡 Suscribiendo a topic:', topic);
+    this.subscribedTopics.add(topic);
+    
+    // Determinamos el callback según el topic si no se provee
+    const cb = callback || this.getCallbackForTopic(topic);
+    
+    if (cb) {
+      this.client.subscribe(topic, (msg) => {
+        console.log(`📩 Mensaje recibido en ${topic}`);
+        cb(msg);
+      });
+    }
+  }
+
+  private getCallbackForTopic(topic: string): ((msg: any) => void) | null {
+    if (topic.startsWith('/topic/chat/') && topic.endsWith('/leidos')) {
+      return (msg) => this.leidos$.next(JSON.parse(msg.body));
+    }
+    if (topic.startsWith('/topic/chat/') && topic.endsWith('/recibidos')) {
+      return (msg) => this.recibidos$.next(JSON.parse(msg.body));
+    }
+    if (topic.startsWith('/topic/chat/')) {
+      return (msg) => this.mensajes$.next(JSON.parse(msg.body));
+    }
+    return null;
   }
 
   // actualiza el numero de conversaciones no leidas consultando la api
@@ -123,6 +177,11 @@ export class WebSocketService {
     this.http
       .get<{ noLeidos: number }>(`${environment.apiUrl}/chat/no-leidos/${user.id}/conversaciones`)
       .subscribe((res) => this.unreadConvCount.set(res.noLeidos));
+  }
+
+  private triggerBadgeAnimation() {
+    this.newMsgTrigger.set(true);
+    setTimeout(() => this.newMsgTrigger.set(false), 1000);
   }
 
   // desconecta del websocket y limpia los topics suscritos
@@ -208,15 +267,9 @@ export class WebSocketService {
     }
   }
 
-  /**
-   * Suscribirse al topic de lectura para saber cuándo el otro usuario lee mis mensajes.
-   */
   suscribirseALeidos(roomId: string): void {
     const topicKey = `/topic/chat/${roomId}/leidos`;
-    if (!this.client?.connected || this.subscribedTopics.has(topicKey)) return;
-
-    this.subscribedTopics.add(topicKey);
-    this.client.subscribe(topicKey, (msg) => {
+    this.gestionarSuscripcion(topicKey, (msg) => {
       this.leidos$.next(JSON.parse(msg.body));
     });
   }
@@ -226,10 +279,7 @@ export class WebSocketService {
    */
   suscribirseARecibidos(roomId: string): void {
     const topicKey = `/topic/chat/${roomId}/recibidos`;
-    if (!this.client?.connected || this.subscribedTopics.has(topicKey)) return;
-
-    this.subscribedTopics.add(topicKey);
-    this.client.subscribe(topicKey, (msg) => {
+    this.gestionarSuscripcion(topicKey, (msg) => {
       this.recibidos$.next(JSON.parse(msg.body));
     });
   }

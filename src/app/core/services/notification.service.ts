@@ -34,6 +34,9 @@ export class NotificationService {
   private apiUrl = `${environment.apiUrl}/api/notificaciones`;
   private inited = false; // flag para no inicializar dos veces si se llama a init() de nuevo
 
+  // flag temporal para animar la campana en el header
+  newNotifTrigger = signal(false);
+
   // inicializa el servicio: carga el conteo inicial y se suscribe al websocket
   // se llama desde el componente raiz despues del login
   init(): void {
@@ -44,14 +47,39 @@ export class NotificationService {
     this.inited = true;
     this.refreshUnreadCount(); // conteo inicial desde la api
 
+    // solicitamos permiso para notificaciones de escritorio
+    if ('Notification' in window && Notification.permission === 'default') {
+      Notification.requestPermission();
+    }
+
     // escuchamos el websocket para actualizar el conteo y mostrar toast cuando llega una nueva notif
     this.ws.notificaciones.subscribe((raw) => {
       const notif = raw as Notificacion & Partial<NotificacionInAppDto>;
       if (notif.id != null && notif.titulo) {
         this.unread.update((n) => n + 1); // incrementamos el contador
         this.showToast(notif as Notificacion); // mostramos el toast en pantalla
+        this.triggerBadgeAnimation();
+        this.showBrowserNotification(notif);
       }
     });
+  }
+
+  private triggerBadgeAnimation() {
+    this.newNotifTrigger.set(true);
+    setTimeout(() => this.newNotifTrigger.set(false), 1000);
+  }
+
+  private showBrowserNotification(notif: Notificacion) {
+    if ('Notification' in window && Notification.permission === 'granted') {
+      const n = new Notification(notif.titulo, {
+        body: notif.mensaje,
+        icon: '/favicon.ico', // o el logo
+      });
+      n.onclick = () => {
+        window.focus();
+        if (notif.url) window.location.href = notif.url;
+      };
+    }
   }
 
   reset(): void {
@@ -156,6 +184,8 @@ export class NotificationService {
       case 'FAVORITO_PRODUCTO':
       case 'FAVORITO_OFERTA':
         return 'fas fa-heart';
+      case 'NUEVO_MENSAJE':
+      case 'OFERTA_CHAT':
       case 'MENSAJE':
         return 'fas fa-comment-alt';
       default:
@@ -182,6 +212,8 @@ export class NotificationService {
       case 'FAVORITO_PRODUCTO':
       case 'FAVORITO_OFERTA':
         return '#ff4d94'; // Pink
+      case 'NUEVO_MENSAJE':
+      case 'OFERTA_CHAT':
       case 'MENSAJE':
         return '#6366f1'; // Nexus Blue
       default:
@@ -204,6 +236,8 @@ export class NotificationService {
       case 'GUIA_ENVIO_VENDEDOR': return 'Guía de Envío';
       case 'FAVORITO_PRODUCTO':
       case 'FAVORITO_OFERTA': return 'Favorito';
+      case 'NUEVO_MENSAJE': return 'Mensaje';
+      case 'OFERTA_CHAT': return 'Oferta';
       case 'MENSAJE': return 'Mensaje';
       default: return 'Notificación';
     }

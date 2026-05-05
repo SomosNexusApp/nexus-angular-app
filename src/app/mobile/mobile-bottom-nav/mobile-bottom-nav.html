@@ -29,7 +29,10 @@
   <a routerLink="/mobile/favoritos" routerLinkActive="active" class="nav-item" (click)="checkAuth($event)">
     <i class="fas fa-heart"></i>
   </a>
-  <a routerLink="/mensajes" routerLinkActive="active" class="nav-item" (click)="checkAuth($event)">
+  <a routerLink="/mensajes" routerLinkActive="active" class="nav-item relative" (click)="checkAuth($event)">
     <i class="fas fa-comment-dots"></i>
+    <span class="badge badge-pop" *ngIf="wsService.unreadConvCount() > 0">
+      {{ wsService.unreadConvCount() > 9 ? '9+' : wsService.unreadConvCount() }}
+    </span>
   </a>
 </nav>

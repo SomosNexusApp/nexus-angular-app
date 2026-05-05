@@ -4,6 +4,7 @@ import { RouterModule, Router } from '@angular/router';
 import { AuthStore } from '../../core/auth/auth-store';
 import { GuestPopupService } from '../../core/services/guest-popup.service';
 import { UiService } from '../../core/services/ui.service';
+import { WebSocketService } from '../../core/services/websocket.service';
 
 @Component({
   selector: 'app-mobile-bottom-nav',
@@ -18,6 +19,7 @@ export class MobileBottomNav {
   private authStore = inject(AuthStore);
   private guestPopup = inject(GuestPopupService);
   private uiService = inject(UiService);
+  public wsService = inject(WebSocketService);
 
   @ViewChild('navBox') navBox!: ElementRef<HTMLElement>;
   

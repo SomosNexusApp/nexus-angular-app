@@ -167,4 +167,37 @@
   .fab-item:active .fab-inner i {
     transform: rotate(90deg) scale(0.9);
   }
+
+  .nav-item.relative {
+    position: relative;
+  }
+
+  .badge {
+    position: absolute;
+    top: 10px;
+    right: 15%;
+    background: linear-gradient(135deg, #f43f5e, #fb7185);
+    color: white;
+    font-size: 0.65rem;
+    font-weight: 800;
+    min-width: 18px;
+    height: 18px;
+    padding: 0 4px;
+    border-radius: 999px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 2px solid #0a0a0c;
+    box-shadow: 0 2px 8px rgba(244, 63, 94, 0.4);
+    z-index: 10;
+  }
+
+  .badge-pop {
+    animation: badgePop 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+
+  @keyframes badgePop {
+    0% { transform: scale(0); opacity: 0; }
+    100% { transform: scale(1); opacity: 1; }
+  }
 }

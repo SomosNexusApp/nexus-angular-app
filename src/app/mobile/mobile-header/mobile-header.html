@@ -7,8 +7,8 @@
     <div class="actions">
       <button class="action-btn" (click)="onNotifClick()">
         <i class="fas fa-bell"></i>
-        <span class="badge" *ngIf="notificationService.unreadCount() > 0">
-          {{ notificationService.unreadCount() > 99 ? '9+': notificationService.unreadCount() }}
+        <span class="badge badge-pop" *ngIf="notificationService.unreadCount() > 0">
+          {{ notificationService.unreadCount() > 99 ? '99+' : notificationService.unreadCount() }}
         </span>
       </button>
 
