@@ -17,6 +17,8 @@ import { ChatService } from '../../../core/services/chat.service';
 import { ChatMensaje, WebSocketService } from '../../../core/services/websocket.service';
 import { AuthStore } from '../../../core/auth/auth-store';
 import { BloqueoService } from '../../../core/services/bloqueo.service';
+import { UiService } from '../../../core/services/ui.service';
+import { NotificationService } from '../../../core/services/notification.service';
 import { TimeAgoPipe } from '../../../shared/pipes/time-ago.pipe';
 import { CurrencyEsPipe } from '../../../shared/pipes/currency-es.pipe';
 import { CoverImagePipe } from '../../../shared/pipes/cover-image.pipe';
@@ -60,6 +62,8 @@ export class ChatPanelComponent implements OnChanges, AfterViewChecked, OnDestro
   bloqueoService = inject(BloqueoService);
   private toast = inject(ToastService);
   private router = inject(Router);
+  private ui = inject(UiService);
+  private notificationService = inject(NotificationService);
 
   mensajes = signal<ChatMensaje[]>([]);
   otroUsuario = signal<any>(null);
@@ -132,6 +136,8 @@ export class ChatPanelComponent implements OnChanges, AfterViewChecked, OnDestro
     this.wsService.suscribirseAlChat(roomId);
     this.wsService.suscribirseALeidos(roomId);
     this.wsService.suscribirseARecibidos(roomId);
+    this.ui.activeChatRoomId.set(roomId);
+    this.notificationService.resetChatNotification(roomId);
 
     // Cancelar suscripción anterior al observable de mensajes
     this.wsSub?.unsubscribe();
@@ -558,6 +564,7 @@ export class ChatPanelComponent implements OnChanges, AfterViewChecked, OnDestro
     this.wsSub?.unsubscribe();
     this.leidosSub?.unsubscribe();
     this.recibidosSub?.unsubscribe();
+    this.ui.activeChatRoomId.set(null);
   }
 
   validarFormatoPrecio(event: any) {

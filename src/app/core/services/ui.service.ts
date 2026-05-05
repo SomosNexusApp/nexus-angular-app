@@ -7,6 +7,7 @@ export class UiService {
   readonly isCategoriasPanelOpen = signal(false);
   readonly isPublishModalOpen = signal(false);
   readonly isAnyChatSelected = signal(false);
+  readonly activeChatRoomId = signal<string | null>(null);
   readonly isDetailView = signal(false);
   readonly isMobileUI = signal(window.innerWidth <= 768);
 

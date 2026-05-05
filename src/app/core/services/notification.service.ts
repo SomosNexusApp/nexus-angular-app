@@ -4,6 +4,7 @@ import { Observable, tap } from 'rxjs';
 import { WebSocketService, Notificacion } from './websocket.service';
 import { ToastService, Toast } from './toast.service';
 import { AuthStore } from '../auth/auth-store';
+import { UiService } from './ui.service';
 import { environment } from '../../../environments/environment';
 
 export interface NotificacionInAppDto {
@@ -28,6 +29,7 @@ export class NotificationService {
   private http = inject(HttpClient);
   private toast = inject(ToastService);
   private auth = inject(AuthStore);
+  private ui = inject(UiService);
 
   readonly unreadCount = this.unread.asReadonly(); // solo lectura para los componentes
 
@@ -36,6 +38,9 @@ export class NotificationService {
 
   // flag temporal para animar la campana en el header
   newNotifTrigger = signal(false);
+
+  // para evitar spam de notificaciones de chat si ya hemos avisado de esa sala
+  private notifiedRoomIds = new Set<string>();
 
   // inicializa el servicio: carga el conteo inicial y se suscribe al websocket
   // se llama desde el componente raiz despues del login
@@ -54,14 +59,42 @@ export class NotificationService {
 
     // escuchamos el websocket para actualizar el conteo y mostrar toast cuando llega una nueva notif
     this.ws.notificaciones.subscribe((raw) => {
-      const notif = raw as Notificacion & Partial<NotificacionInAppDto>;
+      const notif = raw as Notificacion & Partial<NotificacionInAppDto> & { metadata?: string };
       if (notif.id != null && notif.titulo) {
         this.unread.update((n) => n + 1); // incrementamos el contador
-        this.showToast(notif as Notificacion); // mostramos el toast en pantalla
         this.triggerBadgeAnimation();
+
+        // Lógica de supresión de notificaciones de chat redundantes
+        if (notif.tipo === 'NUEVO_MENSAJE' || notif.tipo === 'OFERTA_CHAT') {
+          const meta = notif.metadata ? JSON.parse(notif.metadata) : null;
+          const roomId = meta?.roomId;
+          
+          // 1. Si estoy dentro de ese chat, no mostramos toast ni notif push
+          if (roomId && roomId === this.ui.activeChatRoomId()) {
+            return;
+          }
+          
+          // 2. Si ya he notificado de este chat en esta sesión, no repetimos (solo el "primer" mensaje)
+          if (roomId && this.notifiedRoomIds.has(roomId)) {
+            return;
+          }
+          
+          if (roomId) this.notifiedRoomIds.add(roomId);
+        }
+
+        this.showToast(notif as Notificacion); // mostramos el toast en pantalla
         this.showBrowserNotification(notif);
       }
     });
+  }
+
+  /**
+   * Limpia el rastro de notificaciones enviadas para una sala.
+   * Se llama cuando el usuario entra en el chat para que, si sale y le vuelven a escribir,
+   * vuelva a recibir un aviso (el "primer" mensaje de nuevo).
+   */
+  resetChatNotification(roomId: string): void {
+    this.notifiedRoomIds.delete(roomId);
   }
 
   private triggerBadgeAnimation() {
