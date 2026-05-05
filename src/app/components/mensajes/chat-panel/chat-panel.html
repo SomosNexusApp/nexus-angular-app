@@ -25,7 +25,9 @@
         <img [src]="conversacion.producto | coverImage" class="thumb" />
         <div class="prod-info">
           <span class="prod-title">{{ conversacion.producto.titulo }}</span>
-          <span class="prod-price">{{ conversacion.producto.precio | currencyEs }}</span>
+          <span class="prod-price" [class.negotiated]="precioNegociado()">
+            {{ (precioNegociado() || conversacion.producto.precio) | currencyEs }}
+          </span>
         </div>
         <div class="prod-chevron">
           <i class="fas fa-chevron-right"></i>
@@ -79,7 +81,7 @@
     </div>
 
     <div class="message-list" *ngIf="!cargando()">
-      @for (msg of mensajes(); track msg.id) {
+      @for (msg of mensajes(); track msg) {
         <div
           class="message-row"
           [ngClass]="{
@@ -176,7 +178,7 @@
 
                 <!-- Acciones si soy receptor y está PENDIENTE -->
                 @if (
-                  msg.estadoPropuesta === 'PENDIENTE' && msg.receptor.id === authStore.user()?.id
+                  msg.estadoPropuesta === 'PENDIENTE' && msg.receptor.id == authStore.user()?.id
                 ) {
                   <div class="offer-actions">
                     <button class="btn-accept" (click)="aceptarOferta(msg)">
@@ -204,7 +206,7 @@
 
             <span class="msg-meta">
               {{ msg.fechaEnvio | timeAgo }}
-              @if (msg.tipo !== 'SISTEMA' && msg.remitente.id === authStore.user()?.id) {
+              @if (msg.tipo !== 'SISTEMA' && msg.remitente.id == authStore.user()?.id) {
                 <span class="ticks-status">
                   @if (msg.id < 0) {
                     <i class="far fa-clock"></i>
@@ -304,15 +306,19 @@
               <i class="fas fa-info-circle"></i>
               <span>El vendedor recibirá una notificación con tu propuesta.</span>
             </div>
-            <div class="tip" [class.warning]="precioOferta() && precioOferta()! < minPrecioPermitido()">
+            <div class="tip" [class.warning]="precioOferta() && (precioOferta()! < minPrecioPermitido() || precioOferta()! > conversacion.producto.precio)">
               <i class="fas fa-percentage"></i>
-              <span>Descuento máximo permitido: 20% (Mínimo: {{ minPrecioPermitido() | currencyEs }})</span>
+              <span>
+                {{ precioOferta()! > conversacion.producto.precio 
+                  ? 'La oferta no puede superar el precio original (' + (conversacion.producto.precio | currencyEs) + ')' 
+                  : 'Descuento máximo permitido: 20% (Mínimo: ' + (minPrecioPermitido() | currencyEs) + ')' }}
+              </span>
             </div>
           </div>
 
           <button
             class="btn-nexus-submit"
-            [disabled]="!precioOferta() || precioOferta()! <= 0 || precioOferta()! < minPrecioPermitido()"
+            [disabled]="!precioOferta() || precioOferta()! <= 0 || precioOferta()! < minPrecioPermitido() || precioOferta()! > conversacion.producto.precio"
             (click)="enviarOferta()"
           >
             ENVIAR PROPUESTA

@@ -386,6 +386,14 @@
             <span>Artículo</span>
             <span>{{ formatPrice(producto()!.precio) }}</span>
           </div>
+          @if (descuentoNegociacion() > 0) {
+            <div class="ck-breakdown-row animate-fade-in" style="color: #10b981; font-weight: 600;">
+              <span style="display: flex; align-items: center; gap: 8px;">
+                <i class="fa-solid fa-comments-dollar"></i> Descuento negociación
+              </span>
+              <span>-{{ formatPrice(descuentoNegociacion()) }}</span>
+            </div>
+          }
           <div class="ck-breakdown-row">
             <span>Envío</span>
             <span [style.color]="costoEnvio() === 0 ? '#10b981' : 'inherit'">
@@ -470,7 +478,7 @@
           @if (proteccionOpen()) {
             <div class="ck-protection-body animate-fade-in">
               <ul class="ck-protection-list">
-                <li><i class="fa-solid fa-check"></i> Pago seguro en Escrow</li>
+                <li><i class="fa-solid fa-check"></i> Pago seguro con Stripe</li>
                 <li><i class="fa-solid fa-check"></i> Seguro contra pérdidas</li>
                 <li><i class="fa-solid fa-check"></i> 7 días para devoluciones</li>
               </ul>

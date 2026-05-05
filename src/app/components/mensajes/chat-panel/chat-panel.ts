@@ -9,6 +9,8 @@ import {
   ElementRef,
   AfterViewChecked,
   OnDestroy,
+  ChangeDetectorRef,
+  computed
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterLink } from '@angular/router';
@@ -64,6 +66,7 @@ export class ChatPanelComponent implements OnChanges, AfterViewChecked, OnDestro
   private router = inject(Router);
   private ui = inject(UiService);
   private notificationService = inject(NotificationService);
+  private cdr = inject(ChangeDetectorRef);
 
   mensajes = signal<ChatMensaje[]>([]);
   otroUsuario = signal<any>(null);
@@ -83,6 +86,14 @@ export class ChatPanelComponent implements OnChanges, AfterViewChecked, OnDestro
   private recibidosSub: Subscription | null = null;
   minPrecioPermitido = signal<number>(0);
   esPrecioValido = signal(true);
+
+  precioNegociado = computed(() => {
+    const acceptedOffer = this.mensajes()
+      .filter(m => m.tipo === 'OFERTA_PRECIO' && m.estadoPropuesta === 'ACEPTADA')
+      .sort((a, b) => new Date(b.fechaEnvio).getTime() - new Date(a.fechaEnvio).getTime())[0];
+    
+    return acceptedOffer ? acceptedOffer.precioPropuesto : null;
+  });
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['conversacion'] && this.conversacion) {
@@ -107,7 +118,7 @@ export class ChatPanelComponent implements OnChanges, AfterViewChecked, OnDestro
     if (prod && this.otroUsuario()) {
       const vendedorId = prod.vendedor?.id || prod.usuario?.id;
       this.esVendedor.set(vendedorId === this.otroUsuario().id);
-      this.puedeNegociar.set(prod.tipoOferta === 'VENTA');
+      this.puedeNegociar.set(prod.tipoOferta === 'VENTA' && prod.precioNegociable);
     } else {
       this.esVendedor.set(false);
       this.puedeNegociar.set(false);
@@ -142,54 +153,72 @@ export class ChatPanelComponent implements OnChanges, AfterViewChecked, OnDestro
     // Cancelar suscripción anterior al observable de mensajes
     this.wsSub?.unsubscribe();
     this.wsSub = this.wsService.mensajes.subscribe((msg: ChatMensaje) => {
-      // Solo agregar si es de esta conversación y no es un duplicado
-      if (msg.roomId === roomId || (msg.producto?.id === productoId && productoId !== null)) {
+      // Intentar identificar si el mensaje pertenece a esta conversación
+      const esMismoRoom = msg.roomId === roomId;
+      const esMismoProducto = productoId && msg.producto?.id == productoId;
+      const esEntreMismosUsuarios = 
+        (msg.remitente.id == currUser.id && msg.receptor?.id == otroId) ||
+        (msg.remitente.id == otroId && msg.receptor?.id == currUser.id);
+
+      if (esMismoRoom || esMismoProducto || (!productoId && esEntreMismosUsuarios)) {
         // Verificar si el mensaje está oculto para mí
         const isHiddenForMe =
-          (msg.remitente.id === currUser.id && msg.eliminadoParaRemitente) ||
-          (msg.receptor?.id === currUser.id && msg.eliminadoParaReceptor);
+          (msg.remitente.id == currUser.id && msg.eliminadoParaRemitente) ||
+          (msg.receptor?.id == currUser.id && msg.eliminadoParaReceptor);
 
         if (isHiddenForMe) return;
 
-        const existe = this.mensajes().some((m) => m.id === msg.id);
-        if (!existe) {
-          // Reemplazar mensaje optimista si existe
+        const index = this.mensajes().findIndex((m) => m.id == msg.id);
+        if (index === -1) {
+          // Mensaje nuevo
+          this.autoScrollActivado = true;
           this.mensajes.update((msgs) => {
             const sinOptimistas = msgs.filter((m) => m.id > 0);
-            return [...sinOptimistas, msg];
+            return [...sinOptimistas, { ...msg }];
           });
-          this.autoScrollActivado = true;
 
           // Si el mensaje es para mí, marcarlo como leído inmediatamente
-          if (msg.receptor?.id === currUser.id) {
+          if (msg.receptor?.id == currUser.id) {
             this.wsService.marcarComoRecibido(roomId, currUser.id);
             this.wsService.marcarComoLeido(roomId, currUser.id);
           }
+        } else {
+          // Mensaje existente (actualización, ej: oferta aceptada/rechazada)
+          const oldMsg = this.mensajes()[index];
+          this.mensajes.update((msgs) => msgs.map((m) => (m.id == msg.id ? { ...msg } : m)));
+          
+          // Feedback visual si es una oferta que acaba de cambiar de estado
+          if (msg.tipo === 'OFERTA_PRECIO' && oldMsg.estadoPropuesta !== msg.estadoPropuesta) {
+            const statusLabel = msg.estadoPropuesta === 'ACEPTADA' ? 'aceptada' : 'rechazada';
+            this.toast.info(`La oferta ha sido ${statusLabel}`);
+          }
         }
+        this.cdr.detectChanges();
       }
     });
 
     // Suscribirse a confirmaciones de entrega
     this.recibidosSub?.unsubscribe();
     this.recibidosSub = this.wsService.recibidos.subscribe((ev) => {
-      if (ev.roomId === roomId && ev.usuarioId !== currUser.id) {
+      if (ev.roomId === roomId && ev.usuarioId != currUser.id) {
         // El OTRO ha recibido mis mensajes
         this.mensajes.update((msgs) => msgs.map((m) => {
-          if (m.remitente.id === currUser.id && !m.recibido && !m.leido) {
+          if (m.remitente.id == currUser.id && !m.recibido && !m.leido) {
             return { ...m, recibido: true };
           }
           return m;
         }));
+        this.cdr.detectChanges();
       }
     });
 
     // Suscribirse a confirmaciones de lectura
     this.leidosSub?.unsubscribe();
     this.leidosSub = this.wsService.leidos.subscribe((ev) => {
-      if (ev.roomId === roomId && ev.usuarioId !== currUser.id) {
+      if (ev.roomId === roomId && ev.usuarioId != currUser.id) {
         // El OTRO ha leído mis mensajes
         this.mensajes.update((msgs) => msgs.map((m) => {
-          if (m.remitente.id === currUser.id && !m.leido) {
+          if (m.remitente.id == currUser.id && !m.leido) {
             // Un mensaje leído está implícitamente recibido
             return { ...m, leido: true, recibido: true };
           }
@@ -197,6 +226,7 @@ export class ChatPanelComponent implements OnChanges, AfterViewChecked, OnDestro
         }));
         // Al leer, seguramente el contador de no leídos cambie
         this.wsService.refreshUnreadCount();
+        this.cdr.detectChanges();
       }
     });
 
@@ -236,13 +266,24 @@ export class ChatPanelComponent implements OnChanges, AfterViewChecked, OnDestro
 
   private scrollToBottom(force = false): void {
     if ((this.autoScrollActivado || force) && this.scrollContainer) {
-      try {
-        const nativeElement = this.scrollContainer.nativeElement;
-        nativeElement.scrollTop = nativeElement.scrollHeight;
-        if (!force) {
-          this.autoScrollActivado = false;
+      const container = this.scrollContainer.nativeElement;
+      
+      // Usamos setTimeout para asegurar que Angular ha terminado de renderizar el nuevo mensaje en el DOM
+      setTimeout(() => {
+        try {
+          container.scrollTo({
+            top: container.scrollHeight,
+            behavior: force ? 'smooth' : 'auto'
+          });
+          
+          if (!force) {
+            this.autoScrollActivado = false;
+          }
+        } catch (err) {
+          // Fallback para navegadores antiguos
+          container.scrollTop = container.scrollHeight;
         }
-      } catch (err) {}
+      }, 50);
     }
   }
 
@@ -253,14 +294,28 @@ export class ChatPanelComponent implements OnChanges, AfterViewChecked, OnDestro
   }
 
   aceptarOferta(msg: ChatMensaje) {
-    this.chatService.responderPropuesta(msg.id, true).subscribe((updatedMsg) => {
-      this.actualizarMensajeLista(updatedMsg);
+    this.chatService.responderPropuesta(msg.id, true).subscribe({
+      next: (updatedMsg) => {
+        this.mensajes.update(prev => prev.map(m => m.id == msg.id ? { ...updatedMsg } : m));
+        this.toast.success('Oferta aceptada: ' + updatedMsg.estadoPropuesta);
+        this.cdr.detectChanges();
+      },
+      error: (err) => {
+        this.toast.error('Error al aceptar oferta: ' + (err.error?.error || err.message));
+      }
     });
   }
 
   rechazarOferta(msg: ChatMensaje) {
-    this.chatService.responderPropuesta(msg.id, false).subscribe((updatedMsg) => {
-      this.actualizarMensajeLista(updatedMsg);
+    this.chatService.responderPropuesta(msg.id, false).subscribe({
+      next: (updatedMsg) => {
+        this.mensajes.update(prev => prev.map(m => m.id == msg.id ? { ...updatedMsg } : m));
+        this.toast.info('Oferta rechazada: ' + updatedMsg.estadoPropuesta);
+        this.cdr.detectChanges();
+      },
+      error: (err) => {
+        this.toast.error('Error al rechazar oferta: ' + (err.error?.error || err.message));
+      }
     });
   }
 
@@ -355,12 +410,19 @@ export class ChatPanelComponent implements OnChanges, AfterViewChecked, OnDestro
   }
 
   actualizarMensajeLista(updatedMsg: ChatMensaje) {
-    this.mensajes.update((msgs) => msgs.map((m) => (m.id === updatedMsg.id ? updatedMsg : m)));
+    this.mensajes.update((msgs) => msgs.map((m) => {
+      if (m.id == updatedMsg.id) {
+        return { ...updatedMsg };
+      }
+      return m;
+    }));
+    this.cdr.detectChanges();
   }
 
   enviarOferta() {
     const precio = this.precioOferta();
-    if (!precio || precio <= 0 || (this.conversacion.producto && precio < this.minPrecioPermitido())) return;
+    const original = this.conversacion.producto?.precio || 0;
+    if (!precio || precio <= 0 || (this.conversacion.producto && (precio < this.minPrecioPermitido() || precio > original))) return;
     
     this.onEnviarMensaje({ 
       tipo: 'OFERTA_PRECIO', 
@@ -401,7 +463,7 @@ export class ChatPanelComponent implements OnChanges, AfterViewChecked, OnDestro
         roomId: roomId,
       };
       this.mensajes.update((m) => [...m, optimisticMsg]);
-      this.autoScrollActivado = true;
+      this.scrollToBottom(true);
 
       // Enviar por WebSocket STOMP (si conectado) o por REST como fallback
       if (this.wsService.isConnected) {
@@ -415,6 +477,7 @@ export class ChatPanelComponent implements OnChanges, AfterViewChecked, OnDestro
               this.mensajes.update((msgs) =>
                 msgs.map((m) => (m.id === optimisticMsg.id ? savedMsg : m)),
               );
+              this.cdr.detectChanges();
             },
             error: () => {
               // Revertir optimistic
@@ -437,7 +500,7 @@ export class ChatPanelComponent implements OnChanges, AfterViewChecked, OnDestro
         roomId: roomId,
       };
       this.mensajes.update((m) => [...m, placeholderMsg]);
-      this.autoScrollActivado = true;
+      this.scrollToBottom(true);
 
       // REST para subir archivos
       this.chatService

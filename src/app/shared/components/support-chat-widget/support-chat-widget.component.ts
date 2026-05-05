@@ -56,12 +56,12 @@ export class SupportChatWidgetComponent implements OnDestroy {
       .pipe(filter((e) => e instanceof NavigationEnd))
       .subscribe(() => {
         const url = this.router.url;
-        this.hideOnAdmin.set(url.includes('/admin'));
+        this.hideOnAdmin.set(url.includes('/admin') || url.includes('/mensajes'));
         this.isRegisterPage.set(url.includes('/register'));
         this.cdr.markForCheck();
       });
     const url = this.router.url;
-    this.hideOnAdmin.set(url.includes('/admin'));
+    this.hideOnAdmin.set(url.includes('/admin') || url.includes('/mensajes'));
     this.isRegisterPage.set(url.includes('/register'));
   }
 

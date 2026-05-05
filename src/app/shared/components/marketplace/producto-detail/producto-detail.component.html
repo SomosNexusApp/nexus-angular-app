@@ -194,10 +194,12 @@
               <i class="fas fa-shopping-cart"></i>
               <span>Comprar ahora</span>
             </button>
-            <button class="btn-elite secondary" (click)="abrirModalOferta()">
-              <i class="fas fa-tags"></i>
-              <span>Hacer oferta</span>
-            </button>
+            @if (producto()!.precioNegociable) {
+              <button class="btn-elite secondary" (click)="abrirModalOferta()">
+                <i class="fas fa-tags"></i>
+                <span>Hacer oferta</span>
+              </button>
+            }
             <div class="action-row-split">
               <button class="btn-elite ghost chat" (click)="irAlChat()">
                 <i class="fas fa-comments"></i>

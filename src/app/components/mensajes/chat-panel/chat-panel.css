@@ -329,6 +329,19 @@
   color: var(--nexus-blue, #3b82f6);
   font-weight: 800;
   font-family: 'Space Grotesk', sans-serif;
+  transition: all 0.3s ease;
+}
+
+.prod-price.negotiated {
+  color: #10b981; /* Emerald Green */
+  text-shadow: 0 0 10px rgba(16, 185, 129, 0.3);
+  animation: pricePulse 2s infinite ease-in-out;
+}
+
+@keyframes pricePulse {
+  0% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.8; transform: scale(1.02); }
+  100% { opacity: 1; transform: scale(1); }
 }
 
 .prod-chevron {

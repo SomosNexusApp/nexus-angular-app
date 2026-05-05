@@ -109,10 +109,19 @@ export class CheckoutComponent implements OnInit, OnDestroy {
   costoEnvio = computed(() => this.costoEnvioBackend());
 
   comisionNexus = computed(() => {
-    const p = this.producto()?.precio ?? 0;
+    const p = this.precioVenta() > 0 ? this.precioVenta() : (this.producto()?.precio ?? 0);
     if (p < 20) return 1.6;
     if (p < 100) return 3.6;
     return 5.6;
+  });
+
+  descuentoNegociacion = computed(() => {
+    const original = this.producto()?.precio ?? 0;
+    const venta = this.precioVenta();
+    if (venta > 0 && venta < original) {
+      return original - venta;
+    }
+    return 0;
   });
 
   total = computed(() => {
