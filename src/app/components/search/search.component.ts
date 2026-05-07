@@ -877,7 +877,7 @@ export class SearchComponent implements OnInit, AfterViewInit, OnDestroy {
 
     // Mapa de iconos por slug para asegurar que siempre haya uno "de verdad"
     const iconMap: { [key: string]: string } = {
-      juguetes: 'fas fa-gamepad',
+      juguetes: 'fas fa-puzzle-piece',
       motos: 'fas fa-motorcycle',
       moto: 'fas fa-motorcycle',
       moviles: 'fas fa-mobile-screen-button',
@@ -902,6 +902,9 @@ export class SearchComponent implements OnInit, AfterViewInit, OnDestroy {
       ropa: 'fas fa-shirt',
       vuelos: 'fas fa-plane',
       viajes: 'fas fa-plane-departure',
+      vehiculos: 'fas fa-car',
+      videojuegos: 'fas fa-gamepad',
+      otros: 'fas fa-box-archive',
     };
 
     const slug = cat.slug?.toLowerCase();

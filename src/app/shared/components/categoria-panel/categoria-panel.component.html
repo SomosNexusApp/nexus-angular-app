@@ -57,21 +57,7 @@
           (click)="cat.hijos?.length ? toggleExpandida(cat.id, $event) : navegarA(cat.slug)"
         >
           <div class="cp-icon-wrap">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="16"
-              height="16"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="1.8"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-            >
-              <path [attr.d]="getIconPath(cat)"></path>
-              <circle *ngIf="esVehiculo(cat)" cx="7" cy="17" r="2"></circle>
-              <circle *ngIf="esVehiculo(cat)" cx="17" cy="17" r="2"></circle>
-            </svg>
+            <i [class]="getIconoCategoria(cat)"></i>
           </div>
 
           <span class="cp-label">{{ cat.nombre }}</span>

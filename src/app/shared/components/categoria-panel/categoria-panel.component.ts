@@ -71,11 +71,48 @@ export class CategoriaPanelComponent implements OnInit {
     this.cerrar.emit();
   }
 
-  getIconPath(cat: Categoria): string {
-    return getCategoryIconPath(cat.icono, cat.slug ?? cat.nombre);
+  getIconoCategoria(cat: Categoria | null): string {
+    if (!cat) return 'fas fa-layer-group';
+
+    // Mapa de iconos por slug para asegurar coherencia con el buscador
+    const iconMap: { [key: string]: string } = {
+      juguetes: 'fas fa-puzzle-piece',
+      motos: 'fas fa-motorcycle',
+      moto: 'fas fa-motorcycle',
+      moviles: 'fas fa-mobile-screen-button',
+      telefonia: 'fas fa-mobile-screen-button',
+      informatica: 'fas fa-laptop',
+      electronica: 'fas fa-microchip',
+      coches: 'fas fa-car',
+      coche: 'fas fa-car',
+      hogar: 'fas fa-house-user',
+      muebles: 'fas fa-couch',
+      inmuebles: 'fas fa-building',
+      deportes: 'fas fa-basketball',
+      libros: 'fas fa-book',
+      camaras: 'fas fa-camera',
+      audio: 'fas fa-headphones',
+      consolas: 'fas fa-gamepad',
+      electrodomesticos: 'fas fa-blender',
+      zapatillas: 'fas fa-shoe-prints',
+      zapatos: 'fas fa-shoe-prints',
+      calzado: 'fas fa-shoe-prints',
+      moda: 'fas fa-shirt',
+      ropa: 'fas fa-shirt',
+      vuelos: 'fas fa-plane',
+      viajes: 'fas fa-plane-departure',
+      vehiculos: 'fas fa-car',
+      videojuegos: 'fas fa-gamepad',
+      otros: 'fas fa-box-archive',
+    };
+
+    const slug = cat.slug?.toLowerCase();
+    if (slug && iconMap[slug]) return iconMap[slug];
+
+    return cat.icono || 'fas fa-tag';
   }
 
-  // Ruedas extra solo para vehículos
+  // Ruedas extra solo para vehículos (ya no se usa con FontAwesome pero lo dejamos por si acaso)
   esVehiculo(cat: Categoria): boolean {
     const t = (cat.slug || cat.nombre || '').toLowerCase();
     return t.includes('vehiculo') || t.includes('motor') || t.includes('moto');
