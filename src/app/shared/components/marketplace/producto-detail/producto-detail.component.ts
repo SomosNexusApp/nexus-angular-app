@@ -120,13 +120,20 @@ export class ProductoDetailComponent implements OnInit, OnDestroy {
       p?.tipoOferta === 'VENTA' &&
       this.isLoggedIn() &&
       !this.esVendedorPropietario() &&
-      p.admiteEnvio === true
+      p.admiteEnvio === true &&
+      p.categoria?.slug !== 'inmuebles'
     );
   });
 
   soloRecogidaPersonal = computed(() => {
     const p = this.producto();
-    return !!p && p.admiteEnvio === false && p.estado === 'DISPONIBLE' && p.tipoOferta === 'VENTA';
+    return (
+      !!p &&
+      p.admiteEnvio === false &&
+      p.estado === 'DISPONIBLE' &&
+      p.tipoOferta === 'VENTA' &&
+      p.categoria?.slug !== 'inmuebles'
+    );
   });
 
   mediaEstrellas = computed(() => {
