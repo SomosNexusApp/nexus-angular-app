@@ -60,6 +60,41 @@ export class VehiculoDetailComponent implements OnInit, OnDestroy {
     return v.publicador?.id === user.id;
   });
 
+  galeria = computed(() => {
+    const v = this.vehiculo();
+    if (!v) return [];
+    const list = [v.imagenPrincipal];
+    if (v.galeriaImagenes && Array.isArray(v.galeriaImagenes)) {
+      list.push(...v.galeriaImagenes);
+    }
+    return list.filter(img => !!img);
+  });
+
+  selectedImageIdx = computed(() => {
+    return this.galeria().indexOf(this.imgPrincipal());
+  });
+
+  nextImage() {
+    const list = this.galeria();
+    if (list.length <= 1) return;
+    let idx = this.selectedImageIdx() + 1;
+    if (idx >= list.length) idx = 0;
+    this.imgPrincipal.set(list[idx]);
+  }
+
+  prevImage() {
+    const list = this.galeria();
+    if (list.length <= 1) return;
+    let idx = this.selectedImageIdx() - 1;
+    if (idx < 0) idx = list.length - 1;
+    this.imgPrincipal.set(list[idx]);
+  }
+
+  selectImage(img: string, idx: number) {
+    this.imgPrincipal.set(img);
+  }
+
+
   ngOnInit() {
     window.scrollTo(0, 0);
     this.uiService.isDetailView.set(true);

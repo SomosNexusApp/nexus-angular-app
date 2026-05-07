@@ -44,8 +44,9 @@ export class OfertasCategoriaComponent implements OnInit {
     this.http.get<any>(`${environment.apiUrl}/categorias/raiz`).subscribe({
       next: (res) => {
         const list = Array.isArray(res) ? res : (res?.content ?? res?.data ?? []);
-        // Filtramos solo categorías relevantes que suelen tener ofertas flash
-        const top = list.slice(0, 10);
+        // Añadimos una categoría virtual "Flash" al principio
+        const flashTab: Categoria = { id: -1, nombre: '⚡ Flash', slug: 'flash' };
+        const top = [flashTab, ...list.slice(0, 9)];
         this.categorias.set(top);
         this.loadingCats.set(false);
         if (top.length > 0) this.selectTab(top[0].slug);
@@ -72,13 +73,35 @@ export class OfertasCategoriaComponent implements OnInit {
     this.errorItems.set(false);
     this.ofertas.set([]); // Clear current offers to show skeletons
 
+    const usuarioId = this.authStore.user()?.id;
+
+    if (slug === 'flash') {
+      let url = `${environment.apiUrl}/oferta/flash`;
+      if (usuarioId) url += `?usuarioId=${usuarioId}`;
+
+      this.http.get<any>(url).subscribe({
+        next: (res) => {
+          const list = Array.isArray(res) ? res : (res?.content ?? res?.ofertas ?? res?.data ?? []);
+          const items = (list as MarketplaceItem[]).slice(0, 6);
+          this.cache.set(slug, items);
+          this.ofertas.set(items);
+          this.loadingItems.set(false);
+        },
+        error: () => {
+          this.loadingItems.set(false);
+          this.errorItems.set(true);
+          this.ofertas.set([]);
+        },
+      });
+      return;
+    }
+
     let params = new HttpParams()
       .set('categoria', slug)
       .set('soloActivas', 'true')
       .set('page', '0')
       .set('size', '6');
 
-    const usuarioId = this.authStore.user()?.id;
     if (usuarioId) params = params.set('usuarioId', String(usuarioId));
 
     this.http.get<any>(`${environment.apiUrl}/oferta/filtrar`, { params }).subscribe({

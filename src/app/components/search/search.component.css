@@ -495,21 +495,32 @@ h3,
   border: 1px solid rgba(99, 102, 241, 0.3); /* Borde neón sutil */
   border-radius: 16px;
   box-shadow: 0 20px 50px rgba(0, 0, 0, 0.9);
-  max-height: 380px;
-  overflow-y: auto;
-  overscroll-behavior: contain; /* Evita que el scroll se propague al contenedor padre */
+  max-height: 180px;
+  overflow-y: auto !important;
+  overscroll-behavior: contain;
   padding: 8px;
-  z-index: 9999;
+  z-index: 10000;
+  pointer-events: auto;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(99, 102, 241, 0.5) transparent;
 }
 
 /* Scrollbar para el panel */
 .nx-custom-dropdown-panel::-webkit-scrollbar {
   width: 6px;
+  display: block;
+}
+.nx-custom-dropdown-panel::-webkit-scrollbar-track {
+  background: transparent;
 }
 .nx-custom-dropdown-panel::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.1);
+  background: rgba(99, 102, 241, 0.4);
   border-radius: 10px;
 }
+.nx-custom-dropdown-panel::-webkit-scrollbar-thumb:hover {
+  background: rgba(99, 102, 241, 0.6);
+}
+
 
 .nx-dropdown-option {
   display: flex;
@@ -684,9 +695,22 @@ h3,
   border-radius: var(--nx-radius-md);
   box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
   z-index: 50;
-  overflow: hidden;
+  overflow-y: auto;
+  max-height: 250px;
   margin-top: 0.5rem;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(99, 102, 241, 0.5) transparent;
 }
+
+.nx-autocomplete-dropdown::-webkit-scrollbar {
+  width: 6px;
+  display: block;
+}
+.nx-autocomplete-dropdown::-webkit-scrollbar-thumb {
+  background: rgba(99, 102, 241, 0.4);
+  border-radius: 10px;
+}
+
 
 .nx-dropdown-list {
   list-style: none; /* Fix: remove bullet points */
@@ -920,9 +944,22 @@ h3,
   border-radius: var(--nx-radius-md) !important;
   box-shadow: 0 15px 35px rgba(0, 0, 0, 0.6) !important;
   z-index: 10002;
-  overflow: hidden;
+  overflow-y: auto;
+  max-height: 250px;
   animation: fadeInDown 0.2s ease-out;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(99, 102, 241, 0.5) transparent;
 }
+
+.nx-modal-autocomplete::-webkit-scrollbar {
+  width: 6px;
+  display: block;
+}
+.nx-modal-autocomplete::-webkit-scrollbar-thumb {
+  background: rgba(99, 102, 241, 0.4);
+  border-radius: 10px;
+}
+
 
 .nx-autocomplete-item {
   padding: 0.875rem 1.25rem !important;
@@ -1562,6 +1599,16 @@ h3,
   isolation: isolate;
 }
 
+.nx-card-glass-wrapper.offer-theme {
+  border: 1px solid rgba(244, 63, 94, 0.15);
+  background: linear-gradient(135deg, rgba(244, 63, 94, 0.05), transparent);
+}
+
+.nx-card-glass-wrapper.offer-theme::after {
+  background: linear-gradient(135deg, #f43f5e, #fb7185, #be123c) !important;
+}
+
+
 .nx-card-glass-wrapper::after {
   content: '';
   position: absolute;
@@ -1592,11 +1639,10 @@ h3,
   height: 100%;
   width: 100%;
   flex-grow: 1;
-  background: var(
-    --nx-bg-app
-  ); /* Asegurar que no se vea transparente perdiendo contraste con hover glow */
+  background: transparent; /* Permitir que se vea el fondo del wrapper o de la propia card */
   border-radius: var(--nx-radius-lg);
 }
+
 
 /* Badges Profesionales Flotantes */
 .nx-badge-glass {
@@ -2353,7 +2399,20 @@ h3,
     padding: 0;
     box-sizing: border-box;
     overflow: hidden;
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
   }
+
+  .nx-card-glass-wrapper::after {
+    display: none !important; /* Desactivar glow exterior en móvil para look feed limpio */
+  }
+
+  .nx-card-glass-wrapper > * {
+    border-radius: 0;
+    padding: 0 4px; /* Un poco de aire lateral */
+  }
+
 
   /* Ocultar banner de desktop en móvil para no repetir título */
   .nx-premium-search-banner {

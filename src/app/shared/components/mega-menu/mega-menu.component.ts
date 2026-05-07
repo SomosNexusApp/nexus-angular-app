@@ -202,7 +202,8 @@ export class MegaMenuComponent {
   getRoute(item: any): any[] {
     const slug = createFriendlySlug(item.titulo, item.id);
     if (item.searchType === 'VEHICULO') return ['/vehiculos', slug];
-    if (item.categoria?.slug === 'viajes') return ['/ofertas', slug];
+    if (item.searchType === 'PRODUCTO') return ['/productos', slug];
+    // Por defecto ofertas (incluye viajes si searchType es OFERTA)
     return ['/ofertas', slug];
   }
 

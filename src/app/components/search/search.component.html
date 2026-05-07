@@ -99,7 +99,7 @@
                     <!-- Mapa Interactivo en Modal (Relocalizado al final) -->
 
                     @if (mostrandoSugerenciasUbi && sugerenciasUbicacion.length > 0) {
-                        <div class="nx-autocomplete-dropdown">
+                        <div class="nx-autocomplete-dropdown" (wheel)="$event.stopPropagation()">
                             <ul class="nx-dropdown-list">
                                 @for (sug of sugerenciasUbicacion; track $index) {
                                     <li
@@ -140,7 +140,7 @@
                         </div>
 
                         @if (mostrandoCategorias) {
-                            <div class="nx-custom-dropdown-panel scale-in">
+                            <div class="nx-custom-dropdown-panel scale-in" (wheel)="$event.stopPropagation()">
                                 <div
                                     class="nx-dropdown-option"
                                     (click)="seleccionarCategoria(null)"
@@ -213,7 +213,7 @@
                         </div>
 
                         @if (mostrandoDias) {
-                            <div class="nx-custom-dropdown-panel scale-in">
+                            <div class="nx-custom-dropdown-panel scale-in" (wheel)="$event.stopPropagation()">
                                 @for (opt of diasDisponibles; track opt.value) {
                                     <div
                                         class="nx-dropdown-option"
@@ -252,7 +252,7 @@
                         </div>
 
                         @if (mostrandoCondiciones) {
-                            <div class="nx-custom-dropdown-panel scale-in">
+                            <div class="nx-custom-dropdown-panel scale-in" (wheel)="$event.stopPropagation()">
                                 @for (opt of condicionesDisponibles; track opt.value) {
                                     <div
                                         class="nx-dropdown-option"
@@ -546,7 +546,7 @@
                     </div>
 
                     @if (mostrandoOrden) {
-                        <div class="nx-custom-dropdown-panel nx-sort-panel scale-in">
+                        <div class="nx-custom-dropdown-panel nx-sort-panel scale-in" (wheel)="$event.stopPropagation()">
                             @for (opt of opcionesOrden; track opt.value) {
                                 <div
                                     class="nx-dropdown-option"
@@ -581,7 +581,7 @@
                 }
             } @else if (resultados.length > 0) {
                 @for (item of resultados; track item.id) {
-                    <div class="nx-card-glass-wrapper">
+                    <div class="nx-card-glass-wrapper" [class.offer-theme]="item.searchType === 'OFERTA'">
                         @if (item.searchType === 'OFERTA') {
                             <app-oferta-card
                                 [oferta]="item"
@@ -700,6 +700,7 @@
                         <div
                             class="nx-modal-autocomplete"
                             *ngIf="mostrandoSugerenciasUbi && sugerenciasUbicacion.length > 0"
+                            (wheel)="$event.stopPropagation()"
                         >
                             <div
                                 class="nx-autocomplete-item"

@@ -18,4 +18,12 @@ export interface MarketplaceItem {
   condicion?: string;
   /** Destacado por contrato publicitario pagado */
   patrocinado?: boolean;
+  // Campos de oferta
+  codigoDescuento?: string;
+  badge?: string;
+  destacada?: boolean;
+  esFlash?: boolean;
+  sparkScore?: number;
+  tienda?: string;
 }
+

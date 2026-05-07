@@ -1,8 +1,6 @@
 import { Component, OnInit, signal, inject, ChangeDetectorRef, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
-import { forkJoin, of } from 'rxjs';
-import { map } from 'rxjs/operators';
 import { SearchService, SearchParams } from '../../../core/services/search.service';
 import { AuthStore } from '../../../core/auth/auth-store';
 import { ProductoCardComponent } from '../../../shared/components/marketplace/product-card/producto-card.component';
@@ -32,26 +30,23 @@ export class CercaDeTiComponent implements OnInit, OnDestroy {
   loading = signal(true);
   error = signal(false);
   locationDenied = signal(false);
-  
+
   radius = signal(50); // km por defecto
   userLocation = signal<{lat: number, lng: number} | null>(null);
-  userProvince = signal<string | null>(null);
 
   skeletons = Array(12).fill(0);
-  private provinciaCache = new Map<string, string | null>();
 
   ngOnInit() {
     this.obtenerUbicacion();
   }
 
-  ngOnDestroy() {
-    // Limpieza si es necesaria
-  }
+  ngOnDestroy() {}
 
   obtenerUbicacion() {
     this.loading.set(true);
     this.locationDenied.set(false);
-    
+    this.error.set(false);
+
     if (!navigator.geolocation) {
       this.error.set(true);
       this.loading.set(false);
@@ -60,25 +55,13 @@ export class CercaDeTiComponent implements OnInit, OnDestroy {
 
     navigator.geolocation.getCurrentPosition(
       (pos) => {
-        const coords = {
-          lat: pos.coords.latitude,
-          lng: pos.coords.longitude
-        };
+        const coords = { lat: pos.coords.latitude, lng: pos.coords.longitude };
         this.userLocation.set(coords);
-        this.searchService.getProvinciaDesdeCoordenadas(coords.lat, coords.lng).subscribe({
-          next: (prov) => {
-            this.userProvince.set(prov);
-            this.realizarBusqueda(coords);
-          },
-          error: () => {
-            this.userProvince.set(null);
-            this.realizarBusqueda(coords);
-          }
-        });
+        this.realizarBusqueda(coords, this.radius());
       },
       (err) => {
         console.error('Error obteniendo ubicación:', err);
-        if (err.code === err.PERMISSION_DENIED) {
+        if (err.code === 1 /* PERMISSION_DENIED */) {
           this.locationDenied.set(true);
         } else {
           this.error.set(true);
@@ -90,26 +73,32 @@ export class CercaDeTiComponent implements OnInit, OnDestroy {
     );
   }
 
-  realizarBusqueda(coords: {lat: number, lng: number}) {
+  realizarBusqueda(coords: {lat: number, lng: number}, radiusKm: number) {
     this.loading.set(true);
+    // Pedimos un margen extra al backend (x2) y luego filtramos exacto con Haversine
+    const backendRadius = Math.min(radiusKm * 2, 400);
     const params: SearchParams = {
       tipo: 'TODOS',
       lat: coords.lat,
       lng: coords.lng,
-      radius: 200,
+      radius: backendRadius,
       page: 0,
-      size: 120
+      size: 200
     };
 
     const usuarioId = this.authStore.user()?.id;
 
     this.searchService.buscar(params, usuarioId).subscribe({
       next: (res) => {
-        this.resolverYFiltrarProvincia(res.items || []).subscribe((filtrados) => {
-          this.resultados.set(filtrados);
-          this.loading.set(false);
-          this.cdr.detectChanges();
+        // Filtrar con distancia Haversine exacta según el radio seleccionado
+        const filtrados = (res.items || []).filter((it: any) => {
+          if (it.latitude == null || it.longitude == null) return false;
+          const distKm = this.haversineKm(coords.lat, coords.lng, it.latitude, it.longitude);
+          return distKm <= radiusKm;
         });
+        this.resultados.set(filtrados);
+        this.loading.set(false);
+        this.cdr.detectChanges();
       },
       error: () => {
         this.error.set(true);
@@ -121,50 +110,27 @@ export class CercaDeTiComponent implements OnInit, OnDestroy {
 
   cambiarRadio(nuevoRadio: number) {
     this.radius.set(nuevoRadio);
-    if (this.userLocation()) {
-      this.realizarBusqueda(this.userLocation()!);
+    const coords = this.userLocation();
+    if (coords) {
+      this.realizarBusqueda(coords, nuevoRadio);
     }
   }
 
-  private filtrarPorProvinciaYUbicacion(items: MarketplaceItem[]): MarketplaceItem[] {
-    const provincia = (this.userProvince() || '').toLowerCase();
-    if (!provincia) {
-      return items.filter((it: any) => !!it.latitude && !!it.longitude);
-    }
-    return items.filter((it: any) => {
-      if (!it.latitude || !it.longitude) return false;
-      if (it.searchType === 'OFERTA' && it.esOnline === true) return false;
-      const ubic = String(it.ubicacion || '').toLowerCase();
-      if (!ubic) return false;
-      return ubic.includes(provincia);
-    });
+  /**
+   * Fórmula Haversine: distancia en km entre dos puntos geográficos.
+   */
+  private haversineKm(lat1: number, lon1: number, lat2: number, lon2: number): number {
+    const R = 6371; // Radio de la Tierra en km
+    const dLat = this.deg2rad(lat2 - lat1);
+    const dLon = this.deg2rad(lon2 - lon1);
+    const a =
+      Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+      Math.cos(this.deg2rad(lat1)) * Math.cos(this.deg2rad(lat2)) *
+      Math.sin(dLon / 2) * Math.sin(dLon / 2);
+    return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
   }
 
-  private resolverYFiltrarProvincia(items: MarketplaceItem[]) {
-    const provincia = (this.userProvince() || '').toLowerCase();
-    if (!provincia) {
-      return of(items.filter((it: any) => !!it.latitude && !!it.longitude));
-    }
-    const candidates = items.filter((it: any) => !!it.latitude && !!it.longitude && !(it.searchType === 'OFERTA' && it.esOnline === true));
-    if (candidates.length === 0) return of([]);
-
-    const resolvers = candidates.map((it: any) => {
-      const ubic = String(it.ubicacion || '').toLowerCase();
-      if (ubic.includes(provincia)) return of({ it, provincia: provincia });
-      const key = `${it.latitude},${it.longitude}`;
-      if (this.provinciaCache.has(key)) {
-        return of({ it, provincia: (this.provinciaCache.get(key) || '').toLowerCase() });
-      }
-      return this.searchService.getProvinciaDesdeCoordenadas(it.latitude, it.longitude).pipe(
-        map((prov) => {
-          this.provinciaCache.set(key, prov || null);
-          return { it, provincia: (prov || '').toLowerCase() };
-        }),
-      );
-    });
-
-    return forkJoin(resolvers).pipe(
-      map((rows) => rows.filter((r) => r.provincia.includes(provincia)).map((r) => r.it)),
-    );
+  private deg2rad(deg: number): number {
+    return deg * (Math.PI / 180);
   }
 }

@@ -61,6 +61,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
   readonly isNotifPanelOpen = signal(false);
   readonly isMobileMenuOpen = signal(false);
   readonly notifItems = signal<NotificacionInAppDto[]>([]);
+  private userCoords: { lat: number; lng: number } | null = null;
 
   // Buscador
   searchControl = new FormControl('');
@@ -128,8 +129,8 @@ export class HeaderComponent implements OnInit, OnDestroy {
       subtitle: 'Descubre los mejores chollos en tu zona',
       icon: 'fas fa-location-dot',
       accentColor: '#f59e0b',
-      viewAllLink: '/search',
-      viewAllParams: { tipo: 'OFERTA', orden: 'distancia' }
+      viewAllLink: '/cerca',
+      viewAllParams: { tipo: 'TODOS' }
     },
     gratis: {
       id: 'gratis',
@@ -207,22 +208,122 @@ export class HeaderComponent implements OnInit, OnDestroy {
         },
         error: () => this.loadingMenu.set(false)
       });
+    } else if (menuId === 'cerca') {
+      this.cargarDatosCerca(config);
     } else {
       this.searchService.buscar({
         ...config.viewAllParams,
         size: 4
       }).subscribe({
         next: (res) => {
-          let items = res.items || [];
-          if (menuId === 'cerca' && items.length > 0) {
-            items = [...items].sort(() => Math.random() - 0.5);
-          }
-          this.menuItems.set(items.slice(0, 4));
+          this.menuItems.set(res.items?.slice(0, 4) || []);
           this.loadingMenu.set(false);
         },
         error: () => this.loadingMenu.set(false)
       });
     }
+  }
+
+  private cargarDatosCerca(config: MegaMenuConfig): void {
+    if (this.userCoords) {
+      this.ejecutarCargaCerca(this.userCoords);
+      return;
+    }
+
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (pos) => {
+          this.userCoords = { lat: pos.coords.latitude, lng: pos.coords.longitude };
+          this.ejecutarCargaCerca(this.userCoords);
+        },
+        () => {
+          // Sin ubicación: mostrar los más recientes sin filtro geo
+          this.searchService.buscar({ tipo: 'TODOS', size: 3 }, this.usuario()?.id).subscribe({
+            next: (res) => {
+              this.menuItems.set(res.items?.slice(0, 3) || []);
+              this.loadingMenu.set(false);
+            },
+            error: () => this.loadingMenu.set(false)
+          });
+        },
+        { timeout: 5000 }
+      );
+    } else {
+      this.searchService.buscar({ tipo: 'TODOS', size: 3 }, this.usuario()?.id).subscribe({
+        next: (res) => {
+          this.menuItems.set(res.items?.slice(0, 3) || []);
+          this.loadingMenu.set(false);
+        },
+        error: () => this.loadingMenu.set(false)
+      });
+    }
+  }
+
+  private ejecutarCargaCerca(coords: { lat: number; lng: number }): void {
+    const RADIUS_KM = 50;
+    const backendRadius = RADIUS_KM * 2; // Margen para no perder nada en bordes
+    const usuarioId = this.usuario()?.id;
+
+    this.searchService.buscar({
+      tipo: 'TODOS',
+      lat: coords.lat,
+      lng: coords.lng,
+      radius: backendRadius,
+      size: 60
+    }, usuarioId).subscribe({
+      next: (res) => {
+        const items = res.items || [];
+
+        // Añadir distancia Haversine y filtrar por radio exacto
+        const conDistancia = items
+          .filter((it: any) => it.latitude != null && it.longitude != null)
+          .map((it: any) => ({
+            ...it,
+            _distKm: this.haversineKm(coords.lat, coords.lng, it.latitude, it.longitude)
+          }))
+          .filter((it: any) => it._distKm <= RADIUS_KM)
+          .sort((a: any, b: any) => a._distKm - b._distKm);
+
+        if (conDistancia.length >= 3) {
+          this.menuItems.set(conDistancia.slice(0, 3));
+          this.loadingMenu.set(false);
+        } else {
+          // Si hay menos de 3 en el radio, ampliar a 300km
+          this.searchService.buscar({
+            tipo: 'TODOS',
+            lat: coords.lat,
+            lng: coords.lng,
+            radius: 300,
+            size: 60
+          }, usuarioId).subscribe({
+            next: (res2) => {
+              const items2 = (res2.items || [])
+                .filter((it: any) => it.latitude != null && it.longitude != null)
+                .map((it: any) => ({
+                  ...it,
+                  _distKm: this.haversineKm(coords.lat, coords.lng, it.latitude, it.longitude)
+                }))
+                .sort((a: any, b: any) => a._distKm - b._distKm);
+              this.menuItems.set(items2.slice(0, 3));
+              this.loadingMenu.set(false);
+            },
+            error: () => this.loadingMenu.set(false)
+          });
+        }
+      },
+      error: () => this.loadingMenu.set(false)
+    });
+  }
+
+  /** Fórmula Haversine: distancia en km entre dos puntos geográficos */
+  private haversineKm(lat1: number, lon1: number, lat2: number, lon2: number): number {
+    const R = 6371;
+    const dLat = (lat2 - lat1) * Math.PI / 180;
+    const dLon = (lon2 - lon1) * Math.PI / 180;
+    const a = Math.sin(dLat / 2) ** 2 +
+      Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
+      Math.sin(dLon / 2) ** 2;
+    return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
   }
 
   closeAllPanels(): void {

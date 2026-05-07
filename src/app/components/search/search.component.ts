@@ -296,7 +296,8 @@ export class SearchComponent implements OnInit, AfterViewInit, OnDestroy {
         catchError(() => []),
       )
       .subscribe((cats) => {
-        this.categoriasDisponibles = cats;
+        // Filtrar 'zapatillas' para que no aparezca en el primer nivel (se busca dentro de moda)
+        this.categoriasDisponibles = cats.filter(c => c.slug !== 'zapatillas' && c.nombre.toLowerCase() !== 'zapatillas');
         const slugActual = this.filterForm.get('categoria')?.value;
         if (slugActual) this.actualizarTituloCat(slugActual);
         this.cdr.detectChanges();
@@ -899,6 +900,8 @@ export class SearchComponent implements OnInit, AfterViewInit, OnDestroy {
       calzado: 'fas fa-shoe-prints',
       moda: 'fas fa-shirt',
       ropa: 'fas fa-shirt',
+      vuelos: 'fas fa-plane',
+      viajes: 'fas fa-plane-departure',
     };
 
     const slug = cat.slug?.toLowerCase();

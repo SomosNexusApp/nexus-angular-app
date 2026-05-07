@@ -61,11 +61,13 @@
           <span>{{ oferta().tienda }}</span>
         </div>
 
-        <div class="badge-overlay-wrap" *ngIf="oferta().badge">
-          <span class="hot-badge animate-pulse" [ngClass]="oferta().badge?.toLowerCase()">
-            <i class="fas fa-fire-alt"></i> {{ oferta().badge }}
+        <div class="badge-overlay-wrap" *ngIf="oferta().badge || oferta().codigoDescuento">
+          <span class="hot-badge animate-pulse" [ngClass]="oferta().badge?.toLowerCase() || 'coupon-badge'">
+            <i class="fas" [ngClass]="oferta().codigoDescuento ? 'fa-ticket-alt' : 'fa-fire-alt'"></i> 
+            {{ oferta().codigoDescuento ? 'CUPÓN: ' + oferta().codigoDescuento : oferta().badge }}
           </span>
         </div>
+
       </div>
 
       <!-- AVISO DE LIMPIEZA AUTOMÁTICA -->

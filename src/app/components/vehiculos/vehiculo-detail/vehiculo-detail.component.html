@@ -46,7 +46,27 @@
           <img [src]="imgPrincipal() || 'https://images.unsplash.com/photo-1533473359331-0135ef1b58bf?q=80&w=1000&auto=format&fit=crop'" 
                [alt]="vehiculo().titulo" 
                class="main-image shadow-inner" />
+
+          <!-- Nav Arrows for Gallery (CENTERED DOCK) -->
+          <div class="gallery-nav-dock" *ngIf="galeria().length > 1">
+            <button class="nav-btn prev" (click)="prevImage()">
+              <i class="fas fa-chevron-left"></i>
+            </button>
+            <div class="nav-dots">
+              @for (img of galeria(); track img; let i = $index) {
+                <span
+                  class="dot"
+                  [class.active]="selectedImageIdx() === i"
+                  (click)="selectImage(img, i)"
+                ></span>
+              }
+            </div>
+            <button class="nav-btn next" (click)="nextImage()">
+              <i class="fas fa-chevron-right"></i>
+            </button>
+          </div>
         </div>
+
       </div>
 
       <!-- Film Strip -->

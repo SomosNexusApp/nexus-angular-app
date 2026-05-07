@@ -39,6 +39,13 @@
           <img [src]="oferta.imagenPrincipal || 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?q=80&w=1000&auto=format&fit=crop'" [alt]="oferta.titulo" class="object-cover" />
           @if (discountPercent > 0) { <span class="discount-badge">-{{ discountPercent }}%</span> }
           @if ($any(oferta).badge) { <span class="type-badge" [ngClass]="$any(oferta).badge.toLowerCase()">{{ badgeLabel }}</span> }
+          @if ($any(oferta).codigoDescuento) {
+            <div class="coupon-badge-card" (click)="copiarCodigo($event)">
+              <i class="fa-solid fa-ticket"></i>
+              <span>{{ copiado() ? 'COPIADO' : $any(oferta).codigoDescuento }}</span>
+            </div>
+          }
+
           @if (isExpired) {
             <div class="expired-overlay">
               <i class="fa-regular fa-clock"></i> Ya ha expirado
@@ -52,6 +59,15 @@
             <span class="pub-time">{{ oferta.fechaPublicacion | timeAgo }}</span>
           </div>
           <h3 class="oferta-title">{{ oferta.titulo }}</h3>
+          @if ($any(oferta).codigoDescuento) {
+            <div class="codigo-chip-wrapper" (click)="copiarCodigo($event)">
+              <div class="codigo-chip" [class.copied]="copiado()">
+                <i class="fa-solid fa-ticket"></i>
+                <span>{{ copiado() ? 'COPIADO' : $any(oferta).codigoDescuento }}</span>
+              </div>
+            </div>
+          }
+
           <div class="price-row">
             <div class="prices">
               <span class="price-new">{{ oferta.precioOferta || oferta.precio | currencyEs }}</span>
@@ -104,6 +120,13 @@
         <div class="mobile-top-badges">
           <span class="m-badge m-badge-offer">{{ badgeLabel || 'Oferta' }}</span>
           <span class="m-badge m-badge-time">{{ oferta.fechaPublicacion | timeAgo }}</span>
+          @if ($any(oferta).codigoDescuento) {
+            <span class="m-badge m-badge-coupon" (click)="copiarCodigo($event)">
+              <i class="fa-solid fa-ticket"></i> {{ copiado() ? 'OK' : $any(oferta).codigoDescuento }}
+            </span>
+          }
+
+
           <button class="m-fav-btn" (click)="toggleFavorito($event)">
             <i class="fa-heart" [class.fa-solid]="esFavorito()" [class.fa-regular]="!esFavorito()" [style.color]="esFavorito() ? '#ef4444' : '#666'"></i>
           </button>
