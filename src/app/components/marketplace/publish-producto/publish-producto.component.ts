@@ -56,6 +56,7 @@ export class PublishProductoComponent implements OnInit, AfterViewInit {
   currentStep = signal<PublishStep>(0);
   categorias = signal<Categoria[]>([]);
   selectedCategory = signal<Categoria | null>(null);
+  isInmuebles = computed(() => this.selectedCategory()?.slug === 'inmuebles');
 
   verificandoLink = signal(false);
   linkVerificado = signal(false);
@@ -262,6 +263,12 @@ export class PublishProductoComponent implements OnInit, AfterViewInit {
       this.currentStep();
       this.initIcons(50);
       this.initIcons(200);
+    });
+
+    effect(() => {
+      if (this.isInmuebles()) {
+        this.step3Form.patchValue({ envio: 'NO' });
+      }
     });
   }
 

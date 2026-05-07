@@ -251,35 +251,37 @@
               }
 
               <!-- ENVÍO -->
-              <div class="console-label-mini">Logística de Envío</div>
-              <div class="shipping-options-grid">
-                <button type="button" class="shipping-card-minimal" [class.active]="step3Form.get('envio')?.value === 'SI'" (click)="step3Form.get('envio')?.setValue('SI')">
-                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 18V6a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v11a1 1 0 0 0 1 1h2"/><path d="M15 18H9"/><path d="M19 18h2a1 1 0 0 0 1-1v-3.65a1 1 0 0 0-.223-.632l-2.647-3.309A1 1 0 0 0 17.353 9H15"/><circle cx="7" cy="18" r="2"/><circle cx="17" cy="18" r="2"/></svg>
-                  <div class="sh-info">
-                    <strong>Admite envío</strong>
-                    <p>Enviaré el producto</p>
-                  </div>
-                </button>
-                <button type="button" class="shipping-card-minimal" [class.active]="step3Form.get('envio')?.value === 'NO'" (click)="step3Form.get('envio')?.setValue('NO')">
-                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
-                  <div class="sh-info">
-                    <strong>Solo recogida</strong>
-                    <p>En mano solamente</p>
-                  </div>
-                </button>
-              </div>
-
-              <!-- PESO (Solo si hay envío) -->
-              @if (step3Form.get('envio')?.value === 'SI') {
-                <div class="weight-selector-zone animate-slide-up">
-                  <div class="console-label-mini">Peso del Paquete (Kg)</div>
-                  <div class="weight-chips">
-                    <button type="button" class="weight-chip" [class.active]="step3Form.get('weight_range')?.value === '0-2'" (click)="selectWeight('0-2', 2)">Hasta 2kg</button>
-                    <button type="button" class="weight-chip" [class.active]="step3Form.get('weight_range')?.value === '2-5'" (click)="selectWeight('2-5', 5)">2kg a 5kg</button>
-                    <button type="button" class="weight-chip" [class.active]="step3Form.get('weight_range')?.value === '5-10'" (click)="selectWeight('5-10', 10)">5kg a 10kg</button>
-                    <button type="button" class="weight-chip" [class.active]="step3Form.get('weight_range')?.value === '10-20'" (click)="selectWeight('10-20', 20)">10kg a 20kg</button>
-                  </div>
+              @if (!isInmuebles()) {
+                <div class="console-label-mini">Logística de Envío</div>
+                <div class="shipping-options-grid">
+                  <button type="button" class="shipping-card-minimal" [class.active]="step3Form.get('envio')?.value === 'SI'" (click)="step3Form.get('envio')?.setValue('SI')">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 18V6a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v11a1 1 0 0 0 1 1h2"/><path d="M15 18H9"/><path d="M19 18h2a1 1 0 0 0 1-1v-3.65a1 1 0 0 0-.223-.632l-2.647-3.309A1 1 0 0 0 17.353 9H15"/><circle cx="7" cy="18" r="2"/><circle cx="17" cy="18" r="2"/></svg>
+                    <div class="sh-info">
+                      <strong>Admite envío</strong>
+                      <p>Enviaré el producto</p>
+                    </div>
+                  </button>
+                  <button type="button" class="shipping-card-minimal" [class.active]="step3Form.get('envio')?.value === 'NO'" (click)="step3Form.get('envio')?.setValue('NO')">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+                    <div class="sh-info">
+                      <strong>Solo recogida</strong>
+                      <p>En mano solamente</p>
+                    </div>
+                  </button>
                 </div>
+  
+                <!-- PESO (Solo si hay envío) -->
+                @if (step3Form.get('envio')?.value === 'SI') {
+                  <div class="weight-selector-zone animate-slide-up">
+                    <div class="console-label-mini">Peso del Paquete (Kg)</div>
+                    <div class="weight-chips">
+                      <button type="button" class="weight-chip" [class.active]="step3Form.get('weight_range')?.value === '0-2'" (click)="selectWeight('0-2', 2)">Hasta 2kg</button>
+                      <button type="button" class="weight-chip" [class.active]="step3Form.get('weight_range')?.value === '2-5'" (click)="selectWeight('2-5', 5)">2kg a 5kg</button>
+                      <button type="button" class="weight-chip" [class.active]="step3Form.get('weight_range')?.value === '5-10'" (click)="selectWeight('5-10', 10)">5kg a 10kg</button>
+                      <button type="button" class="weight-chip" [class.active]="step3Form.get('weight_range')?.value === '10-20'" (click)="selectWeight('10-20', 20)">10kg a 20kg</button>
+                    </div>
+                  </div>
+                }
               }
 
               <!-- UBICACIÓN -->
