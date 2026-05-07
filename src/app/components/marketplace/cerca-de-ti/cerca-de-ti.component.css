@@ -27,7 +27,7 @@
 }
 
 .page-header-premium {
-  margin-bottom: 80px;
+  margin-bottom: 40px;
   animation: slideDownFade 0.8s cubic-bezier(0.16, 1, 0.3, 1) both;
 }
 
@@ -40,28 +40,28 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  gap: 40px;
+  gap: 30px;
 }
 
 .nexus-local-experience {
   display: flex;
   align-items: center;
-  gap: 30px;
+  gap: 20px;
 }
 
 /* RADAR ANIMATION */
 .radar-container {
   position: relative;
-  width: 80px;
-  height: 80px;
+  width: 60px;
+  height: 60px;
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
 .radar-icon {
-  width: 48px;
-  height: 48px;
+  width: 40px;
+  height: 40px;
   background: rgba(34, 197, 94, 0.15);
   border: 1px solid rgba(34, 197, 94, 0.3);
   border-radius: 50%;
@@ -92,19 +92,19 @@
 
 .brand-tag {
   display: inline-block;
-  font-size: 0.75rem;
+  font-size: 0.7rem;
   font-weight: 800;
   color: #22c55e;
   text-transform: uppercase;
-  letter-spacing: 3px;
-  margin-bottom: 8px;
+  letter-spacing: 2px;
+  margin-bottom: 4px;
 }
 
 h1 {
-  font-size: 3.8rem;
+  font-size: 3rem;
   font-weight: 900;
   margin: 0;
-  letter-spacing: -2px;
+  letter-spacing: -1.5px;
   background: linear-gradient(to right, #fff, #88889a);
   -webkit-background-clip: text;
   background-clip: text;
@@ -170,21 +170,21 @@ h1 {
 
 .results-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-  gap: 30px;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 20px;
   margin-top: 20px;
 }
 
 @media (max-width: 768px) {
   .results-grid {
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-    gap: 20px;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
   }
 }
 
 /* Skeletons */
 .skeleton-card {
-  height: 380px;
+  height: 300px;
   background: linear-gradient(90deg, rgba(255,255,255,0.03) 25%, rgba(255,255,255,0.06) 50%, rgba(255,255,255,0.03) 75%);
   background-size: 200% 100%;
   animation: loading 1.5s infinite;

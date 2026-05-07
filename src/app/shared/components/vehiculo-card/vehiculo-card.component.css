@@ -47,7 +47,7 @@
 .img-wrapper {
   position: relative;
   width: 100%;
-  aspect-ratio: 16/10;
+  aspect-ratio: 1 / 1;
   background: #1a1a1a;
   overflow: hidden;
 }
@@ -129,7 +129,7 @@
 
 /* ── Body ────────────────────────────────────────────────── */
 .card-body {
-  padding: 16px;
+  padding: 12px;
   display: flex;
   flex-direction: column;
   flex-grow: 1;

@@ -69,7 +69,7 @@
 .img-wrapper {
   position: relative;
   width: 100%;
-  aspect-ratio: 16/10;
+  aspect-ratio: 1 / 1;
   background-color: #1a1a1a;
   overflow: hidden;
 }
@@ -224,10 +224,11 @@
 
 /* --- CARD BODY --- */
 .card-body {
-  padding: 16px;
+  padding: 12px;
   display: flex;
   flex-direction: column;
   flex-grow: 1;
+  gap: 4px;
 }
 
 .price-row {
@@ -235,7 +236,7 @@
 }
 
 .product-price {
-  font-size: 1.4rem;
+  font-size: 1.25rem;
   font-weight: 800;
   color: #fff;
   margin: 0;
@@ -246,17 +247,16 @@
 .text-purple { color: #c084fc; }
 
 .product-title {
-  font-size: 0.95rem;
-  color: #d1d5db;
-  margin: 0 0 auto 0;
-  line-height: 1.4;
+  font-size: 0.85rem;
+  color: #9ca3af;
+  margin: 0;
+  line-height: 1.3;
   font-weight: 500;
   display: -webkit-box;
   -webkit-line-clamp: 2;
   line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
-  padding-bottom: 12px;
 }
 
 .card-footer {
