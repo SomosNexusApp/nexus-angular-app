@@ -81,9 +81,15 @@
   padding: 4px 52px 16px;
   scrollbar-width: none;
   -webkit-overflow-scrolling: touch;
+  cursor: grab;
+  user-select: none;
 }
 .scroll-track::-webkit-scrollbar {
   display: none;
+}
+.scroll-track.is-dragging {
+  cursor: grabbing;
+  scroll-behavior: auto; /* Disable smooth scroll during drag */
 }
 
 /* ── Pill ── */
@@ -152,11 +158,10 @@
     background 0.22s,
     border-color 0.22s;
 }
-.pill-icon svg {
-  width: 18px;
-  height: 18px;
-  stroke: var(--c, #a8b4ff);
-  transition: stroke 0.22s;
+.pill-icon i {
+  font-size: 1.1rem;
+  color: var(--c, #a8b4ff);
+  transition: color 0.22s;
 }
 .cat-pill:hover .pill-icon {
   background: color-mix(in srgb, var(--c, #a8b4ff) 22%, transparent);

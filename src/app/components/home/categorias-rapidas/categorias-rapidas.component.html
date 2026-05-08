@@ -6,7 +6,15 @@
     </header>
 
     <div class="scroll-zone">
-      <div class="scroll-track">
+      <div 
+        class="scroll-track" 
+        #scrollTrack
+        (mousedown)="onMouseDown($event)"
+        (mousemove)="onMouseMove($event)"
+        (mouseup)="onMouseUp()"
+        (mouseleave)="onMouseUp(); resumeAutoScroll()"
+        (mouseenter)="pauseAutoScroll()"
+      >
         @if (loading()) {
           @for (s of skeletons; track $index) {
             <div class="cat-pill sk">
@@ -34,6 +42,7 @@
         }
 
         @if (!loading() && !error()) {
+          <!-- First set -->
           @for (cat of categorias(); track cat.id) {
             <button
               class="cat-pill"
@@ -42,16 +51,33 @@
               [attr.aria-label]="'Ver ' + cat.nombre"
             >
               <span class="pill-icon">
-                <svg
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-width="1.6"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                >
-                  <path [attr.d]="getIconPath(cat)" />
-                </svg>
+                <i [class]="getIconoCategoria(cat)"></i>
+              </span>
+              <span class="pill-name">{{ cat.nombre }}</span>
+              <svg
+                class="pill-arrow"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <line x1="5" y1="12" x2="19" y2="12" />
+                <polyline points="12 5 19 12 12 19" />
+              </svg>
+            </button>
+          }
+          <!-- Duplicate set for seamless loop -->
+          @for (cat of categorias(); track cat.id + '-clone') {
+            <button
+              class="cat-pill"
+              (click)="navegar(cat.slug)"
+              [style.--c]="getAccentColor(cat)"
+              [attr.aria-label]="'Ver ' + cat.nombre"
+            >
+              <span class="pill-icon">
+                <i [class]="getIconoCategoria(cat)"></i>
               </span>
               <span class="pill-name">{{ cat.nombre }}</span>
               <svg
