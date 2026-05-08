@@ -308,8 +308,8 @@ export class SearchComponent implements OnInit, AfterViewInit, OnDestroy {
     this.searchService
       .getMarcasVehiculos()
       .pipe(takeUntil(this.destroy$))
-      .subscribe((marcas) => {
-        this.marcasDisponibles = marcas;
+      .subscribe((marcas: any[]) => {
+        this.marcasDisponibles = marcas.map(m => typeof m === 'object' ? m.name : m);
         this.cdr.detectChanges();
       });
   }
