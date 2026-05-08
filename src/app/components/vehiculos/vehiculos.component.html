@@ -88,9 +88,9 @@
             <div class="nx-autocomplete-dropdown">
               <ul class="nx-dropdown-list">
                 @for (sug of sugerenciasUbicacion; track $index) {
-                  <li class="nx-dropdown-item" (click)="seleccionarUbicacion(sug)">
+                  <li class="nx-dropdown-item" (click)="seleccionarUbicacion(sug.display_name, { lat: sug.lat, lng: sug.lng })">
                     <i class="fas fa-location-dot"></i>
-                    <span>{{ sug }}</span>
+                    <span>{{ sug.display_name }}</span>
                   </li>
                 }
               </ul>
