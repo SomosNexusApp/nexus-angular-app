@@ -236,11 +236,16 @@ export class ProductoDetailComponent implements OnInit, OnDestroy {
       .subscribe({ next: (v) => this.valoraciones.set(v.slice(0, 3)) });
 
     this.http
-      .get<any>(`${environment.apiUrl}/producto/filtrar?vendedorId=${vendedorId}&tamano=4`)
+      .get<any>(`${environment.apiUrl}/producto/filtrar?vendedorId=${vendedorId}&tamano=10`)
       .subscribe({
         next: (res) => {
-          const lista = res?.contenido ?? res ?? [];
-          this.productosVendedor.set(lista.filter((pp: Producto) => pp.id !== p.id));
+          const lista = (res?.contenido ?? res ?? []) as Producto[];
+          const filtrados = lista.filter((pp: Producto) => pp.id !== p.id);
+          // Mezclar y tomar 3
+          const aleatorios = filtrados
+            .sort(() => Math.random() - 0.5)
+            .slice(0, 3);
+          this.productosVendedor.set(aleatorios);
           this.cargandoVendedor.set(false);
         },
         error: () => this.cargandoVendedor.set(false),

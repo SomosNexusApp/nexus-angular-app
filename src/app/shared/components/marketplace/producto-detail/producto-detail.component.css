@@ -554,15 +554,15 @@
 .details-showcase {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 24px;
-  margin-bottom: 60px;
+  gap: 20px;
+  margin-bottom: 40px;
 }
 
 .details-panel {
-  padding: 40px;
+  padding: 32px;
   display: flex;
   flex-direction: column;
-  gap: 24px;
+  gap: 20px;
 }
 
 .panel-title {
@@ -837,27 +837,26 @@
 
 /* Vendor Extra Products */
 .vendor-extra-products {
-  margin-top: 20px;
-  padding-top: 20px;
+  margin-top: 16px;
+  padding-top: 16px;
   border-top: 1px solid rgba(255, 255, 255, 0.05);
 }
 
 .extra-title {
   font-size: 0.9rem;
   font-weight: 700;
-  margin-bottom: 16px;
+  margin-bottom: 12px;
 }
 
 .extra-scroll {
-  display: flex;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
   gap: 16px;
-  overflow-x: auto;
-  padding-bottom: 10px;
+  margin-top: 10px;
 }
 
 .extra-item {
-  width: 180px;
-  flex-shrink: 0;
+  width: 100%;
 }
 
 /* ── Related Section ────────────────────────────────────────── */

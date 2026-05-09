@@ -57,17 +57,17 @@ export type SkeletonCardVariant = 'producto' | 'oferta' | 'vehiculo';
         background: #1a1a1a;
       }
       .sk-card--producto .sk-img {
-        padding-top: 100%;
+        padding-top: 90%;
       }
       .sk-card--oferta .sk-img {
-        padding-top: 85%;
+        padding-top: 75%;
       }
       .sk-card--vehiculo .sk-img {
-        padding-top: 65%;
+        padding-top: 55%;
       }
 
       .sk-body {
-        padding: 14px 16px 16px;
+        padding: 10px 14px 12px;
         display: flex;
         flex-direction: column;
         flex-grow: 1;
