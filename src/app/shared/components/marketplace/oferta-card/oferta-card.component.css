@@ -125,7 +125,7 @@
 .img-wrapper {
   position: relative;
   width: 100%;
-  aspect-ratio: 1 / 1;
+  aspect-ratio: 1 / 0.9;
   background: #1a1a1a;
   overflow: hidden;
 }
@@ -179,10 +179,10 @@
 }
 
 .card-body {
-  padding: 12px;
+  padding: 10px;
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 8px;
   flex-grow: 1;
 }
 
@@ -232,7 +232,7 @@
   -webkit-box-orient: vertical;
   overflow: hidden;
   line-height: 1.5;
-  min-height: 45px;
+  min-height: 40px;
   transition: color 0.3s ease;
 }
 
@@ -391,7 +391,7 @@
 .mobile-img-container {
   position: relative;
   width: 100px;
-  height: 100px;
+  height: 90px;
 }
 
 .mobile-thumb {
