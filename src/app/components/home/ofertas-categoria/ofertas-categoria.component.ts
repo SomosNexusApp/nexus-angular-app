@@ -45,7 +45,7 @@ export class OfertasCategoriaComponent implements OnInit {
       next: (res) => {
         const list = Array.isArray(res) ? res : (res?.content ?? res?.data ?? []);
         // Añadimos una categoría virtual "Flash" al principio
-        const flashTab: Categoria = { id: -1, nombre: '⚡ Flash', slug: 'flash' };
+        const flashTab: Categoria = { id: -1, nombre: 'Flash', slug: 'flash' };
         const top = [flashTab, ...list.slice(0, 9)];
         this.categorias.set(top);
         this.loadingCats.set(false);
@@ -60,7 +60,7 @@ export class OfertasCategoriaComponent implements OnInit {
 
   selectTab(slug: string) {
     if (this.activeSlug() === slug && this.ofertas().length > 0) return;
-    
+
     this.activeSlug.set(slug);
 
     if (this.cache.has(slug)) {
@@ -107,7 +107,9 @@ export class OfertasCategoriaComponent implements OnInit {
     this.http.get<any>(`${environment.apiUrl}/oferta/filtrar`, { params }).subscribe({
       next: (res) => {
         // El backend de Nexus devuelve 'contenido' en lugar del estándar 'content' de Spring Data
-        const list = Array.isArray(res) ? res : (res?.contenido ?? res?.content ?? res?.ofertas ?? res?.data ?? []);
+        const list = Array.isArray(res)
+          ? res
+          : (res?.contenido ?? res?.content ?? res?.ofertas ?? res?.data ?? []);
         const items = (list as MarketplaceItem[]).slice(0, 6);
         this.cache.set(slug, items);
         this.ofertas.set(items);
@@ -125,4 +127,3 @@ export class OfertasCategoriaComponent implements OnInit {
     this.router.navigate(['/search'], { queryParams: { categoria: slug, tipo: 'OFERTA' } });
   }
 }
-

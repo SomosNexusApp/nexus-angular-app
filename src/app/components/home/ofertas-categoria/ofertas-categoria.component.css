@@ -58,6 +58,33 @@
   letter-spacing: -0.04em;
   line-height: 1.1;
   margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.nx-bolt-icon {
+  color: #fbbf24;
+  font-size: 2.4rem;
+  filter: drop-shadow(0 0 10px rgba(251, 191, 36, 0.4));
+  animation: boltPulse 2s infinite ease-in-out;
+}
+
+@keyframes boltPulse {
+  0%, 100% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.1); opacity: 0.8; }
+}
+
+.nx-wind-icon {
+  color: #94a3b8;
+  font-size: 1.8rem;
+  margin-left: 8px;
+  animation: windShift 3s infinite ease-in-out;
+}
+
+@keyframes windShift {
+  0%, 100% { transform: translateX(0); }
+  50% { transform: translateX(5px); }
 }
 
 .btn-all {
@@ -142,8 +169,8 @@
 /* ── Grid & Animations ── */
 .offers-grid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 24px;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
   min-height: 400px;
 }
 
@@ -254,10 +281,17 @@
 /* ── Responsive ── */
 @media (max-width: 1200px) {
   .offers-grid {
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: repeat(3, 1fr);
     gap: 20px;
   }
   .sec-head h2 { font-size: 2.2rem; }
+}
+
+@media (max-width: 992px) {
+  .offers-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+  }
 }
 
 @media (max-width: 768px) {

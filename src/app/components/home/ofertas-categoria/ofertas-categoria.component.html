@@ -1,16 +1,22 @@
 <section class="ofcat-wrap">
   <div class="section-inner">
-    
     <!-- 1. Header Premium -->
     <header class="sec-head">
       <div class="title-group">
-        <h2>Top Chollos Flash ⚡</h2>
+        <h2>Top Chollos Flash <i class="fa-solid fa-bolt-lightning nx-bolt-icon"></i></h2>
       </div>
 
       @if (activeSlug()) {
         <button class="btn-all" (click)="goToCategory(activeSlug())">
           Ver todo el catálogo
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2.5"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
             <line x1="5" y1="12" x2="19" y2="12" />
             <polyline points="12 5 19 12 12 19" />
           </svg>
@@ -43,7 +49,6 @@
 
     <!-- 3. Grid de Ofertas Dinámico -->
     <div class="offers-grid">
-      
       <!-- Loading State -->
       @if (loadingItems()) {
         @for (s of skeletonCards; track $index) {
@@ -57,15 +62,21 @@
       @if (!loadingItems() && errorItems()) {
         <div class="state-container">
           <div class="glass-empty-card">
-              <div class="empty-icon-wrap" style="background: rgba(255,165,0,0.1); color: orange;">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/>
-                    <line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/>
-                </svg>
-              </div>
-              <h3>Oops! Algo se perdió</h3>
-              <p>No pudimos conectar con el servidor para traer estas ofertas. Por favor, inténtalo de nuevo.</p>
-              <button class="btn-nexus-primary" (click)="selectTab(activeSlug())">Reintentar</button>
+            <div class="empty-icon-wrap" style="background: rgba(255, 165, 0, 0.1); color: orange">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path
+                  d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"
+                />
+                <line x1="12" y1="9" x2="12" y2="13" />
+                <line x1="12" y1="17" x2="12.01" y2="17" />
+              </svg>
+            </div>
+            <h3>Oops! Algo se perdió</h3>
+            <p>
+              No pudimos conectar con el servidor para traer estas ofertas. Por favor, inténtalo de
+              nuevo.
+            </p>
+            <button class="btn-nexus-primary" (click)="selectTab(activeSlug())">Reintentar</button>
           </div>
         </div>
       }
@@ -79,8 +90,11 @@
                 <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" />
               </svg>
             </div>
-            <h3>¡Sold Out! Han volado 💨</h3>
-            <p>La comunidad Nexus ha sido más rápida. Los chollos de esta categoría se han agotado, pero la próxima oleada está a punto de llegar.</p>
+            <h3>¡Sold Out! Han volado <i class="fa-solid fa-wind nx-wind-icon"></i></h3>
+            <p>
+              La comunidad Nexus ha sido más rápida. Los chollos de esta categoría se han agotado,
+              pero la próxima oleada está a punto de llegar.
+            </p>
             <button class="btn-nexus-glass" (click)="selectTab('')">Ver otras categorías</button>
           </div>
         </div>
@@ -95,6 +109,5 @@
         }
       }
     </div>
-
   </div>
 </section>

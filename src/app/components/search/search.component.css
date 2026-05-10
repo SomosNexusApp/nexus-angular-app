@@ -1056,13 +1056,15 @@ h3,
   border: 1px solid var(--nx-glass-border);
   color: #fff;
   border-radius: 6px;
-  padding: 0.35rem 0.75rem;
+  padding: 0.35rem 2rem 0.35rem 0.75rem;
   font-size: 0.75rem;
   font-weight: 600;
   outline: none;
   cursor: pointer;
   transition: all 0.3s ease;
-  appearance: listbox; /* Better native integration in some browsers */
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
 }
 
 .nx-dark-select-sm:hover {

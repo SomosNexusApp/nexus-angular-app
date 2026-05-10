@@ -334,13 +334,13 @@ export class SearchComponent implements OnInit, AfterViewInit, OnDestroy {
       if (this.formSub) this.formSub.unsubscribe();
       const tipoParam = params['tipo'] || 'TODOS';
       const catParam = params['categoria'] || '';
-      this.esBusquedaVehiculo = tipoParam === 'VEHICULO' || this.slugEsVehiculo(catParam);
+      this.esBusquedaVehiculo = (tipoParam === 'VEHICULO' || this.slugEsVehiculo(catParam)) && catParam !== 'flash';
       this.actualizarTituloCat(catParam);
 
       this.filterForm.patchValue(
         {
           q: params['q'] || '',
-          tipo: this.esBusquedaVehiculo ? 'VEHICULO' : tipoParam,
+          tipo: catParam === 'flash' ? 'OFERTA' : (this.esBusquedaVehiculo ? 'VEHICULO' : tipoParam),
           categoria: catParam,
           precioMin: params['precioMin'] || '',
           precioMax: params['precioMax'] || '',
@@ -606,7 +606,10 @@ export class SearchComponent implements OnInit, AfterViewInit, OnDestroy {
       ?.valueChanges.pipe(distinctUntilChanged(), takeUntil(this.destroy$))
       .subscribe((slug) => {
         this.actualizarTituloCat(slug || '');
-        if (this.slugEsVehiculo(slug)) {
+        if (slug === 'flash') {
+          this.filterForm.patchValue({ tipo: 'OFERTA' }, { emitEvent: false });
+          this.esBusquedaVehiculo = false;
+        } else if (this.slugEsVehiculo(slug)) {
           this.filterForm.patchValue({ tipo: 'VEHICULO' }, { emitEvent: false });
           this.esBusquedaVehiculo = true;
         } else if (this.filterForm.get('tipo')?.value === 'VEHICULO') {
@@ -664,6 +667,13 @@ export class SearchComponent implements OnInit, AfterViewInit, OnDestroy {
       this.categoriaIconoActual.set('fas fa-layer-group');
       return;
     }
+
+    if (slug === 'flash') {
+      this.categoriaNombreActual.set('Ofertas Flash');
+      this.categoriaIconoActual.set('fas fa-bolt-lightning');
+      return;
+    }
+
     const cat = this.categoriasDisponibles.find((c) => c.slug === slug);
     this.categoriaNombreActual.set(cat ? cat.nombre : slug.charAt(0).toUpperCase() + slug.slice(1));
     this.categoriaIconoActual.set(this.getIconoCategoria(cat || null));
@@ -905,6 +915,7 @@ export class SearchComponent implements OnInit, AfterViewInit, OnDestroy {
       vehiculos: 'fas fa-car',
       videojuegos: 'fas fa-gamepad',
       otros: 'fas fa-box-archive',
+      flash: 'fas fa-bolt-lightning',
     };
 
     const slug = cat.slug?.toLowerCase();
