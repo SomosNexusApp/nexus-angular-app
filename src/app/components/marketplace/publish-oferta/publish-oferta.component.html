@@ -208,9 +208,7 @@
                  (mousemove)="updateMousePos($event)">
               <div class="card-glow"></div>
               <div class="icon-sphere">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                  <path [attr.d]="getIconPath(cat)"></path>
-                </svg>
+                <i [className]="getIconoCategoria(cat)"></i>
               </div>
               <div class="category-info">
                 <h3>{{ cat.nombre }}</h3>

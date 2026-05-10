@@ -179,6 +179,18 @@
   padding-right: 40px !important;
 }
 
+.price-premium:disabled {
+  color: #64748b !important;
+  background: rgba(255, 255, 255, 0.01) !important;
+  cursor: not-allowed;
+}
+
+.input-group input:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  background: rgba(255, 255, 255, 0.02);
+}
+
 .input-suffix {
   position: absolute;
   right: 18px;
@@ -472,9 +484,14 @@
   box-shadow: 0 0 20px rgba(59, 130, 246, 0.4);
 }
 
-.icon-sphere svg {
+.icon-sphere svg,
+.icon-sphere i {
   width: 24px;
   height: 24px;
+  font-size: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .category-info h3 {

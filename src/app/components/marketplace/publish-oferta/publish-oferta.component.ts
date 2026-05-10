@@ -56,23 +56,51 @@ export class PublishOfertaComponent implements OnInit {
 
   @ViewChild('descInput') descInput!: ElementRef<HTMLTextAreaElement>;
 
-  // Mapa de iconos SVG basado en el campo 'icono' del backend
-  iconPaths: Record<string, string> = {
-    cpu: 'M4 4h16v16H4V4zm0 5h16M4 15h16M9 4v16M15 4v16',
-    shirt: 'M6.5 2h11l1 4-5 3v11H9.5V9l-5-3z',
-    home: 'M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z M9 22V12h6v10',
-    car: 'M19 17h2c.6 0 1-.4 1-1v-3c0-.9-.7-1.7-1.5-1.9C18.7 10.6 16 10 16 10s-1.3-1.4-2.2-2.3c-.5-.4-1.1-.7-1.8-.7H5c-.6 0-1.1.4-1.4.9l-1.4 2.9A3.7 3.7 0 0 0 2 12.4V16c0 .6.4 1 1 1h2',
-    laptop:
-      'M2 16h20M2 16v2a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-2M2 16V6a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v10',
-    gamepad:
-      'M6 12h4M12 12h.01M15 10v4M18 12h.01M3 7h18a2 2 0 0 1 2 2v6a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V9a2 2 0 0 1 2-2z',
-    bicycle: 'M12 12a5 5 0 1 0 0 10 5 5 0 0 0 0-10zm0 0l-3-9h6l-3 9z',
-    book: 'M4 19.5A2.5 2.5 0 0 1 6.5 17H20M4 19.5A2.5 2.5 0 0 0 6.5 22H20M4 19.5V4.5A2.5 2.5 0 0 1 6.5 2H20v15H6.5a2.5 2.5 0 0 0-2.5 2.5z',
-    archive:
-      'M21 8V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v3m18 0v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8m18 0-9 6-9-6',
-    building: 'M3 21h18M3 7v14M21 21V7M9 21V3h6v18',
-    plane: 'M17.8 19.2L16 11l3.5-3.5C21 6 21.5 4 21 3c-1-.5-3 0-4.5 1.5L13 8 4.8 6.2c-.5-.1-.9.1-1.1.5l-.3.5c-.2.5-.1 1 .3 1.3L9 12l-2 3H4l-1 1 3 2 2 3 1-1v-3l3-2 3.5 5.3c.3.4.8.5 1.3.3l.5-.2c.4-.3.6-.7.5-1.2z',
-  };
+  getIconoCategoria(cat: Categoria | null): string {
+    if (!cat) return 'fas fa-layer-group';
+
+    const iconMap: { [key: string]: string } = {
+      juguetes: 'fas fa-puzzle-piece',
+      motos: 'fas fa-motorcycle',
+      moto: 'fas fa-motorcycle',
+      moviles: 'fas fa-mobile-screen-button',
+      telefonia: 'fas fa-mobile-screen-button',
+      informatica: 'fas fa-laptop',
+      electronica: 'fas fa-microchip',
+      coches: 'fas fa-car',
+      coche: 'fas fa-car',
+      hogar: 'fas fa-house-user',
+      muebles: 'fas fa-couch',
+      inmuebles: 'fas fa-building',
+      deportes: 'fas fa-basketball',
+      libros: 'fas fa-book',
+      camaras: 'fas fa-camera',
+      audio: 'fas fa-headphones',
+      consolas: 'fas fa-gamepad',
+      electrodomesticos: 'fas fa-blender',
+      zapatillas: 'fas fa-shoe-prints',
+      zapatos: 'fas fa-shoe-prints',
+      calzado: 'fas fa-shoe-prints',
+      moda: 'fas fa-shirt',
+      ropa: 'fas fa-shirt',
+      vuelos: 'fas fa-plane',
+      viajes: 'fas fa-plane-departure',
+      vehiculos: 'fas fa-car',
+      videojuegos: 'fas fa-gamepad',
+      otros: 'fas fa-box-archive',
+      flash: 'fas fa-bolt-lightning',
+    };
+
+    const slug = cat.slug?.toLowerCase();
+    if (slug && iconMap[slug]) return iconMap[slug];
+
+    let ico = cat.icono || 'fas fa-tag';
+    if (ico && !ico.includes('fa-')) ico = 'fa-' + ico;
+    if (ico && !ico.includes('fas') && !ico.includes('fab') && !ico.includes('far'))
+      ico = 'fas ' + ico;
+
+    return ico;
+  }
 
   getCategoryDesc(name: string): string {
     const descs: Record<string, string> = {
@@ -172,11 +200,15 @@ export class PublishOfertaComponent implements OnInit {
 
     this.ofertaForm.get('esGratis')?.valueChanges.subscribe(isGratis => {
       const priceControl = this.ofertaForm.get('precioOferta');
+      const originalPriceControl = this.ofertaForm.get('precioOriginal');
       if (isGratis) {
         priceControl?.setValue('0');
         priceControl?.disable();
+        // El precio original se deja habilitado para mostrar valor previo
+        originalPriceControl?.enable();
       } else {
         priceControl?.enable();
+        originalPriceControl?.enable();
       }
     });
 
@@ -232,7 +264,7 @@ export class PublishOfertaComponent implements OnInit {
   }
 
   getIconPath(cat: Categoria): string {
-    return this.iconPaths[cat.icono || ''] || 'M20.59 13.41l-7.17 7.17a2 2 0 01-2.83 0L2 12V2h10l8.59 8.59a2 2 0 010 2.82zM7 7h.01';
+    return this.getIconoCategoria(cat);
   }
 
   private calculateBadge(off?: number | null, orig?: number | null): string {
