@@ -45,11 +45,18 @@ export class OnboardingStepperComponent implements OnInit {
   };
 
   ngOnInit() {
-    // Si el usuario no es de Google, saltamos el paso de términos (ya lo aceptó al registrarse)
+    const u = this.user();
     if (!this.isSocialUser) {
-      this.currentStep = 1; 
-      // Marcamos términos como aceptados para que las validaciones internas no fallen
+      // Usuario de email: ya aceptó términos en el registro
       this.localState.termsAccepted = true;
+
+      // Si el usuario tiene rol EMPRESA (ya fue convertido), saltamos al paso del avatar
+      if (u?.rol === 'ROLE_EMPRESA') {
+        this.localState.accountType = 'EMPRESA';
+        this.currentStep = 3; // ir directamente al avatar
+      } else {
+        this.currentStep = 1; // empezar por seguridad
+      }
     }
   }
 
@@ -228,7 +235,12 @@ export class OnboardingStepperComponent implements OnInit {
       formData.append('file', this.localState.customAvatarFile);
       this.http.post<any>(`${environment.apiUrl}/api/usuario/${this.user()?.id}/avatar`, formData).subscribe({
         next: () => this.saveAvatarChoiceAndFinish(),
-        error: () => this.handleError('Error al subir el avatar personalizado.')
+        error: (err) => {
+          // Si falla la subida, loguear y continuar con iniciales en vez de bloquear el registro
+          console.error('[Onboarding] Error subiendo avatar personalizado:', err);
+          this.localState.avatarChoice = 'INITIALS';
+          this.saveAvatarChoiceAndFinish();
+        }
       });
     } else {
       this.saveAvatarChoiceAndFinish();
@@ -238,20 +250,35 @@ export class OnboardingStepperComponent implements OnInit {
   private saveAvatarChoiceAndFinish() {
     const choicePayload = { choice: this.localState.avatarChoice };
     this.http.patch(`${environment.apiUrl}/api/usuario/me/avatar-choice`, choicePayload).subscribe({
+      next: () => this.doCompleteOnboarding(),
+      error: (err) => {
+        // Si falla guardar la preferencia de avatar, continuamos igualmente (no bloqueante)
+        console.warn('[Onboarding] avatar-choice patch failed, continuing anyway:', err);
+        this.doCompleteOnboarding();
+      }
+    });
+  }
+
+  private doCompleteOnboarding() {
+    this.http.post(`${environment.apiUrl}/api/usuario/me/complete-onboarding`, {}).subscribe({
       next: () => {
-        this.http.post(`${environment.apiUrl}/api/usuario/me/complete-onboarding`, {}).subscribe({
-          next: () => {
-            const u = this.user();
-            if (u) {
-              u.onboardingCompletado = true;
-              this.authStore.setUser(u);
-            }
-            this.completeOnboarding();
-          },
-          error: () => this.handleError()
-        });
+        const u = this.user();
+        if (u) {
+          u.onboardingCompletado = true;
+          this.authStore.setUser(u);
+        }
+        this.completeOnboarding();
       },
-      error: () => this.handleError()
+      error: (err) => {
+        // Incluso si el backend falla, cerramos el onboarding localmente para no bloquear al usuario
+        console.warn('[Onboarding] complete-onboarding endpoint failed, closing locally:', err);
+        const u = this.user();
+        if (u) {
+          u.onboardingCompletado = true;
+          this.authStore.setUser(u);
+        }
+        this.completeOnboarding();
+      }
     });
   }
 

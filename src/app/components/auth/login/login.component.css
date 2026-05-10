@@ -343,6 +343,21 @@ input.error {
     letter-spacing: 0.25em;
 }
 
+/* Código 2FA: limitar el desbordamiento en móvil */
+.code-input {
+    box-sizing: border-box;
+    width: 100%;
+    max-width: 100%;
+    overflow: hidden;
+}
+
+@media (max-width: 480px) {
+    .code-input {
+        letter-spacing: 0.15em;
+        font-size: 1.25rem !important;
+    }
+}
+
 .fade-in {
     animation: fadeIn 0.3s ease-in-out;
 }

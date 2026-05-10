@@ -91,12 +91,23 @@
     @if (step() === 2) {
       <div class="verify-step text-center fade-in">
         <div class="icon-circle mb-4 text-nexus-purple text-4xl">
-          <i class="fas fa-shield-alt"></i>
+          <i class="fas" [class.fa-mobile-alt]="twoFactorMethod() === 'TOTP'" [class.fa-envelope]="twoFactorMethod() === 'EMAIL'" [class.fa-shield-alt]="!twoFactorMethod()"></i>
         </div>
         <h3 class="text-xl font-bold mb-2">Verificación en dos pasos</h3>
-        <p class="text-muted mb-6">
-          Introduce el código de 6 dígitos generado por tu aplicación o enviado a tu correo.
-        </p>
+
+        @if (twoFactorMethod() === 'TOTP') {
+          <p class="text-muted mb-6">
+            Abre tu aplicación de autenticación (Google Authenticator, Authy…) e introduce el código de 6 dígitos que se muestra.
+          </p>
+        } @else if (twoFactorMethod() === 'EMAIL') {
+          <p class="text-muted mb-6">
+            Hemos enviado un código de 6 dígitos a tu correo electrónico. Revisa tu bandeja de entrada y también la carpeta de spam.
+          </p>
+        } @else {
+          <p class="text-muted mb-6">
+            Introduce el código de 6 dígitos de tu aplicación o correo electrónico.
+          </p>
+        }
 
         <form [formGroup]="twoFactorForm" (ngSubmit)="onTwoFactorSubmit()">
           <div class="form-group mb-6">
@@ -104,9 +115,11 @@
               type="text"
               formControlName="codigo"
               maxlength="6"
-              class="code-input text-center text-2xl tracking-widest uppercase font-mono"
+              inputmode="numeric"
+              pattern="[0-9]*"
+              class="code-input text-center text-2xl tracking-widest font-mono"
               placeholder="000000"
-              autocomplete="off"
+              autocomplete="one-time-code"
             />
           </div>
           <button

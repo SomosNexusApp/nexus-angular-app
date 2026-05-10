@@ -253,6 +253,9 @@
   text-align: center;
   letter-spacing: 15px;
   width: 100%;
+  box-sizing: border-box;
+  max-width: 100%;
+  overflow: hidden;
 }
 
 .totp-input-group input:focus {
@@ -638,12 +641,15 @@
   .totp-setup-area {
     padding: 20px;
     margin-top: 15px;
+    overflow: hidden;
   }
 
   .totp-input-group input {
-    font-size: 1.3rem;
-    letter-spacing: 8px;
-    padding: 12px;
+    font-size: 1.2rem;
+    letter-spacing: 6px;
+    padding: 12px 8px;
+    box-sizing: border-box;
+    max-width: 100%;
   }
 
   .step-3-layout {

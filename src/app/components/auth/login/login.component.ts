@@ -38,7 +38,9 @@ export class LoginComponent implements OnInit, OnDestroy {
   countdown = signal<number>(0);
   private countdownSub?: Subscription;
 
-  private tempUserId = signal<number | null>(null);
+  private tempUsername = signal<string | null>(null);      // username del usuario durante 2FA
+  private tempMfaToken = signal<string | null>(null);     // token temporal mientras verifica 2FA
+  twoFactorMethod = signal<'EMAIL' | 'TOTP' | null>(null); // método activo para mostrar instrucciones
   returnUrl: string = '/';
 
   loginForm: FormGroup = this.fb.group({
@@ -90,7 +92,11 @@ export class LoginComponent implements OnInit, OnDestroy {
       next: (res: any) => {
         this.isLoading.set(false);
         if (res.requires2FA || res.requiere2FA) {
-          this.tempUserId.set(res.usuarioId);
+          // Guardamos el username y el token temporal para el paso 2
+          this.tempUsername.set(res.username || null);
+          this.tempMfaToken.set(res.mfaToken || null);
+          // Detectamos el método de 2FA del actor (puede venir en la respuesta)
+          this.twoFactorMethod.set(res.twoFactorMethod as any || null);
           this.step.set(2);
         } else {
           this.loginExitoso();
@@ -104,12 +110,23 @@ export class LoginComponent implements OnInit, OnDestroy {
   }
 
   onTwoFactorSubmit() {
-    if (this.twoFactorForm.invalid || !this.tempUserId()) return;
+    if (this.twoFactorForm.invalid) return;
     this.isLoading.set(true);
     this.errorMessage.set(null);
 
-    const payload = { usuarioId: this.tempUserId(), codigo: this.twoFactorForm.value.codigo };
-    const url = `${environment.apiUrl}/auth/2fa/verificar`;
+    const username = this.tempUsername();
+    const code = this.twoFactorForm.value.codigo;
+
+    if (!username) {
+      // Fallback: si no tenemos username, volvemos al paso 1
+      this.isLoading.set(false);
+      this.step.set(1);
+      this.errorMessage.set('Sesión expirada. Por favor, inicia sesión de nuevo.');
+      return;
+    }
+
+    const payload = { username, code };
+    const url = `${environment.apiUrl}/auth/verify-2fa`;
 
     this.http.post<any>(url, payload).subscribe({
       next: (res) => {
