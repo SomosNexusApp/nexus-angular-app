@@ -119,7 +119,7 @@
 /* RESULTS GRID */
 .m-feed-results {
   flex: 1;
-  padding-bottom: 40px;
+  padding-bottom: 120px; /* Margen para no colapsar con el bottom nav */
 }
 
 /* BOTÓN DE FILTROS AVANZADOS */
