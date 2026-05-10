@@ -192,8 +192,7 @@
     border-radius: 10px !important;
   }
   .card-icon i {
-    width: 18px !important;
-    height: 18px !important;
+    font-size: 1.1rem !important;
   }
   .card-text h3 {
     font-size: 1.1rem !important;
@@ -286,9 +285,7 @@
 }
 
 .card-icon i {
-  width: 24px;
-  height: 24px;
-  stroke-width: 2;
+  font-size: 1.5rem;
 }
 
 .selection-card:hover .card-icon {

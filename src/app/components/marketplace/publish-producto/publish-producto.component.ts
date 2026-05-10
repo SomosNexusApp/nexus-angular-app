@@ -136,11 +136,45 @@ export class PublishProductoComponent implements OnInit, AfterViewInit {
     building: 'M3 21h18M3 7v14M21 21V7M9 21V3h6v18',
   };
 
-  getIconPath(cat: Categoria): string {
-    return (
-      this.iconPaths[cat.icono || ''] ||
-      'M20.59 13.41l-7.17 7.17a2 2 0 01-2.83 0L2 12V2h10l8.59 8.59a2 2 0 010 2.82zM7 7h.01'
-    );
+  getIconoCategoria(cat: Categoria | null): string {
+    if (!cat) return 'fas fa-layer-group';
+    const iconMap: { [key: string]: string } = {
+      juguetes: 'fas fa-puzzle-piece',
+      motos: 'fas fa-motorcycle',
+      moto: 'fas fa-motorcycle',
+      moviles: 'fas fa-mobile-screen-button',
+      telefonia: 'fas fa-mobile-screen-button',
+      informatica: 'fas fa-laptop',
+      electronica: 'fas fa-microchip',
+      coches: 'fas fa-car',
+      coche: 'fas fa-car',
+      hogar: 'fas fa-house-user',
+      muebles: 'fas fa-couch',
+      inmuebles: 'fas fa-building',
+      deportes: 'fas fa-basketball',
+      libros: 'fas fa-book',
+      camaras: 'fas fa-camera',
+      audio: 'fas fa-headphones',
+      consolas: 'fas fa-gamepad',
+      electrodomesticos: 'fas fa-blender',
+      zapatillas: 'fas fa-shoe-prints',
+      zapatos: 'fas fa-shoe-prints',
+      calzado: 'fas fa-shoe-prints',
+      moda: 'fas fa-shirt',
+      ropa: 'fas fa-shirt',
+      vuelos: 'fas fa-plane',
+      viajes: 'fas fa-plane-departure',
+      vehiculos: 'fas fa-car',
+      videojuegos: 'fas fa-gamepad',
+      otros: 'fas fa-box-archive',
+      flash: 'fas fa-bolt-lightning',
+    };
+    const slug = cat.slug?.toLowerCase();
+    if (slug && iconMap[slug]) return iconMap[slug];
+    let ico = cat.icono || 'fas fa-tag';
+    if (ico && !ico.includes('fa-')) ico = 'fa-' + ico;
+    if (ico && !ico.includes('fas') && !ico.includes('fab') && !ico.includes('far')) ico = 'fas ' + ico;
+    return ico;
   }
 
   getCategoryDesc(name: string): string {
