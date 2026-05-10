@@ -216,14 +216,7 @@ export const routes: Routes = [
       ),
     canActivate: [authGuard],
   },
-  {
-    path: 'publicidad',
-    loadComponent: () =>
-      import('./components/publicidad/publicidad-page.component').then(
-        (m) => m.PublicidadPageComponent,
-      ),
-    canActivate: [authGuard],
-  },
+
   {
     path: 'perfil/:username',
     loadComponent: () =>
