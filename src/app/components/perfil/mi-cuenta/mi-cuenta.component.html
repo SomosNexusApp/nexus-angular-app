@@ -517,18 +517,46 @@
       </section>
     }
 
-    <!-- ═══ PUBLICIDAD (solo empresa) ═══ -->
-    @if (activeSection() === 'publicidad' && authStore.isEmpresa()) {
+    <!-- ═══ PUBLICIDAD ═══ -->
+    @if (activeSection() === 'publicidad') {
       <section class="section publicidad-empresa">
-        <h2 class="section-title"><i class="fas fa-bullhorn"></i> Publicidad y contratos</h2>
-        <p class="section-lead">
-          Aquí gestionas las propuestas que el equipo Nexus te envía (presupuesto, banner o publicación patrocinada).
-          Si aceptas, el pago es con tarjeta mediante Stripe.
-        </p>
-        <div class="publicidad-actions">
-          <a routerLink="/publicidad/contratos" class="btn-primary-link">Abrir gestión de contratos</a>
-          <span class="hint">También puedes llegar desde el aviso en notificaciones.</span>
+
+        <!-- Sección: Patrocinar mi anuncio (TODOS los usuarios) -->
+        <div class="section-header-row">
+          <h2 class="section-title"><i class="fas fa-star"></i> Patrocinar mi anuncio</h2>
         </div>
+        <div class="patrocinio-intro-card">
+          <div class="patrocinio-icon-wrap">
+            <i class="fas fa-rocket"></i>
+          </div>
+          <div class="patrocinio-intro-body">
+            <h3>¿Tienes algo que quieras destacar?</h3>
+            <p>
+              Patrocina uno de tus productos, ofertas o vehículos para que aparezca el primero en la lista con la
+              etiqueta <span class="badge-patrocinado-mini">PATROCINADO</span>. Solo tienes que elegirlo, indicar
+              el tiempo deseado y enviar la solicitud. El equipo de Nexus la revisará y te notificará con el precio.
+            </p>
+            <a routerLink="/publicidad/patrocinios" class="btn-patrocinar">
+              <i class="fas fa-bullhorn"></i> Solicitar patrocinio / Ver mis solicitudes
+            </a>
+          </div>
+        </div>
+
+        <!-- Sección: Contratos de publicidad (SOLO empresa) -->
+        @if (authStore.isEmpresa()) {
+          <div class="publicidad-empresa-section">
+            <h2 class="section-title mt-6"><i class="fas fa-file-contract"></i> Publicidad y contratos</h2>
+            <p class="section-lead">
+              Aquí gestionas las propuestas que el equipo Nexus te envía (presupuesto, banner o publicación patrocinada).
+              Si aceptas, el pago es con tarjeta mediante Stripe.
+            </p>
+            <div class="publicidad-actions">
+              <a routerLink="/publicidad/contratos" class="btn-primary-link">Abrir gestión de contratos</a>
+              <span class="hint">También puedes llegar desde el aviso en notificaciones.</span>
+            </div>
+          </div>
+        }
+
       </section>
     }
 

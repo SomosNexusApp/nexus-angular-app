@@ -1,0 +1,249 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+
+:host { display: block; min-height: 100vh; background: #0f0f13; font-family: 'Inter', sans-serif; }
+
+/* ── HERO ─────────────────────────────── */
+.page-hero {
+  background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+  padding: 2.5rem 2rem;
+}
+.hero-content { max-width: 900px; margin: 0 auto; display: flex; align-items: center; gap: 1.5rem; }
+.hero-icon {
+  width: 64px; height: 64px; border-radius: 18px;
+  background: linear-gradient(135deg, #6c63ff, #a855f7);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.8rem; color: #fff; flex-shrink: 0;
+  box-shadow: 0 8px 24px rgba(108,99,255,0.4);
+}
+.hero-content h1 { font-size: 1.8rem; font-weight: 800; color: #fff; margin: 0 0 0.25rem; }
+.hero-content p { color: rgba(255,255,255,0.6); margin: 0; font-size: 0.95rem; }
+.badge-pat {
+  background: linear-gradient(90deg, #f59e0b, #ef4444);
+  color: #fff; font-size: 0.7rem; font-weight: 700;
+  padding: 2px 6px; border-radius: 4px; letter-spacing: 0.05em;
+}
+
+/* ── BANNERS ──────────────────────────── */
+.pay-success-banner, .pay-cancel-banner {
+  max-width: 900px; margin: 1.5rem auto 0; padding: 1rem 1.5rem;
+  border-radius: 12px; display: flex; align-items: center; gap: 0.75rem; font-size: 0.95rem;
+}
+.pay-success-banner { background: rgba(16,185,129,0.15); border: 1px solid rgba(16,185,129,0.3); color: #6ee7b7; }
+.pay-cancel-banner  { background: rgba(239,68,68,0.12); border: 1px solid rgba(239,68,68,0.3); color: #fca5a5; }
+
+/* ── TABS ─────────────────────────────── */
+.pat-tabs {
+  max-width: 900px; margin: 1.5rem auto 0; padding: 0 1.5rem;
+  display: flex; gap: 0.5rem; border-bottom: 1px solid rgba(255,255,255,0.08);
+}
+.pat-tab {
+  background: none; border: none; color: rgba(255,255,255,0.5);
+  font-size: 0.9rem; font-weight: 500; padding: 0.75rem 1.25rem;
+  cursor: pointer; border-bottom: 2px solid transparent; transition: all 0.2s;
+  display: flex; align-items: center; gap: 0.5rem;
+}
+.pat-tab:hover { color: rgba(255,255,255,0.8); }
+.pat-tab.active { color: #a78bfa; border-bottom-color: #a78bfa; }
+.tab-badge {
+  background: #a78bfa; color: #fff; font-size: 0.7rem; font-weight: 700;
+  padding: 2px 6px; border-radius: 10px; min-width: 20px; text-align: center;
+}
+
+/* ── SECTION ──────────────────────────── */
+.pat-section { max-width: 900px; margin: 0 auto; padding: 2rem 1.5rem; }
+
+/* ── STEP CARD ────────────────────────── */
+.step-card {
+  background: #1a1a2e; border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 16px; padding: 2rem; animation: fadeIn 0.3s ease;
+}
+@keyframes fadeIn { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+
+.step-header {
+  display: flex; align-items: center; gap: 1rem; margin-bottom: 2rem;
+}
+.step-num {
+  width: 36px; height: 36px; border-radius: 50%;
+  background: linear-gradient(135deg, #6c63ff, #a855f7);
+  color: #fff; font-weight: 700; font-size: 1rem;
+  display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+}
+.step-header h2 { font-size: 1.2rem; font-weight: 700; color: #fff; margin: 0; flex: 1; }
+.btn-back {
+  background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1);
+  color: rgba(255,255,255,0.6); padding: 0.5rem 0.75rem; border-radius: 8px;
+  cursor: pointer; transition: all 0.2s;
+}
+.btn-back:hover { background: rgba(255,255,255,0.1); color: #fff; }
+
+/* ── TIPO GRID ────────────────────────── */
+.tipo-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin-bottom: 2rem; }
+.tipo-btn {
+  background: rgba(255,255,255,0.04); border: 2px solid rgba(255,255,255,0.08);
+  border-radius: 14px; padding: 2rem 1rem; cursor: pointer;
+  display: flex; flex-direction: column; align-items: center; gap: 0.75rem;
+  color: rgba(255,255,255,0.6); font-size: 0.95rem; font-weight: 500;
+  transition: all 0.2s;
+}
+.tipo-btn i { font-size: 2rem; }
+.tipo-btn:hover { border-color: rgba(167,139,250,0.4); color: #a78bfa; background: rgba(167,139,250,0.06); }
+.tipo-btn.selected { border-color: #a78bfa; color: #a78bfa; background: rgba(167,139,250,0.1); }
+
+/* ── ITEMS GRID ───────────────────────── */
+.items-grid { display: flex; flex-direction: column; gap: 0.75rem; }
+.item-card {
+  background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 12px; padding: 1rem; cursor: pointer; width: 100%;
+  display: flex; align-items: center; gap: 1rem; text-align: left; transition: all 0.2s;
+}
+.item-card:hover { border-color: rgba(167,139,250,0.4); background: rgba(167,139,250,0.06); transform: translateX(4px); }
+.item-img { width: 60px; height: 60px; object-fit: cover; border-radius: 8px; flex-shrink: 0; }
+.item-img-placeholder {
+  width: 60px; height: 60px; border-radius: 8px; background: rgba(255,255,255,0.06);
+  display: flex; align-items: center; justify-content: center; color: rgba(255,255,255,0.3); flex-shrink: 0;
+}
+.item-info { flex: 1; }
+.item-title { display: block; color: #fff; font-size: 0.95rem; font-weight: 600; margin-bottom: 0.25rem; }
+.item-tipo-badge {
+  font-size: 0.7rem; font-weight: 600; padding: 2px 8px; border-radius: 4px;
+  background: rgba(167,139,250,0.15); color: #a78bfa;
+}
+.item-select-icon { color: rgba(255,255,255,0.3); }
+
+/* ── CONFIRM CARD ─────────────────────── */
+.selected-item-preview {
+  display: flex; align-items: center; gap: 1rem; padding: 1rem;
+  background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 12px; margin-bottom: 1.5rem;
+}
+.preview-img { width: 72px; height: 72px; object-fit: cover; border-radius: 10px; flex-shrink: 0; }
+.preview-info { display: flex; flex-direction: column; gap: 0.25rem; }
+.preview-label { font-size: 0.75rem; color: rgba(255,255,255,0.4); text-transform: uppercase; letter-spacing: 0.05em; }
+.preview-info strong { color: #fff; font-size: 1rem; }
+.preview-tipo { font-size: 0.75rem; color: #a78bfa; font-weight: 600; }
+
+.config-form { margin-bottom: 1.5rem; }
+.form-group { margin-bottom: 1.5rem; }
+.form-group label { display: block; font-size: 0.85rem; font-weight: 600; color: rgba(255,255,255,0.7); margin-bottom: 0.75rem; }
+
+.dias-selector { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+.dias-btn {
+  background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1);
+  color: rgba(255,255,255,0.7); padding: 0.5rem 1rem; border-radius: 8px;
+  cursor: pointer; font-size: 0.875rem; font-weight: 500; transition: all 0.2s;
+}
+.dias-btn:hover { border-color: rgba(167,139,250,0.4); color: #a78bfa; }
+.dias-btn.selected { background: rgba(167,139,250,0.15); border-color: #a78bfa; color: #a78bfa; }
+
+.price-input-wrap { position: relative; max-width: 200px; }
+.price-input {
+  width: 100%; padding: 0.625rem 2.5rem 0.625rem 0.875rem;
+  background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.12);
+  border-radius: 8px; color: #fff; font-size: 0.95rem; outline: none;
+  box-sizing: border-box;
+}
+.price-input:focus { border-color: #a78bfa; }
+.price-currency {
+  position: absolute; right: 0.75rem; top: 50%; transform: translateY(-50%);
+  color: rgba(255,255,255,0.4); font-size: 0.9rem;
+}
+.form-hint { font-size: 0.8rem; color: rgba(255,255,255,0.4); margin-top: 0.5rem; }
+
+.info-box {
+  display: flex; gap: 1rem; padding: 1rem 1.25rem;
+  background: rgba(59,130,246,0.08); border: 1px solid rgba(59,130,246,0.2);
+  border-radius: 12px; margin-bottom: 1.5rem;
+}
+.info-box i { color: #60a5fa; margin-top: 2px; flex-shrink: 0; }
+.info-box strong { display: block; color: #93c5fd; font-size: 0.875rem; margin-bottom: 0.25rem; }
+.info-box p { color: rgba(255,255,255,0.5); font-size: 0.85rem; margin: 0; }
+
+.step-actions, .confirm-actions { display: flex; justify-content: flex-end; }
+.btn-primary {
+  background: linear-gradient(135deg, #6c63ff, #a855f7);
+  color: #fff; border: none; padding: 0.75rem 1.5rem;
+  border-radius: 10px; font-size: 0.95rem; font-weight: 600;
+  cursor: pointer; display: flex; align-items: center; gap: 0.5rem; transition: all 0.2s;
+}
+.btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(108,99,255,0.4); }
+.btn-primary:disabled { opacity: 0.6; cursor: not-allowed; transform: none; box-shadow: none; }
+.btn-lg { padding: 0.875rem 2rem; font-size: 1rem; }
+.btn-secondary {
+  background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1);
+  color: rgba(255,255,255,0.7); padding: 0.625rem 1.25rem;
+  border-radius: 8px; font-size: 0.875rem; text-decoration: none;
+  cursor: pointer; transition: all 0.2s; display: inline-flex; align-items: center; gap: 0.5rem;
+}
+.btn-secondary:hover { background: rgba(255,255,255,0.1); color: #fff; }
+
+/* ── SOLICITUDES LIST ─────────────────── */
+.solicitudes-list { display: flex; flex-direction: column; gap: 1rem; }
+.solicitud-card {
+  background: #1a1a2e; border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 14px; padding: 1.25rem;
+  display: flex; align-items: center; gap: 1.25rem; transition: border-color 0.2s;
+}
+.solicitud-card.estado-active { border-left: 3px solid #10b981; }
+.solicitud-card.estado-solicitud_usuario { border-left: 3px solid #f59e0b; }
+.solicitud-card.estado-aprobado_pendiente_pago { border-left: 3px solid #6c63ff; }
+.solicitud-card.estado-cancelled, .solicitud-card.estado-rechazado { border-left: 3px solid #ef4444; opacity: 0.7; }
+
+.sol-img { width: 64px; height: 64px; object-fit: cover; border-radius: 10px; flex-shrink: 0; }
+.sol-img-placeholder {
+  width: 64px; height: 64px; border-radius: 10px; background: rgba(255,255,255,0.06);
+  display: flex; align-items: center; justify-content: center; color: rgba(255,255,255,0.2); flex-shrink: 0;
+}
+.sol-body { flex: 1; min-width: 0; }
+.sol-top { display: flex; align-items: center; gap: 0.75rem; flex-wrap: wrap; margin-bottom: 0.5rem; }
+.sol-titulo { color: #fff; font-weight: 600; font-size: 0.95rem; }
+.sol-tipo {
+  font-size: 0.7rem; font-weight: 600; padding: 2px 8px; border-radius: 4px;
+  background: rgba(255,255,255,0.08); color: rgba(255,255,255,0.5);
+}
+.sol-meta { display: flex; gap: 1rem; flex-wrap: wrap; }
+.sol-meta span { color: rgba(255,255,255,0.4); font-size: 0.8rem; display: flex; align-items: center; gap: 0.35rem; }
+.sol-meta i { font-size: 0.75rem; }
+
+.sol-badge {
+  font-size: 0.75rem; font-weight: 600; padding: 3px 10px; border-radius: 20px;
+}
+.badge-active   { background: rgba(16,185,129,0.15); color: #6ee7b7; }
+.badge-approved { background: rgba(108,99,255,0.15); color: #a78bfa; }
+.badge-pending  { background: rgba(245,158,11,0.15); color: #fbbf24; }
+.badge-cancelled{ background: rgba(239,68,68,0.12);  color: #fca5a5; }
+.badge-neutral  { background: rgba(255,255,255,0.08); color: rgba(255,255,255,0.5); }
+
+.sol-actions { flex-shrink: 0; }
+.btn-pay {
+  background: linear-gradient(135deg, #6c63ff, #a855f7);
+  color: #fff; border: none; padding: 0.625rem 1.25rem;
+  border-radius: 8px; font-size: 0.875rem; font-weight: 600;
+  cursor: pointer; display: flex; align-items: center; gap: 0.5rem;
+  transition: all 0.2s; white-space: nowrap;
+}
+.btn-pay:hover { transform: translateY(-2px); box-shadow: 0 6px 16px rgba(108,99,255,0.4); }
+
+/* ── STATES ───────────────────────────── */
+.loading-state { display: flex; justify-content: center; padding: 4rem; }
+.spinner { width: 36px; height: 36px; border: 3px solid rgba(255,255,255,0.1); border-top-color: #a78bfa; border-radius: 50%; animation: spin 0.7s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
+.spinner-sm { width: 16px; height: 16px; border: 2px solid rgba(255,255,255,0.3); border-top-color: #fff; border-radius: 50%; animation: spin 0.7s linear infinite; }
+
+.empty-state {
+  text-align: center; padding: 4rem 2rem;
+  display: flex; flex-direction: column; align-items: center; gap: 1rem;
+}
+.empty-state i { font-size: 3rem; color: rgba(255,255,255,0.15); }
+.empty-state p { color: rgba(255,255,255,0.4); font-size: 1rem; }
+
+/* ── RESPONSIVE ───────────────────────── */
+@media (max-width: 600px) {
+  .tipo-grid { grid-template-columns: 1fr; }
+  .hero-icon { width: 48px; height: 48px; font-size: 1.3rem; border-radius: 12px; }
+  .hero-content h1 { font-size: 1.3rem; }
+  .sol-top { flex-direction: column; align-items: flex-start; }
+  .pat-tabs { padding: 0 1rem; }
+  .pat-section { padding: 1.5rem 1rem; }
+  .step-card { padding: 1.25rem; }
+}

@@ -1,0 +1,228 @@
+<div class="patrocinios-page">
+  <div class="page-hero">
+    <div class="hero-content">
+      <div class="hero-icon"><i class="fas fa-rocket"></i></div>
+      <div>
+        <h1>Patrocinar mi anuncio</h1>
+        <p>Destaca tus productos, ofertas o vehículos con la etiqueta <span class="badge-pat">PATROCINADO</span></p>
+      </div>
+    </div>
+  </div>
+
+  @if (pagePaySuccess()) {
+    <div class="pay-success-banner">
+      <i class="fas fa-check-circle"></i>
+      <strong>¡Pago completado!</strong> Tu anuncio ya está siendo patrocinado. Puede tardar unos minutos en actualizarse.
+    </div>
+  }
+  @if (pagePayCancel()) {
+    <div class="pay-cancel-banner">
+      <i class="fas fa-times-circle"></i>
+      El pago fue cancelado. Puedes intentarlo de nuevo desde "Mis solicitudes".
+    </div>
+  }
+
+  <!-- Tabs -->
+  <div class="pat-tabs">
+    <button class="pat-tab" [class.active]="activeTab() === 'solicitar'" (click)="activeTab.set('solicitar')">
+      <i class="fas fa-plus-circle"></i> Nuevo patrocinio
+    </button>
+    <button class="pat-tab" [class.active]="activeTab() === 'mis-solicitudes'" (click)="activeTab.set('mis-solicitudes'); cargarPatrocinios()">
+      <i class="fas fa-list-alt"></i> Mis solicitudes
+      @if (patrocinios().length > 0) {
+        <span class="tab-badge">{{ patrocinios().length }}</span>
+      }
+    </button>
+  </div>
+
+  <!-- ═══ TAB: SOLICITAR ═══ -->
+  @if (activeTab() === 'solicitar') {
+    <div class="pat-section">
+
+      <!-- Paso 1: Elegir tipo -->
+      @if (paso() === 1) {
+        <div class="step-card">
+          <div class="step-header">
+            <span class="step-num">1</span>
+            <h2>¿Qué tipo de anuncio quieres patrocinar?</h2>
+          </div>
+          <div class="tipo-grid">
+            <button class="tipo-btn" [class.selected]="tipoSeleccionado() === 'PRODUCTO'"
+                    (click)="onTipoChange('PRODUCTO')">
+              <i class="fas fa-box-open"></i>
+              <span>Producto</span>
+            </button>
+            <button class="tipo-btn" [class.selected]="tipoSeleccionado() === 'OFERTA'"
+                    (click)="onTipoChange('OFERTA')">
+              <i class="fas fa-tags"></i>
+              <span>Oferta / Chollo</span>
+            </button>
+            <button class="tipo-btn" [class.selected]="tipoSeleccionado() === 'VEHICULO'"
+                    (click)="onTipoChange('VEHICULO')">
+              <i class="fas fa-car"></i>
+              <span>Vehículo</span>
+            </button>
+          </div>
+          <div class="step-actions">
+            <button class="btn-primary" (click)="irAPaso2()">
+              Continuar <i class="fas fa-arrow-right"></i>
+            </button>
+          </div>
+        </div>
+      }
+
+      <!-- Paso 2: Elegir item -->
+      @if (paso() === 2) {
+        <div class="step-card">
+          <div class="step-header">
+            <span class="step-num">2</span>
+            <h2>Elige el anuncio a patrocinar</h2>
+            <button class="btn-back" (click)="paso.set(1)"><i class="fas fa-arrow-left"></i></button>
+          </div>
+
+          @if (cargandoItems()) {
+            <div class="loading-state"><div class="spinner"></div></div>
+          } @else if (items().length === 0) {
+            <div class="empty-state">
+              <i class="fas fa-inbox"></i>
+              <p>No tienes {{ tipoSeleccionado() === 'PRODUCTO' ? 'productos' : tipoSeleccionado() === 'OFERTA' ? 'ofertas' : 'vehículos' }} publicados.</p>
+              <a routerLink="/publicar" class="btn-secondary">Publicar ahora</a>
+            </div>
+          } @else {
+            <div class="items-grid">
+              @for (item of items(); track item.id) {
+                <button class="item-card" (click)="seleccionarItem(item)">
+                  @if (item.imagen) {
+                    <img [src]="item.imagen" [alt]="item.titulo" class="item-img" />
+                  } @else {
+                    <div class="item-img-placeholder"><i class="fas fa-image"></i></div>
+                  }
+                  <div class="item-info">
+                    <span class="item-title">{{ item.titulo }}</span>
+                    <span class="item-tipo-badge">{{ item.tipo }}</span>
+                  </div>
+                  <div class="item-select-icon"><i class="fas fa-chevron-right"></i></div>
+                </button>
+              }
+            </div>
+          }
+        </div>
+      }
+
+      <!-- Paso 3: Configurar y confirmar -->
+      @if (paso() === 3 && itemSeleccionado()) {
+        <div class="step-card confirm-card">
+          <div class="step-header">
+            <span class="step-num">3</span>
+            <h2>Configura tu patrocinio</h2>
+            <button class="btn-back" (click)="volverAlista()"><i class="fas fa-arrow-left"></i></button>
+          </div>
+
+          <!-- Item preview -->
+          <div class="selected-item-preview">
+            @if (itemSeleccionado()?.imagen) {
+              <img [src]="itemSeleccionado()!.imagen" [alt]="itemSeleccionado()!.titulo" class="preview-img" />
+            }
+            <div class="preview-info">
+              <span class="preview-label">Anuncio seleccionado</span>
+              <strong>{{ itemSeleccionado()!.titulo }}</strong>
+              <span class="preview-tipo">{{ itemSeleccionado()!.tipo }}</span>
+            </div>
+          </div>
+
+          <!-- Config form -->
+          <div class="config-form">
+            <div class="form-group">
+              <label>Duración del patrocinio</label>
+              <div class="dias-selector">
+                @for (d of diasOptions; track d) {
+                  <button class="dias-btn" [class.selected]="diasPatrocinio() === d" (click)="diasPatrocinio.set(d)">
+                    {{ d }} días
+                  </button>
+                }
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label>Precio estimado (opcional)</label>
+              <div class="price-input-wrap">
+                <input type="number" min="0" step="0.01" [ngModel]="precioEstimado()"
+                       (ngModelChange)="precioEstimado.set($event)"
+                       placeholder="Ej: 9.99" class="price-input" />
+                <span class="price-currency">€</span>
+              </div>
+              <p class="form-hint">Si sabes cuánto quieres pagar, indícalo. El equipo Nexus confirmará el precio final.</p>
+            </div>
+          </div>
+
+          <!-- Info box -->
+          <div class="info-box">
+            <i class="fas fa-info-circle"></i>
+            <div>
+              <strong>¿Cómo funciona?</strong>
+              <p>Enviaremos tu solicitud al equipo de Nexus. En menos de 48h recibirás una notificación con el precio aprobado. Entonces podrás pagar con tarjeta y tu anuncio se activará automáticamente con la etiqueta PATROCINADO.</p>
+            </div>
+          </div>
+
+          <div class="confirm-actions">
+            <button class="btn-primary btn-lg" [disabled]="enviando()" (click)="enviarSolicitud()">
+              @if (enviando()) {
+                <span class="spinner-sm"></span> Enviando...
+              } @else {
+                <i class="fas fa-paper-plane"></i> Enviar solicitud
+              }
+            </button>
+          </div>
+        </div>
+      }
+    </div>
+  }
+
+  <!-- ═══ TAB: MIS SOLICITUDES ═══ -->
+  @if (activeTab() === 'mis-solicitudes') {
+    <div class="pat-section">
+      @if (cargandoPatrocinios()) {
+        <div class="loading-state"><div class="spinner"></div></div>
+      } @else if (patrocinios().length === 0) {
+        <div class="empty-state">
+          <i class="fas fa-star"></i>
+          <p>Aún no has enviado ninguna solicitud de patrocinio.</p>
+          <button class="btn-primary" (click)="activeTab.set('solicitar')">
+            <i class="fas fa-plus"></i> Solicitar ahora
+          </button>
+        </div>
+      } @else {
+        <div class="solicitudes-list">
+          @for (p of patrocinios(); track p.id) {
+            <div class="solicitud-card" [class]="'estado-' + p.estado.toLowerCase()">
+              @if (p.itemImagen) {
+                <img [src]="p.itemImagen" [alt]="p.itemTitulo" class="sol-img" />
+              } @else {
+                <div class="sol-img-placeholder"><i class="fas fa-image"></i></div>
+              }
+              <div class="sol-body">
+                <div class="sol-top">
+                  <span class="sol-titulo">{{ p.itemTitulo || 'Anuncio #' + p.itemId }}</span>
+                  <span class="sol-tipo">{{ p.tipoItem }}</span>
+                  <span [class]="'sol-badge ' + getEstadoClass(p.estado)">{{ getEstadoLabel(p.estado) }}</span>
+                </div>
+                <div class="sol-meta">
+                  @if (p.diasPatrocinio) { <span><i class="fas fa-clock"></i> {{ p.diasPatrocinio }} días</span> }
+                  @if (p.monto) { <span><i class="fas fa-euro-sign"></i> {{ p.monto | number:'1.2-2' }} €</span> }
+                  <span><i class="fas fa-calendar"></i> {{ p.fecha | date:'dd/MM/yyyy' }}</span>
+                </div>
+              </div>
+              <div class="sol-actions">
+                @if (p.estado === 'APROBADO_PENDIENTE_PAGO') {
+                  <button class="btn-pay" (click)="pagarPatrocinio(p.id)">
+                    <i class="fas fa-credit-card"></i> Pagar ahora
+                  </button>
+                }
+              </div>
+            </div>
+          }
+        </div>
+      }
+    </div>
+  }
+</div>

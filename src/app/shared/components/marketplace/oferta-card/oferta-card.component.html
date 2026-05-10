@@ -38,6 +38,9 @@
         <div class="img-wrapper">
           <img [src]="oferta.imagenPrincipal || 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?q=80&w=1000&auto=format&fit=crop'" [alt]="oferta.titulo" class="object-cover" />
           @if (discountPercent > 0) { <span class="discount-badge">-{{ discountPercent }}%</span> }
+          @if ($any(oferta).patrocinada || $any(oferta).patrocinado) {
+            <span class="patrocinada-badge"><i class="fas fa-star"></i> Patrocinado</span>
+          }
           @if ($any(oferta).badge) { <span class="type-badge" [ngClass]="$any(oferta).badge.toLowerCase()">{{ badgeLabel }}</span> }
           @if ($any(oferta).codigoDescuento) {
             <div class="coupon-badge-card" (click)="copiarCodigo($event)">

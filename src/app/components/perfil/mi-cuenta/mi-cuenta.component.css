@@ -2113,3 +2113,104 @@ hr {
   border-radius: 18px !important;
 }
 
+
+/* -- PUBLICIDAD / PATROCINIO SECTION ----------------------- */
+.patrocinio-intro-card {
+  display: flex;
+  gap: 1.5rem;
+  background: linear-gradient(135deg, rgba(108,99,255,0.08) 0%, rgba(168,85,247,0.06) 100%);
+  border: 1px solid rgba(108,99,255,0.2);
+  border-radius: 16px;
+  padding: 1.5rem;
+  margin-bottom: 2rem;
+}
+.patrocinio-icon-wrap {
+  width: 64px;
+  height: 64px;
+  background: linear-gradient(135deg, #6c63ff, #a855f7);
+  border-radius: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.75rem;
+  color: #fff;
+  flex-shrink: 0;
+  box-shadow: 0 6px 20px rgba(108,99,255,0.35);
+}
+.patrocinio-intro-body h3 {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #fff;
+  margin: 0 0 0.5rem;
+}
+.patrocinio-intro-body p {
+  color: rgba(255,255,255,0.55);
+  font-size: 0.9rem;
+  line-height: 1.6;
+  margin: 0 0 1rem;
+}
+.badge-patrocinado-mini {
+  background: linear-gradient(90deg, #f59e0b, #ef4444);
+  color: #fff;
+  font-size: 0.65rem;
+  font-weight: 700;
+  padding: 2px 6px;
+  border-radius: 4px;
+  letter-spacing: 0.05em;
+  white-space: nowrap;
+}
+.btn-patrocinar {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: linear-gradient(135deg, #6c63ff, #a855f7);
+  color: #fff;
+  text-decoration: none;
+  padding: 0.625rem 1.25rem;
+  border-radius: 10px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  transition: all 0.2s;
+}
+.btn-patrocinar:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 18px rgba(108,99,255,0.4);
+}
+.publicidad-empresa-section {
+  border-top: 1px solid rgba(255,255,255,0.07);
+  padding-top: 2rem;
+  margin-top: 1.5rem;
+}
+.section-lead {
+  color: rgba(255,255,255,0.55);
+  font-size: 0.9rem;
+  line-height: 1.6;
+  margin: 0.5rem 0 1.25rem;
+}
+.publicidad-actions {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+.btn-primary-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: linear-gradient(135deg, #6c63ff, #a855f7);
+  color: #fff;
+  text-decoration: none;
+  padding: 0.625rem 1.25rem;
+  border-radius: 10px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  transition: all 0.2s;
+}
+.btn-primary-link:hover { transform: translateY(-2px); box-shadow: 0 6px 18px rgba(108,99,255,0.4); }
+.hint { color: rgba(255,255,255,0.35); font-size: 0.8rem; }
+.mt-6 { margin-top: 1.5rem; }
+
+@media (max-width: 600px) {
+  .patrocinio-intro-card { flex-direction: column; }
+  .patrocinio-icon-wrap { width: 48px; height: 48px; font-size: 1.3rem; }
+}

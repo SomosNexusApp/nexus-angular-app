@@ -55,6 +55,10 @@
           {{ tipoLabel }}
         </span>
 
+        @if ($any(vehiculo).patrocinado) {
+          <span class="patrocinado-badge">Patrocinado</span>
+        }
+
         @if ($any(vehiculo).estadoVehiculo === 'VENDIDO') {
           <div class="estado-overlay">
             <span class="estado-text">VENDIDO</span>

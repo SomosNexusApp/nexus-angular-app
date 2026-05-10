@@ -209,6 +209,22 @@ export const routes: Routes = [
     canActivate: [authGuard],
   },
   {
+    path: 'publicidad/patrocinios',
+    loadComponent: () =>
+      import('./components/publicidad/mis-patrocinios-page.component').then(
+        (m) => m.MisPatrociniosPageComponent,
+      ),
+    canActivate: [authGuard],
+  },
+  {
+    path: 'publicidad',
+    loadComponent: () =>
+      import('./components/publicidad/publicidad-page.component').then(
+        (m) => m.PublicidadPageComponent,
+      ),
+    canActivate: [authGuard],
+  },
+  {
     path: 'perfil/:username',
     loadComponent: () =>
       import('./components/perfil/perfil-publico/perfil-publico.component').then(

@@ -241,17 +241,15 @@ export class MiCuentaComponent implements OnInit {
     { id: 'ayuda', icon: 'fa-question-circle', label: 'Ayuda' },
   ];
 
-  /** Incluye Publicidad solo para cuentas empresa (después de Mis ventas). */
+  /** Incluye Publicidad para todos los usuarios autenticados. */
   sidebarItemsVisible = computed(() => {
     const items = [...this.sidebarBase];
-    if (this.authStore.isEmpresa()) {
-      const idx = items.findIndex((i) => i.id === 'ventas');
-      const row = { id: 'publicidad' as SidebarSection, icon: 'fa-bullhorn', label: 'Publicidad' };
-      if (idx >= 0) {
-        items.splice(idx + 1, 0, row);
-      } else {
-        items.push(row);
-      }
+    const idx = items.findIndex((i) => i.id === 'ventas');
+    const row = { id: 'publicidad' as SidebarSection, icon: 'fa-bullhorn', label: 'Publicidad' };
+    if (idx >= 0) {
+      items.splice(idx + 1, 0, row);
+    } else {
+      items.push(row);
     }
     return items;
   });
@@ -267,14 +265,6 @@ export class MiCuentaComponent implements OnInit {
     this.route.queryParams.subscribe((params) => {
       const tab = params['tab'];
       if (tab) {
-        if (tab === 'publicidad' && !this.authStore.isEmpresa()) {
-          this.router.navigate([], {
-            relativeTo: this.route,
-            queryParams: { tab: 'resumen' },
-            replaceUrl: true,
-          });
-          return;
-        }
         this.setSection(tab as SidebarSection);
       }
 

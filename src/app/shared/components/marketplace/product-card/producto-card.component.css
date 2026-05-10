@@ -515,3 +515,16 @@
   gap: 6px;
 }
 
+
+/* -- PATROCINADO BADGE ------------------- */
+.patrocinado-badge {
+  background: linear-gradient(90deg, #f59e0b, #ef4444) !important;
+  color: #fff !important;
+  font-weight: 700;
+  font-size: 0.65rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  border-radius: 4px;
+  padding: 3px 7px;
+  box-shadow: 0 2px 6px rgba(239,68,68,0.35);
+}
