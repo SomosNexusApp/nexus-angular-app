@@ -1515,3 +1515,36 @@
   letter-spacing: 2px;
   height: 54px;
 }
+
+/* ── Report Section ────────────────────────────────── */
+.report-footer-area {
+  display: flex;
+  justify-content: center;
+  padding: 40px 0 20px;
+  margin-top: 40px;
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+  width: 100%;
+}
+
+.report-btn-subtle {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  font-size: 0.85rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  opacity: 0.6;
+}
+
+.report-btn-subtle:hover {
+  color: var(--red);
+  opacity: 1;
+}
+
+.report-btn-subtle i {
+  font-size: 0.9rem;
+}

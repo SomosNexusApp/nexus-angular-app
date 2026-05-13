@@ -478,6 +478,16 @@
       </section>
     }
 
+    <!-- Reportar -->
+    @if (!esVendedorPropietario()) {
+      <div class="report-footer-area">
+        <button class="report-btn-subtle" (click)="reportarAnuncio()">
+          <i class="fas fa-flag"></i>
+          <span>Reportar este anuncio</span>
+        </button>
+      </div>
+    }
+
     <!-- ── Mobile Sticky Bottom Bar ──────────────────────── -->
     <div class="mobile-sticky-actions">
       @if (estaVendido() && !esVendedorPropietario()) {
