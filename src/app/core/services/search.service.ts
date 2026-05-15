@@ -297,13 +297,19 @@ export class SearchService {
             const provincia = addr.county || addr.state_district || addr.state || '';
 
             // Nombre corto: "Arahal, Sevilla" o solo "Sevilla" si es la capital
+            const cp = addr.postcode || '';
             let display: string;
+            
             if (ciudad && provincia && ciudad.toLowerCase() !== provincia.toLowerCase()) {
               display = `${ciudad}, ${provincia}`;
             } else if (ciudad) {
               display = ciudad;
             } else {
-              display = provincia;
+              display = provincia || query; // Fallback al query original si no hay nada
+            }
+
+            if (cp && !display.includes(cp)) {
+              display += ` (${cp})`;
             }
 
             return {

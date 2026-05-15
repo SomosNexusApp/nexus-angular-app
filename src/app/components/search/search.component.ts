@@ -598,6 +598,11 @@ export class SearchComponent implements OnInit, AfterViewInit, OnDestroy {
           this.sugerenciasUbicacion = [];
           this.mostrandoSugerenciasUbi = false;
           this.cdr.detectChanges();
+
+          // Si el usuario ha borrado el texto, limpiamos el filtro de ubicación del formulario
+          if (!q) {
+            this.limpiarUbicacion();
+          }
         }
       });
 
@@ -668,6 +673,16 @@ export class SearchComponent implements OnInit, AfterViewInit, OnDestroy {
       });
     }
     this.cdr.detectChanges();
+  }
+
+  seleccionarPrimeraSugerencia(): void {
+    if (this.sugerenciasUbicacion.length > 0) {
+      const first = this.sugerenciasUbicacion[0];
+      this.seleccionarUbicacion(first.display, { lat: first.lat, lng: first.lng });
+    } else if (this.ubicacionInputControl.value) {
+      // Si no hay sugerencias cargadas pero hay texto, intentamos seleccionar el texto
+      this.seleccionarUbicacion(this.ubicacionInputControl.value);
+    }
   }
 
   usarUbicacionActual(): void {

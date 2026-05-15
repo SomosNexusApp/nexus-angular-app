@@ -67,6 +67,7 @@
                         class="nx-dark-input no-left-icon"
                         placeholder="Ciudad, provincia, código postal..."
                         (focus)="mostrandoSugerenciasUbi = sugerenciasUbicacion.length > 0"
+                        (keyup.enter)="seleccionarPrimeraSugerencia()"
                     />
                     <button
                         type="button"
@@ -703,11 +704,11 @@
                                 class="nx-autocomplete-item"
                                 *ngFor="let s of sugerenciasUbicacion"
                                 (click)="
-                                    seleccionarUbicacion(s.display_name, { lat: s.lat, lng: s.lng })
+                                    seleccionarUbicacion(s.display, { lat: s.lat, lng: s.lng })
                                 "
                             >
                                 <i class="fas fa-map-marker-alt"></i>
-                                <span>{{ s.display_name }}</span>
+                                <span>{{ s.display }}</span>
                             </div>
                         </div>
                     </div>
