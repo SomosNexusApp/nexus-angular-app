@@ -286,14 +286,37 @@ export class SearchService {
 
   buscarUbicacionExterna(query: string): Observable<any[]> {
     if (!query || query.length < 3) return of([]);
-    const url = `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(query)}&countrycodes=es&format=json&addressdetails=1&limit=5`;
+    const url = `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(query)}&countrycodes=es&format=json&addressdetails=1&limit=8`;
     return this.http.get<any[]>(url).pipe(
       map((resultados) => {
-        return resultados.map((res) => ({
-          display_name: res.display_name,
-          lat: parseFloat(res.lat),
-          lng: parseFloat(res.lon),
-        }));
+        const vistos = new Set<string>();
+        return resultados
+          .map((res) => {
+            const addr = res.address || {};
+            const ciudad = addr.city || addr.town || addr.village || addr.municipality || addr.suburb || '';
+            const provincia = addr.county || addr.state_district || addr.state || '';
+
+            // Nombre corto: "Arahal, Sevilla" o solo "Sevilla" si es la capital
+            let display: string;
+            if (ciudad && provincia && ciudad.toLowerCase() !== provincia.toLowerCase()) {
+              display = `${ciudad}, ${provincia}`;
+            } else if (ciudad) {
+              display = ciudad;
+            } else {
+              display = provincia;
+            }
+
+            return {
+              display: display.trim(),
+              lat: parseFloat(res.lat),
+              lng: parseFloat(res.lon),
+            };
+          })
+          .filter((s) => {
+            if (!s.display || s.display.length < 2 || vistos.has(s.display.toLowerCase())) return false;
+            vistos.add(s.display.toLowerCase());
+            return true;
+          });
       }),
       catchError(() => of([])),
     );
@@ -304,8 +327,14 @@ export class SearchService {
     return this.http.get<any>(url).pipe(
       map((res) => {
         const addr = res?.address || {};
-        const provincia = addr.state || addr.county || addr.province || null;
-        return provincia ? String(provincia).trim() : null;
+        const ciudad = addr.city || addr.town || addr.village || addr.municipality || addr.suburb || '';
+        // Priorizar county (Sevilla) sobre state (Andalucía)
+        const provincia = addr.county || addr.state_district || addr.province || addr.state || '';
+        
+        if (ciudad && provincia && ciudad.toLowerCase() !== provincia.toLowerCase()) {
+          return `${ciudad}, ${provincia}`;
+        }
+        return ciudad || provincia || null;
       }),
       catchError(() => of(null)),
     );

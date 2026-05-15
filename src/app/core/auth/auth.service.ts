@@ -96,12 +96,14 @@ export class AuthService {
    */
   logout(isAdmin = false): void {
     this.jwt.removeToken(isAdmin);
+    // Restaurar el overflow del body por si venía del menú móvil
+    document.body.style.overflow = '';
     if (isAdmin) {
       this.store.clearAdmin();
-      this.router.navigate(['/admin/login']);
+      this.router.navigate(['/admin/login'], { replaceUrl: true });
     } else {
       this.store.clear();
-      this.router.navigate(['/']);
+      this.router.navigate(['/'], { replaceUrl: true });
     }
   }
 

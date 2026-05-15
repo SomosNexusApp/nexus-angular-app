@@ -479,14 +479,17 @@ export class HeaderComponent implements OnInit, OnDestroy {
   }
 
   isNavActive(link: NavLink): boolean {
-    const url = this.router.url;
+    const url = this.router.url.split('?')[0]; // Strip query params for comparison
     if (link.queryParams) {
-      const tree = this.router.parseUrl(url);
+      const tree = this.router.parseUrl(this.router.url);
       return (
         url.startsWith(link.route) &&
-        Object.entries(link.queryParams).every(([k, v]) => tree.queryParams[k] === v)
+        Object.entries(link.queryParams).every(([k, v]) => tree.queryParams[k] === String(v))
       );
     }
-    return url.startsWith(link.route);
+    // For routes like /ofertas, /viajes, /gratis that have detail sub-pages (/ofertas/:slug),
+    // only mark as active if the path is exactly the route (no extra segments after it)
+    const pathAfter = url.slice(link.route.length);
+    return url.startsWith(link.route) && (pathAfter === '' || pathAfter.startsWith('?'));
   }
 }

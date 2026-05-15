@@ -47,7 +47,8 @@ export class MobileBottomNav {
   checkAuth(event: Event) {
     if (!this.authStore.isLoggedIn()) {
       event.preventDefault();
-      this.guestPopup.showPopup();
+      // On mobile, the popup is blocked, so navigate to login directly
+      this.router.navigate(['/login']);
     }
   }
 

@@ -43,77 +43,74 @@
             </button>
         </div>
 
+        <!-- Ubicación: FUERA del scroll container para que el autocomplete no sea recortado por overflow -->
+        <div class="nx-ubicacion-section" [formGroup]="filterForm">
+            <div class="nx-form-group">
+                <div class="nx-form-label-row">
+                    <label class="nx-form-label">Ubicación</label>
+                    <button
+                        type="button"
+                        class="nx-btn-map-toggle"
+                        (click)="toggleMapa()"
+                        [class.active]="mostrandoMapaModal"
+                    >
+                        <i class="fas fa-map"></i>
+                        {{ filterForm.get('lat')?.value ? 'Ajustar Mapa' : 'Ver Mapa' }}
+                    </button>
+                </div>
+
+                <div class="nx-input-with-icon">
+                    <i class="fas fa-location-dot nx-icon-left"></i>
+                    <input
+                        type="text"
+                        [formControl]="ubicacionInputControl"
+                        class="nx-dark-input no-left-icon"
+                        placeholder="Ciudad, provincia, código postal..."
+                        (focus)="mostrandoSugerenciasUbi = sugerenciasUbicacion.length > 0"
+                    />
+                    <button
+                        type="button"
+                        class="nx-btn-locate"
+                        (click)="usarUbicacionActual()"
+                        [disabled]="obteniendoUbicacion"
+                        title="Usar mi ubicación actual"
+                    >
+                        <i
+                            class="fas fa-crosshairs anim-gps"
+                            [class.nx-spin]="obteniendoUbicacion"
+                        ></i>
+                    </button>
+                </div>
+
+                <!-- Resumen de Ubicación Seleccionada -->
+                @if (filterForm.get('lat')?.value && filterForm.get('ubicacion')?.value) {
+                    <div class="nx-location-summary">
+                        <i class="fas fa-location-crosshairs"></i>
+                        <span>{{ filterForm.get('ubicacion')?.value }} ({{ filterForm.get('radius')?.value }} km)</span>
+                    </div>
+                }
+
+                <!-- Autocomplete: dentro del section sin overflow clip -->
+                @if (mostrandoSugerenciasUbi && sugerenciasUbicacion.length > 0) {
+                    <div class="nx-autocomplete-dropdown" (mousedown)="$event.preventDefault()">
+                        <ul class="nx-dropdown-list">
+                            @for (sug of sugerenciasUbicacion; track $index) {
+                                <li
+                                    class="nx-dropdown-item"
+                                    (click)="seleccionarUbicacion(sug.display, { lat: sug.lat, lng: sug.lng })"
+                                >
+                                    <i class="fas fa-location-dot"></i>
+                                    <span>{{ sug.display }}</span>
+                                </li>
+                            }
+                        </ul>
+                    </div>
+                }
+            </div>
+        </div>
+
         <div class="nx-sidebar-scroll-container">
             <form [formGroup]="filterForm" class="nx-filter-form">
-                <!-- Ubicación -->
-                <div class="nx-form-group">
-                    <div class="nx-form-label-row">
-                        <label class="nx-form-label">Ubicación</label>
-                        <button
-                            type="button"
-                            class="nx-btn-map-toggle"
-                            (click)="toggleMapa()"
-                            [class.active]="mostrandoMapaModal"
-                        >
-                            <i class="fas fa-map"></i>
-                            {{ filterForm.get('lat')?.value ? 'Ajustar Mapa' : 'Ver Mapa' }}
-                        </button>
-                    </div>
-
-                    <div class="nx-input-with-icon">
-                        <i class="fas fa-location-dot nx-icon-left"></i>
-                        <input
-                            type="text"
-                            formControlName="ubicacion"
-                            class="nx-dark-input no-left-icon"
-                            placeholder="Ciudad, provincia, código postal..."
-                            (focus)="mostrandoSugerenciasUbi = sugerenciasUbicacion.length > 0"
-                        />
-                        <button
-                            type="button"
-                            class="nx-btn-locate"
-                            (click)="usarUbicacionActual()"
-                            [disabled]="obteniendoUbicacion"
-                            title="Usar mi ubicación actual"
-                        >
-                            <i
-                                class="fas fa-crosshairs anim-gps"
-                                [class.nx-spin]="obteniendoUbicacion"
-                            ></i>
-                        </button>
-                    </div>
-
-                    <!-- Resumen de Ubicación Seleccionada -->
-                    @if (filterForm.get('lat')?.value && filterForm.get('ubicacion')?.value) {
-                        <div class="nx-location-summary">
-                            <i class="fas fa-location-crosshairs"></i>
-                            <span
-                                >{{ filterForm.get('ubicacion')?.value }} ({{
-                                    filterForm.get('radius')?.value
-                                }}
-                                km)</span
-                            >
-                        </div>
-                    }
-
-                    <!-- Mapa Interactivo en Modal (Relocalizado al final) -->
-
-                    @if (mostrandoSugerenciasUbi && sugerenciasUbicacion.length > 0) {
-                        <div class="nx-autocomplete-dropdown" (wheel)="$event.stopPropagation()">
-                            <ul class="nx-dropdown-list">
-                                @for (sug of sugerenciasUbicacion; track $index) {
-                                    <li
-                                        class="nx-dropdown-item"
-                                        (click)="seleccionarUbicacion(sug.display_name, { lat: sug.lat, lng: sug.lng })"
-                                    >
-                                        <i class="fas fa-location-dot"></i>
-                                        <span>{{ sug.display_name }}</span>
-                                    </li>
-                                }
-                            </ul>
-                        </div>
-                    }
-                </div>
 
                 <div class="nx-divider-subtle"></div>
 

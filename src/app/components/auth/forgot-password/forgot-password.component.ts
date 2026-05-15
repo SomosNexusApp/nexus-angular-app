@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 import { AuthService } from '../../../core/auth/auth.service';
+import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
   selector: 'app-forgot-password',
@@ -18,6 +19,7 @@ export class ForgotPasswordComponent {
   // Estados
   isSubmitted = signal<boolean>(false);
   isLoading = signal<boolean>(false);
+  errorMsg = signal<string>('');
 
   forgotForm: FormGroup = this.fb.group({
     email: ['', [Validators.required, Validators.email]],
@@ -34,17 +36,21 @@ export class ForgotPasswordComponent {
     }
 
     this.isLoading.set(true);
+    this.errorMsg.set('');
     const email = this.forgotForm.value.email;
 
     this.authService.requestPasswordReset(email).subscribe({
       next: () => {
         this.isLoading.set(false);
-        this.isSubmitted.set(true); // Mostramos el mensaje de éxito
-      },
-      error: () => {
-        // ANTI-ENUMERATION: Aunque el email no exista o haya error, simulamos éxito en la UI
-        this.isLoading.set(false);
         this.isSubmitted.set(true);
+      },
+      error: (err: HttpErrorResponse) => {
+        this.isLoading.set(false);
+        if (err.status === 404 || err.status === 400) {
+          this.errorMsg.set('No existe ninguna cuenta con ese correo electrónico.');
+        } else {
+          this.errorMsg.set('Ha ocurrido un error. Por favor, inténtalo de nuevo.');
+        }
       },
     });
   }

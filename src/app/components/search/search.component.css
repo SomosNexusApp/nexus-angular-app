@@ -217,6 +217,22 @@ h3,
   scrollbar-width: none; /* Firefox */
   -ms-overflow-style: none; /* IE/Edge */
 }
+
+/* Ubicación: sección independiente fuera del scroll para que el autocomplete no sea recortado */
+.nx-ubicacion-section {
+  padding: 1.25rem 1.25rem 0;
+  flex-shrink: 0;
+  position: relative;
+  overflow: visible;
+  border-bottom: 1px solid var(--nx-glass-border);
+}
+
+.nx-ubicacion-section .nx-autocomplete-dropdown {
+  /* Sobreescribir el z-index para estar sobre todo dentro del sidebar */
+  z-index: 10050;
+  max-height: 200px;
+}
+
 .nx-sidebar-scroll-container::-webkit-scrollbar {
   display: none; /* Chrome, Safari, Opera */
 }
@@ -234,6 +250,7 @@ h3,
   display: flex;
   flex-direction: column;
   gap: 0.625rem;
+  position: relative; /* Needed for absolute-positioned autocomplete dropdown */
 }
 
 .nx-form-grid-2 {
@@ -683,6 +700,33 @@ h3,
   font-size: 1.1rem;
 }
 
+/* Autocomplete outside scroll container (to avoid overflow clip) */
+.nx-sidebar-autocomplete {
+  position: absolute;
+  top: auto; /* Visually below the ubicacion input group */
+  left: 1.25rem;
+  right: 1.25rem;
+  background: #1a1b26;
+  backdrop-filter: blur(12px);
+  border: 1px solid var(--nx-glass-border);
+  border-radius: var(--nx-radius-md);
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.6);
+  z-index: 10020;
+  overflow-y: auto;
+  max-height: 220px;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(99, 102, 241, 0.5) transparent;
+}
+
+.nx-sidebar-autocomplete::-webkit-scrollbar {
+  width: 6px;
+  display: block;
+}
+.nx-sidebar-autocomplete::-webkit-scrollbar-thumb {
+  background: rgba(99, 102, 241, 0.4);
+  border-radius: 10px;
+}
+
 /* Autocomplete Dropdown */
 .nx-autocomplete-dropdown {
   position: absolute;
@@ -694,7 +738,7 @@ h3,
   border: 1px solid var(--nx-glass-border);
   border-radius: var(--nx-radius-md);
   box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
-  z-index: 50;
+  z-index: 10010; /* Must be above the sidebar and its scroll container */
   overflow-y: auto;
   max-height: 250px;
   margin-top: 0.5rem;

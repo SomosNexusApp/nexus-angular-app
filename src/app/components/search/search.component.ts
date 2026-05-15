@@ -11,7 +11,7 @@ import {
   signal,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { Subject, Subscription, of } from 'rxjs';
@@ -79,6 +79,7 @@ export class SearchComponent implements OnInit, AfterViewInit, OnDestroy {
   private scrollService = inject(ScrollService);
 
   filterForm!: FormGroup;
+  ubicacionInputControl = new FormControl('');
   resultados: MarketplaceItem[] = [];
   cargando = true;
   cargandoMas = false;
@@ -164,6 +165,15 @@ export class SearchComponent implements OnInit, AfterViewInit, OnDestroy {
     this.initForm();
     this.cargarCategorias();
     this.cargarMarcas();
+
+    // Sincronizar el input de texto con el valor del formulario (ej: al cargar desde URL)
+    this.filterForm.get('ubicacion')?.valueChanges
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(val => {
+        if (this.ubicacionInputControl.value !== val) {
+          this.ubicacionInputControl.setValue(val, { emitEvent: false });
+        }
+      });
 
     // Nueva lógica optimizada con switchMap DEBE ir antes de escucharCambiosURL
     // para no perder el disparo inicial si se emite síncronamente.
@@ -575,10 +585,9 @@ export class SearchComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   private escucharAutocompletados(): void {
-    this.filterForm
-      .get('ubicacion')
-      ?.valueChanges.pipe(debounceTime(400), distinctUntilChanged(), takeUntil(this.destroy$))
-      .subscribe((q) => {
+    this.ubicacionInputControl.valueChanges
+      .pipe(debounceTime(400), distinctUntilChanged(), takeUntil(this.destroy$))
+      .subscribe((q: string | null) => {
         if (q && q.length > 2 && !this.obteniendoUbicacion) {
           this.searchService.buscarUbicacionExterna(q).subscribe((s) => {
             this.sugerenciasUbicacion = s;
@@ -621,24 +630,27 @@ export class SearchComponent implements OnInit, AfterViewInit, OnDestroy {
 
   seleccionarUbicacion(u: string, coords?: { lat: number; lng: number }): void {
     if (!u) return;
-    this.filterForm.patchValue({ ubicacion: u });
+    
+    // Actualizamos el control de texto (standalone) sin disparar su valueChanges
+    this.ubicacionInputControl.setValue(u, { emitEvent: false });
     this.mostrandoSugerenciasUbi = false;
 
-    if (coords && this.map && this.marker) {
-      // Usar coordenadas directas de la sugerencia (Precisión 100%)
-      this.filterForm.patchValue(
-        {
-          lat: coords.lat,
-          lng: coords.lng,
-        },
-        { emitEvent: false },
-      );
+    // Actualizamos el formulario de una sola vez para disparar una sola búsqueda
+    const updateData: any = { ubicacion: u };
+    if (coords) {
+      updateData.lat = coords.lat;
+      updateData.lng = coords.lng;
+    }
 
+    this.filterForm.patchValue(updateData, { emitEvent: true });
+
+    // Actualizar elementos visuales del mapa
+    if (coords && this.map && this.marker) {
       this.marker.setLatLng([coords.lat, coords.lng]);
       this.map.setView([coords.lat, coords.lng], 13);
       this.updateRadiusCircle();
-    } else {
-      // Geocodificar si no tenemos coordenadas (ej. Enter en el input)
+    } else if (!coords) {
+      // Geocodificar si no tenemos coordenadas
       this.searchService.getCoordenadas(u).subscribe((newCoords) => {
         if (newCoords && this.map && this.marker) {
           this.filterForm.patchValue(
@@ -646,7 +658,7 @@ export class SearchComponent implements OnInit, AfterViewInit, OnDestroy {
               lat: newCoords.lat,
               lng: newCoords.lng,
             },
-            { emitEvent: false },
+            { emitEvent: true },
           );
 
           this.marker.setLatLng([newCoords.lat, newCoords.lng]);
@@ -655,6 +667,35 @@ export class SearchComponent implements OnInit, AfterViewInit, OnDestroy {
         }
       });
     }
+    this.cdr.detectChanges();
+  }
+
+  usarUbicacionActual(): void {
+    if (!navigator.geolocation) return;
+
+    // Usar microtarea para evitar ExpressionChangedAfterItHasBeenCheckedError si el spinner se activa síncronamente
+    Promise.resolve().then(() => {
+      this.obteniendoUbicacion = true;
+      this.cdr.detectChanges();
+    });
+
+    navigator.geolocation.getCurrentPosition(
+      (pos) => {
+        const lat = pos.coords.latitude;
+        const lng = pos.coords.longitude;
+
+        this.searchService.getProvinciaDesdeCoordenadas(lat, lng).subscribe((lugar) => {
+          this.seleccionarUbicacion(lugar || 'Ubicación actual', { lat, lng });
+          this.obteniendoUbicacion = false;
+          this.cdr.detectChanges();
+        });
+      },
+      () => {
+        this.obteniendoUbicacion = false;
+        this.cdr.detectChanges();
+      },
+      { timeout: 5000 },
+    );
   }
 
   private slugEsVehiculo(s: string): boolean {
@@ -805,82 +846,6 @@ export class SearchComponent implements OnInit, AfterViewInit, OnDestroy {
     this.isMobileFiltersOpen = !this.isMobileFiltersOpen;
   }
 
-  usarUbicacionActual(): void {
-    if (!navigator.geolocation) return;
-
-    // Fix ExpressionChangedAfterItHasBeenCheckedError
-    Promise.resolve().then(() => {
-      this.obteniendoUbicacion = true;
-      this.cdr.detectChanges();
-    });
-
-    navigator.geolocation.getCurrentPosition(
-      (pos) => {
-        const { latitude, longitude } = pos.coords;
-
-        // Actualizar formulario
-        this.filterForm.patchValue(
-          {
-            lat: latitude,
-            lng: longitude,
-          },
-          { emitEvent: false },
-        );
-
-        // Actualizar Mapa si existe
-        if (this.map && this.marker) {
-          this.marker.setLatLng([latitude, longitude]);
-          this.map.setView([latitude, longitude], 13);
-          this.updateRadiusCircle();
-        }
-
-        this.http
-          .get<any>(
-            `https://nominatim.openstreetmap.org/reverse?lat=${latitude}&lon=${longitude}&format=json`,
-          )
-          .pipe(takeUntil(this.destroy$))
-          .subscribe({
-            next: (res) => {
-              const addr = res?.address;
-              let ciudad = '';
-
-              if (addr) {
-                const loc =
-                  addr.city || addr.town || addr.village || addr.municipality || addr.suburb || '';
-                const prov = addr.county || addr.province || addr.state || '';
-
-                if (loc && prov && loc !== prov) {
-                  ciudad = `${loc}, ${prov}`;
-                } else {
-                  ciudad = loc || prov || '';
-                }
-              }
-
-              if (!ciudad) {
-                ciudad = `${latitude.toFixed(4)}, ${longitude.toFixed(4)}`;
-              }
-
-              this.filterForm.patchValue({ ubicacion: ciudad });
-              this.obteniendoUbicacion = false;
-              this.mostrandoSugerenciasUbi = false;
-              this.cdr.detectChanges();
-            },
-            error: () => {
-              this.filterForm.patchValue({
-                ubicacion: `${latitude.toFixed(4)}, ${longitude.toFixed(4)}`,
-              });
-              this.obteniendoUbicacion = false;
-              this.mostrandoSugerenciasUbi = false;
-              this.cdr.detectChanges();
-            },
-          });
-      },
-      () => {
-        this.obteniendoUbicacion = false;
-        this.cdr.detectChanges();
-      },
-    );
-  }
 
   getIconoCategoria(cat: Categoria | null): string {
     if (!cat) return 'fas fa-layer-group';
