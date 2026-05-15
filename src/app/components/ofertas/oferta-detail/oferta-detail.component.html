@@ -1,4 +1,13 @@
-<div class="oferta-canvas elite-theme" *ngIf="!cargando() && oferta()">
+<div class="oferta-canvas elite-theme" *ngIf="!cargando() && oferta()"
+     [class.guest-mode]="!authStore.isLoggedIn() && isMobileUI()">
+  
+  <!-- ── Guest Info Bar (Mobile Only) ────────────────── -->
+  <div class="guest-info-bar" *ngIf="!authStore.isLoggedIn() && isMobileUI()">
+    <i class="fas fa-info-circle"></i>
+    <span>Inicia sesión para poder interactuar con este chollo</span>
+    <a routerLink="/login">Entrar</a>
+  </div>
+
   <div class="mobile-detail-nav">
     <button class="m-nav-btn back" (click)="back()" aria-label="Volver">
       <i class="fas fa-arrow-left"></i>

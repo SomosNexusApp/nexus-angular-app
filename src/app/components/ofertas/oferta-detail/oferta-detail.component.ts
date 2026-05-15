@@ -183,7 +183,8 @@ export class OfertaDetailComponent implements OnInit, OnDestroy {
 
   votar(esSpark: boolean) {
     if (!this.authStore.isLoggedIn()) { 
-      this.confirmModal.abrir('Inicio de sesión', 'Debes iniciar sesión para calificar este chollo.', 'INFO');
+      this.toast.info('Inicia sesión para votar este chollo');
+      this.guestPopup.showPopup('Para votar chollos');
       return; 
     }
     if (this.votando()) return;
@@ -493,6 +494,7 @@ export class OfertaDetailComponent implements OnInit, OnDestroy {
 
   toggleFavorito(): void {
     if (!this.authStore.isLoggedIn()) {
+      this.toast.info('Inicia sesión para guardar tus favoritos');
       this.guestPopup.showPopup('Para guardar tus chollos favoritos');
       return;
     }

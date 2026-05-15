@@ -13,6 +13,7 @@ import { ViewChild } from '@angular/core';
 import { FavoritoService } from '../../../core/services/favorito.service';
 import { UiService } from '../../../core/services/ui.service';
 import { extractIdFromSlug, createFriendlySlug } from '../../../shared/utils/slug-utils';
+import { GuestPopupService } from '../../../core/services/guest-popup.service';
 
 import { AvatarComponent } from '../../../shared/components/avatar/avatar.component';
 
@@ -40,6 +41,7 @@ export class VehiculoDetailComponent implements OnInit, OnDestroy {
   uiService = inject(UiService);
   authStore = inject(AuthStore);
   private toast = inject(ToastService);
+  private guestPopupService = inject(GuestPopupService);
 
   @ViewChild(ReporteModalComponent) reporteModal!: ReporteModalComponent;
 
@@ -162,7 +164,8 @@ export class VehiculoDetailComponent implements OnInit, OnDestroy {
 
   contactar() {
     if (!this.authStore.isLoggedIn()) {
-      this.toast.error('Inicia sesión para contactar');
+      this.toast.info('Inicia sesión para contactar con el vendedor');
+      this.guestPopupService.showPopup('Para contactar al vendedor');
       return;
     }
     this.router.navigate(['/mensajes'], { queryParams: { productoId: this.vehiculo()?.id } });
@@ -185,7 +188,8 @@ export class VehiculoDetailComponent implements OnInit, OnDestroy {
 
   toggleFavorito() {
     if (!this.authStore.isLoggedIn()) {
-      this.toast.warning('Inicia sesión para guardar en favoritos');
+      this.toast.info('Inicia sesión para guardar tus favoritos');
+      this.guestPopupService.showPopup('Para guardar en tus favoritos');
       return;
     }
     const id = this.vehiculo().id;

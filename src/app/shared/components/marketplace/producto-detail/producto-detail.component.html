@@ -26,7 +26,18 @@
 
 <!-- ── Main Content ══════════════════════════════════════════ -->
 @if (!cargando() && !error() && producto()) {
-  <div class="detail-page" [class.is-mobile]="uiService.isDetailView()">
+  <div class="detail-page" 
+       [class.is-mobile]="uiService.isDetailView()"
+       [class.guest-mode]="!isLoggedIn() && uiService.isMobileUI()">
+
+    <!-- ── Guest Info Bar (Mobile Only) ────────────────── -->
+    @if (!isLoggedIn() && uiService.isMobileUI()) {
+      <div class="guest-info-bar">
+        <i class="fas fa-info-circle"></i>
+        <span>Inicia sesión para poder interactuar con este anuncio</span>
+        <a routerLink="/login">Entrar</a>
+      </div>
+    }
     
     <!-- ── Floating Mobile Header ──────────────────────── -->
     <div class="mobile-top-actions">
@@ -490,79 +501,31 @@
 
     <!-- ── Mobile Sticky Bottom Bar ──────────────────────── -->
     <div class="mobile-sticky-actions">
-      @if (estaVendido() && !esVendedorPropietario()) {
+      @if (esVendedorPropietario()) {
+        <!-- Propietario: Editar -->
+        <a [routerLink]="['/publicar/editar', producto()!.id]" class="sticky-btn primary">
+          <i class="fas fa-edit" style="margin-right: 8px;"></i>
+          <span>Editar anuncio</span>
+        </a>
+      } @else if (estaVendido()) {
+        <!-- Vendido: Estado -->
         <div class="sticky-sold-label">VENDIDO</div>
-        <button class="sticky-btn share" (click)="compartir()">
-          <i class="fas fa-share-alt"></i>
-        </button>
       } @else {
-        @if (puedeComprar() && !estaVendido()) {
+        <!-- Comprador / Invitado -->
+        @if (mostrarBotonComprar()) {
           <button class="sticky-btn primary" (click)="comprarAhora()">
             <span>Comprar</span>
           </button>
-          <button class="sticky-btn secondary" (click)="irAlChat()">
+          <button class="sticky-btn secondary" (click)="irAlChat()" aria-label="Chat">
             <i class="fas fa-comments"></i>
           </button>
-          <button class="sticky-btn share" (click)="compartir()">
-            <i class="fas fa-share-alt"></i>
-          </button>
-        } @else if (soloRecogidaPersonal() && isLoggedIn() && !esVendedorPropietario() && !estaVendido()) {
+        } @else {
           <button class="sticky-btn primary" (click)="irAlChat()">
-            <span>Contactar</span>
-          </button>
-          <button class="sticky-btn share" (click)="compartir()">
-            <i class="fas fa-share-alt"></i>
-          </button>
-        } @else if (esIntercambio() && isLoggedIn() && !esVendedorPropietario() && !estaVendido()) {
-          <button class="sticky-btn primary" (click)="irAlChat()">
-            <span>Proponer Intercambio</span>
-          </button>
-          <button class="sticky-btn share" (click)="compartir()">
-            <i class="fas fa-share-alt"></i>
-          </button>
-        } @else if (esDonacion() && isLoggedIn() && !esVendedorPropietario() && !estaVendido()) {
-          <button class="sticky-btn primary" (click)="irAlChat()">
-            <span>Solicitar</span>
-          </button>
-          <button class="sticky-btn share" (click)="compartir()">
-            <i class="fas fa-share-alt"></i>
-          </button>
-        } @else if (!isLoggedIn() && !estaVendido()) {
-          @if (producto()!.categoria?.slug === 'inmuebles') {
-            <button class="sticky-btn primary" (click)="irAlChat()">
-              <span>Contactar</span>
-            </button>
-          } @else if (producto()!.tipoOferta === 'VENTA') {
-            <button class="sticky-btn primary" (click)="comprarAhora()">
-              <span>Comprar</span>
-            </button>
-            <button class="sticky-btn secondary" (click)="irAlChat()">
-              <i class="fas fa-comments"></i>
-            </button>
-          } @else if (producto()!.tipoOferta === 'INTERCAMBIO') {
-            <button class="sticky-btn primary" (click)="irAlChat()">
-              <span>Intercambiar</span>
-            </button>
-          } @else if (producto()!.tipoOferta === 'DONACION') {
-            <button class="sticky-btn primary" (click)="irAlChat()">
-              <span>Solicitar</span>
-            </button>
-          }
-          <button class="sticky-btn share" (click)="compartir()">
-            <i class="fas fa-share-alt"></i>
-          </button>
-        } @else if (esVendedorPropietario()) {
-          <a [routerLink]="['/publicar/editar', producto()!.id]" class="sticky-btn primary">
-            <span>Editar</span>
-          </a>
-          <button class="sticky-btn share" (click)="compartir()">
-            <i class="fas fa-share-alt"></i>
+            <i class="fas fa-comments" style="margin-right: 8px;"></i>
+            <span>Chat</span>
           </button>
         }
       }
-      <button class="sticky-btn fav" [class.active]="esFavorito()" (click)="toggleFavorito()">
-        <i class="fas fa-heart"></i>
-      </button>
     </div>
 
   </div> <!-- /detail-page -->

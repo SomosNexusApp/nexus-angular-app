@@ -156,6 +156,18 @@ export class ProductoDetailComponent implements OnInit, OnDestroy {
   esIntercambio = computed(() => this.producto()?.tipoOferta === 'INTERCAMBIO');
   esDonacion = computed(() => this.producto()?.tipoOferta === 'DONACION');
 
+  mostrarBotonComprar = computed(() => {
+    const p = this.producto();
+    if (!p) return false;
+    return (
+      p.estado === 'DISPONIBLE' &&
+      p.tipoOferta === 'VENTA' &&
+      !!p.admiteEnvio &&
+      p.categoria?.slug !== 'inmuebles' &&
+      !this.esVendedorPropietario()
+    );
+  });
+
   private routeSub: any;
 
   ngOnInit(): void {
@@ -307,6 +319,7 @@ export class ProductoDetailComponent implements OnInit, OnDestroy {
 
   irAlChat(): void {
     if (!this.isLoggedIn()) {
+      this.toast.info('Inicia sesión para contactar con el vendedor');
       this.guestPopupService.showPopup('Para contactar al vendedor');
       return;
     }
@@ -322,6 +335,7 @@ export class ProductoDetailComponent implements OnInit, OnDestroy {
 
   toggleFavorito(): void {
     if (!this.isLoggedIn()) {
+      this.toast.info('Inicia sesión para guardar tus favoritos');
       this.guestPopupService.showPopup('Para guardar tus productos favoritos');
       return;
     }

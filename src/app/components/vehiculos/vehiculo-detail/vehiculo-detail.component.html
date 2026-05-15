@@ -26,7 +26,16 @@
 </div>
 
 <!-- ── Main Content ══════════════════════════════════════════ -->
-<div class="detail-page" *ngIf="!cargando() && vehiculo()" [class.mobile-active]="uiService.isMobileUI()">
+<div class="detail-page" *ngIf="!cargando() && vehiculo()" 
+     [class.mobile-active]="uiService.isMobileUI()"
+     [class.guest-mode]="!authStore.isLoggedIn() && uiService.isMobileUI()">
+
+  <!-- ── Guest Info Bar (Mobile Only) ────────────────── -->
+  <div class="guest-info-bar" *ngIf="!authStore.isLoggedIn() && uiService.isMobileUI()">
+    <i class="fas fa-info-circle"></i>
+    <span>Inicia sesión para poder interactuar con este vehículo</span>
+    <a routerLink="/login">Entrar</a>
+  </div>
   
   <!-- ── Header & Breadcrumb ────────────────────────── -->
   <nav class="breadcrumb" *ngIf="!uiService.isMobileUI()">
