@@ -112,7 +112,7 @@ export class ConfiguracionComponent implements OnInit, AfterViewInit, OnDestroy 
 
   cerrarSesion() {
     this.authService.logout();
-    this.router.navigate(['/auth/login']);
+    this.router.navigate(['/login']);
   }
 
   constructor(
@@ -129,7 +129,7 @@ export class ConfiguracionComponent implements OnInit, AfterViewInit, OnDestroy 
 
   ngOnInit(): void {
     if (!this.user()) {
-      this.router.navigate(['/auth/login']);
+      this.router.navigate(['/login']);
       return;
     }
     this.cargarDatosActuales();
@@ -415,7 +415,7 @@ export class ConfiguracionComponent implements OnInit, AfterViewInit, OnDestroy 
           this.showFormEmpresa.set(false);
           setTimeout(() => {
             this.authService.logout();
-            this.router.navigate(['/auth/login']);
+            this.router.navigate(['/login']);
           }, 2000);
         },
         error: (err) => {
