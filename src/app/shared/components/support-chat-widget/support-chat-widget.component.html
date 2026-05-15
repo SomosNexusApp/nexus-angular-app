@@ -65,6 +65,15 @@
                   </div>
                 </div>
               }
+              @if (m.tipoContenido === 'ENCUESTA') {
+                <div class="scw-rich-card scw-rich-card--survey" style="border-color: #f59e0b; background: rgba(245, 158, 11, 0.05);">
+                  <div class="scw-rich-icon" style="background: rgba(245, 158, 11, 0.1); color: #f59e0b;"><i class="fas fa-star"></i></div>
+                  <div class="scw-rich-info">
+                    <strong style="color: #f59e0b;">Encuesta de Satisfacción</strong>
+                    <button class="scw-btn-survey-link" (click)="abrirEncuesta()" style="background: #f59e0b; color: #fff; border: none; padding: 4px 10px; border-radius: 6px; cursor: pointer; font-size: 0.8rem; margin-top: 4px;">Abrir encuesta</button>
+                  </div>
+                </div>
+              }
             </div>
           }
           

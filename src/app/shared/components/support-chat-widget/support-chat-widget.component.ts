@@ -157,6 +157,12 @@ export class SupportChatWidgetComponent implements OnDestroy {
     });
   }
 
+  abrirEncuesta(): void {
+    this.status.set('WAITING_SURVEY');
+    this.cdr.markForCheck();
+    setTimeout(() => this.scrollToBottom(), 100);
+  }
+
   reiniciarChat(): void {
     localStorage.removeItem('nexus_soporte_token');
     this.sessionToken.set(null);
